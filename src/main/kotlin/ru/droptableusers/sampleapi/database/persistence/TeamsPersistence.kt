@@ -45,7 +45,6 @@ class TeamsPersistence() {
             null
         }
     }
-
     fun selectAll(limit: Int? = null, offset: Long? = null): List<TeamModel> {
         return try {
             if (limit != null && offset != null){
