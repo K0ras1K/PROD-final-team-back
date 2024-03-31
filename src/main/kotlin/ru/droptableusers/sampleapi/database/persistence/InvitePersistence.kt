@@ -16,14 +16,14 @@ class InvitePersistence {
             type = resultRow[InviteTable.type]
         )
 
-    fun insert(inviteModel: InviteModel){
+    fun insert(inviteModel: InviteModel) {
         try {
             InviteTable.insert {
                 it[InviteTable.teamId] = inviteModel.teamId
                 it[InviteTable.userId] = inviteModel.userId
                 it[InviteTable.type] = type
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
@@ -31,19 +31,19 @@ class InvitePersistence {
     fun selectByTeamId(teamId: Int): List<InviteModel> {
         return try {
             InviteTable.selectAll()
-                .where {InviteTable.teamId.eq(teamId)}
+                .where { InviteTable.teamId.eq(teamId) }
                 .map(::resultRowToInvite)
-        } catch (e: Exception){
+        } catch (e: Exception) {
             listOf()
         }
     }
 
-    fun selectByUserId(userId: Int): List<InviteModel>{
+    fun selectByUserId(userId: Int): List<InviteModel> {
         return try {
             InviteTable.selectAll()
-                .where {InviteTable.userId.eq(userId)}
+                .where { InviteTable.userId.eq(userId) }
                 .map(::resultRowToInvite)
-        } catch (e: Exception){
+        } catch (e: Exception) {
             listOf()
         }
     }
@@ -51,18 +51,18 @@ class InvitePersistence {
     fun selectById(id: Int): InviteModel? {
         return try {
             InviteTable.selectAll()
-                .where {InviteTable.id.eq(id)}
+                .where { InviteTable.id.eq(id) }
                 .single()
                 .let(::resultRowToInvite)
-        } catch (e: Exception){
+        } catch (e: Exception) {
             null
         }
     }
 
-    fun delete(id: Int): Boolean{
+    fun delete(id: Int): Boolean {
         return try {
-            InviteTable.deleteWhere (op = { InviteTable.id.eq(id) }) > 0
-        } catch (e: Exception){
+            InviteTable.deleteWhere(op = { InviteTable.id.eq(id) }) > 0
+        } catch (e: Exception) {
             false
         }
     }

@@ -1,7 +1,5 @@
 package ru.droptableusers.sampleapi.data.models.base
 
-import kotlinx.serialization.Serializable
-
 data class TeamModel(
     val id: Int,
     val name: String,

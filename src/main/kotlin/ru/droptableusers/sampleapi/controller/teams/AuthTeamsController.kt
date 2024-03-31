@@ -12,6 +12,7 @@ import ru.droptableusers.sampleapi.data.models.inout.input.teams.CreateTeamReque
 import ru.droptableusers.sampleapi.data.models.inout.output.ProfileOutputResponse
 import ru.droptableusers.sampleapi.data.models.inout.output.teams.SmallTeamRespondModel
 import ru.droptableusers.sampleapi.data.models.inout.output.teams.TeamRespondModel
+import ru.droptableusers.sampleapi.database.persistence.GroupPersistence
 import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
 
@@ -39,11 +40,13 @@ class AuthTeamsController(call: ApplicationCall) : AbstractController(call) {
                     firstName = it.firstName,
                     lastName = it.lastName,
                     tgId = it.tgLogin,
-                    registerAt = it.regTime
+                    registerAt = it.regTime,
+                    group = GroupPersistence().select(login)!!.group,
+                    id = it.id
                 )
             }
             val teamOutput = TeamRespondModel(
-                team = teamData!!,
+                team = teamData,
                 users = users
             )
             call.respond(HttpStatusCode.OK, teamOutput)

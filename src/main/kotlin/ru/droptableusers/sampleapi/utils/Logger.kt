@@ -9,5 +9,5 @@ import org.slf4j.LoggerFactory
  * @author Roman K0ras1K Kalmykov
  */
 object Logger {
-    val logger = LoggerFactory.getLogger("TravelAgent")
+    val logger = LoggerFactory.getLogger("DropTableUsers API")
 }

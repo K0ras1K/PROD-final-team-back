@@ -5,8 +5,6 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.droptableusers.sampleapi.data.models.base.TourResultModel
 import ru.droptableusers.sampleapi.database.schema.ToursResultTable
-import ru.droptableusers.sampleapi.database.schema.UserTable
-import java.lang.Exception
 
 class ToursResultPersistence {
 
@@ -46,7 +44,7 @@ class ToursResultPersistence {
     fun delete(userId: Int, tourName: String): Boolean {
         return try {
             transaction {
-                ToursResultTable.deleteWhere{ ToursResultTable.userId.eq(userId) and ToursResultTable.name.eq(tourName) } > 0
+                ToursResultTable.deleteWhere { ToursResultTable.userId.eq(userId) and ToursResultTable.name.eq(tourName) } > 0
             }
         } catch (e: Exception) {
             false
