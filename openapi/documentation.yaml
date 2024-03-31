@@ -4,7 +4,7 @@ info:
   description: "SampleAPI API"
   version: "1.0.0"
 servers:
-  - url: "https://api.ethereally.space"
+  - url: "https://SampleAPI"
 paths:
   /:
     get:
@@ -19,6 +19,27 @@ paths:
               examples:
                 Example#1:
                   value: "Hello World!"
+  /1.0/teams/apply:
+    post:
+      description: ""
+  /1.0/teams/create:
+    post:
+      description: ""
+  /1.0/teams/load:
+    get:
+      description: ""
+  /1.0/teams/load/{id}:
+    get:
+      description: ""
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+  /1.0/teams/loadmy:
+    get:
+      description: ""
   /1.0/users/login:
     post:
       description: ""
