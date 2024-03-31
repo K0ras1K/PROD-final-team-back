@@ -74,16 +74,16 @@ fun Application.configureRouting() {
                     }
                 }
             }
-            route("/tour-results") {
+            route("/tours") {
                 authenticate("auth-jwt") {
-                    get("/user") {
+                    get("/results/user") {
                         AuthTourResultsController(call).getResultsByUserId()
                     }
-                    get("/name") {
+                    get("/results/name") {
                         AuthTourResultsController(call).getResultsByTourName()
                     }
                     get("/list") {
-                        AuthTourResultsController(call).listTourNames()
+                        AuthTourResultsController(call).listTours()
                     }
                 }
             }

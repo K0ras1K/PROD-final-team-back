@@ -1,7 +1,7 @@
 package ru.droptableusers.sampleapi.data.models.base
 
 data class TourResultModel(
-    val name: String,
-    val result: Float,
-    val userId: Int
+    val userId: Int,
+    val tourId: Int,
+    val result: Float
 )
