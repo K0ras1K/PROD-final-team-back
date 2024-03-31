@@ -42,7 +42,8 @@ class AuthTeamsController(call: ApplicationCall) : AbstractController(call) {
                     tgId = it.tgLogin,
                     registerAt = it.regTime,
                     group = GroupPersistence().select(it.id)!!.group,
-                    id = it.id
+                    id = it.id,
+                    description = it.description
                 )
             }
             val teamOutput = TeamRespondModel(
