@@ -17,18 +17,19 @@ class TeamsPersistence() {
             bannerUrl = resultRow[TeamTable.bannerUrl]
         )
 
-    fun insert(teamModel: TeamModel) {
-        try {
+    fun insert(teamModel: TeamModel): Int? {
+        return try {
             transaction {
                 TeamTable.insert {
                     it[TeamTable.name] = teamModel.name
                     it[TeamTable.description] = teamModel.description
                     it[TeamTable.iconUrl] = teamModel.iconUrl
                     it[TeamTable.bannerUrl] = teamModel.bannerUrl
-                }
+                }.resultedValues!!.single().let { it[TeamTable.id].value }
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            null
         }
     }
 

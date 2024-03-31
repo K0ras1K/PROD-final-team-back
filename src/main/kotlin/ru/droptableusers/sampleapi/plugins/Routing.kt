@@ -7,6 +7,8 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import ru.droptableusers.sampleapi.UsersController
 import ru.droptableusers.sampleapi.controller.HelloController
+import ru.droptableusers.sampleapi.controller.teams.AuthTeamsController
+import ru.droptableusers.sampleapi.controller.teams.PublicTeamsController
 import ru.droptableusers.sampleapi.controller.users.AuthUsersController
 
 /**
@@ -48,14 +50,14 @@ fun Application.configureRouting() {
             }
             route("/teams") {
                 get("/load") {
-
+                    PublicTeamsController(call).loadAll()
                 }
                 authenticate("auth-jwt") {
                     post("/create") {
-
+                        AuthTeamsController(call).createTeam()
                     }
                     get("/load/{id}") {
-
+                        AuthTeamsController(call).loadTeam()
                     }
                     post("/apply") {
 

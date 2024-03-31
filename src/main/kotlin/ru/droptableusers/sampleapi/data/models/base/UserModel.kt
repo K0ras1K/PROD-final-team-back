@@ -1,6 +1,7 @@
 package ru.droptableusers.sampleapi.data.models.base
 
 data class UserModel(
+    val id: Int,
     val username: String,
     val password: String,
     val tgLogin: String,

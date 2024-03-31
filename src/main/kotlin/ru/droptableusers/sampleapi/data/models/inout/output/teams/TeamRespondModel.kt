@@ -6,6 +6,6 @@ import ru.droptableusers.sampleapi.data.models.inout.output.ProfileOutputRespons
 
 @Serializable
 data class TeamRespondModel(
-    val team: TeamModel,
+    val team: SmallTeamRespondModel,
     val users: List<ProfileOutputResponse>
 )
