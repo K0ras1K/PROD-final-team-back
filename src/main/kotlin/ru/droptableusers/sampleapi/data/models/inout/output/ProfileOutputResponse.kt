@@ -5,6 +5,7 @@ import ru.droptableusers.sampleapi.data.enums.Group
 
 @Serializable
 data class ProfileOutputResponse(
+    val id: Int,
     val username: String,
     val firstName: String,
     val lastName: String,
