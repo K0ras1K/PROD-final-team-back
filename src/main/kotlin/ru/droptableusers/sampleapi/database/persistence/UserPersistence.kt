@@ -77,6 +77,19 @@ class UserPersistence {
         }
     }
 
+    fun selectById(id: Int): UserModel? {
+        return try {
+            transaction {
+                UserTable.selectAll()
+                    .where { UserTable.id.eq(id) }
+                    .single()
+                    .let(::resultRowToUserModel)
+            }
+        } catch (exception: Exception) {
+            null
+        }
+    }
+
     fun update(userModel: UserModel): Boolean {
         return try {
             transaction {
