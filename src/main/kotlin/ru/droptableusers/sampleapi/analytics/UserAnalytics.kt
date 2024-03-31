@@ -28,21 +28,4 @@ object UserAnalytics {
         return AnalyticsUtil.averageMedian(results)
     }
 
-    /**
-     * @return tour-name = percent
-     *
-     * @author SoraVWV
-     */
-    fun handleGraph(userId: Int): Map<String, Float> {
-        val tourResultModels = ToursPersistence().selectResultsByUserId(userId)
-        val result = mutableMapOf<String, Float>()
-
-        for (tourResultModel in tourResultModels) {
-            val tourModel = ToursPersistence().selectTourById(tourResultModels[0].tourId) ?: continue
-            result[tourModel.name] = tourResultModel.result / tourModel.maxScore
-        }
-
-        return result
-    }
-
 }

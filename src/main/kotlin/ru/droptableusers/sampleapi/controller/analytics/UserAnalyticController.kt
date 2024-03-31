@@ -4,7 +4,6 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import kotlinx.coroutines.runBlocking
-import ru.droptableusers.sampleapi.analytics.AnalyticsUtil
 import ru.droptableusers.sampleapi.analytics.UserAnalytics
 import ru.droptableusers.sampleapi.controller.AbstractController
 import ru.droptableusers.sampleapi.data.models.inout.output.analytics.UserAnalyticResponse
