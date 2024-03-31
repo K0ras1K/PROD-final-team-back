@@ -1,4 +1,4 @@
-package ru.droptableusers.sampleapi
+package ru.droptableusers.sampleapi.controller.users
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
@@ -8,6 +8,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import kotlinx.coroutines.runBlocking
 import org.mindrot.jbcrypt.BCrypt
+import ru.droptableusers.sampleapi.ApplicationConstants
 import ru.droptableusers.sampleapi.data.enums.Group
 import ru.droptableusers.sampleapi.data.enums.ValidationStatus
 import ru.droptableusers.sampleapi.data.models.base.GroupModel
