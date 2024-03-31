@@ -18,8 +18,14 @@ class DatabaseInit {
             TagTable,
             TeamsUsersTable,
             TeamTable,
-            UserTable,
-            ValidationDataTable
+            ValidationDataTable,
+            GroupTable,
+            InviteTable,
+            SearchingForTable,
+            TagsUsersTable,
+            ToursResultTable,
+            ValidateDataTable,
+            SearchingForTagsTable
         )
 
     /**
