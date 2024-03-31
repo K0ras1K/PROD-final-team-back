@@ -1,7 +1,7 @@
 package ru.droptableusers.sampleapi.database.persistence
 
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.droptableusers.sampleapi.data.models.base.UserModel
 import ru.droptableusers.sampleapi.database.schema.UserTable
@@ -14,7 +14,20 @@ import ru.droptableusers.sampleapi.database.schema.UserTable
  *
  * @author Roman K0ras1K Kalmykov
  */
-class UserPersistence(val username: String) {
+class UserPersistence() {
+
+    private fun resultRowToUserModel(row: ResultRow): UserModel =
+        UserModel(
+            username = row[UserTable.username],
+            password = row[UserTable.password],
+            regTime = row[UserTable.regTime],
+            tgLogin = row[UserTable.tgLogin],
+            firstName = row[UserTable.firstName],
+            lastName = row[UserTable.lastName],
+            birthdayDate = row[UserTable.birthdayDate],
+        )
+
+
     /**
      * Insert
      *
@@ -44,26 +57,55 @@ class UserPersistence(val username: String) {
      *
      * @return UserModel
      */
-    fun selectByUsername(): UserModel? {
+    fun selectByUsername(username: String): UserModel? {
         return try {
             transaction {
                 UserTable.selectAll()
                     .where { UserTable.username.eq(username) }
                     .single()
-                    .let {
-                        UserModel(
-                            username = username,
-                            password = it[UserTable.password],
-                            regTime = it[UserTable.regTime],
-                            tgLogin = it[UserTable.tgLogin],
-                            firstName = it[UserTable.firstName],
-                            lastName = it[UserTable.lastName],
-                            birthdayDate = it[UserTable.birthdayDate],
-                        )
-                    }
+                    .let(::resultRowToUserModel)
             }
         } catch (exception: Exception) {
             null
+        }
+    }
+
+    fun update(userModel: UserModel): Boolean {
+        return try {
+            transaction {
+                UserTable.update ({UserTable.username eq userModel.username}) {
+                    it[UserTable.password] = userModel.password
+                    it[UserTable.firstName] = userModel.firstName
+                    it[UserTable.lastName] = userModel.lastName
+                    it[UserTable.birthdayDate] = userModel.birthdayDate
+                    it[UserTable.tgLogin] = userModel.tgLogin
+                    it[UserTable.regTime] = userModel.regTime
+                } > 0
+            }
+        } catch (exception: Exception) {
+            false
+        }
+    }
+
+    fun delete(): Boolean{
+        return try {
+            transaction {
+                UserTable.deleteWhere (op = {UserTable.username eq username}) > 0
+            }
+        } catch (e: Exception){
+            false
+        }
+    }
+
+    fun selectByIdList(idList: List<Int>): List<UserModel>{
+        return try {
+            transaction {
+                UserTable.selectAll()
+                    .where { UserTable.id.inList(idList) }
+                    .map(::resultRowToUserModel)
+            }
+        } catch (exception: Exception) {
+            listOf()
         }
     }
 }
