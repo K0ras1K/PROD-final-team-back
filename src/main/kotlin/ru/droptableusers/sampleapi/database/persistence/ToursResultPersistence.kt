@@ -31,16 +31,15 @@ class ToursResultPersistence {
         }
     }
 
-    fun selectByUserId(userId: Int): TourResultModel? {
+    fun selectByUserId(userId: Int): List<TourResultModel> {
         return try {
             transaction {
                 ToursResultTable.selectAll()
                     .where { ToursResultTable.userId.eq(userId) }
-                    .single()
-                    .let(::resultRowToTourResult)
+                    .map(::resultRowToTourResult)
             }
         } catch (exception: Exception) {
-            null
+            listOf()
         }
     }
 
