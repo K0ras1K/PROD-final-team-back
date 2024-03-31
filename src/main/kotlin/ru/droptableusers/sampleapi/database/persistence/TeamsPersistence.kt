@@ -120,4 +120,18 @@ class TeamsPersistence() {
         }
     }
 
+    fun selectByUserId(id: Int): Int? {
+        return try {
+            transaction {
+                TeamsUsersTable.selectAll()
+                    .where { TeamsUsersTable.userId.eq(id) }
+                    .single()
+                    .let(::getTeammateId)
+            }
+        }
+        catch (exception: Exception) {
+            null
+        }
+    }
+
 }

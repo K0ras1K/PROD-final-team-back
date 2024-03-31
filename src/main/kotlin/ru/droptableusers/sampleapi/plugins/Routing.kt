@@ -60,8 +60,14 @@ fun Application.configureRouting() {
                     get("/load/{id}") {
                         AuthTeamsController(call).loadTeam()
                     }
-                    post("/apply") {
-
+                    post("/apply/{teamId}") {
+                        AuthTeamsController(call).apply()
+                    }
+                    post("/accept/{inviteId}") {
+                        AuthTeamsController(call).accept()
+                    }
+                    get("/invites") {
+                        AuthTeamsController(call).loadRequests()
                     }
                     get("/loadmy") {
 

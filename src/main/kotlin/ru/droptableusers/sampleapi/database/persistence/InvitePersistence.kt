@@ -1,10 +1,8 @@
 package ru.droptableusers.sampleapi.database.persistence
 
-import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
+import ru.droptableusers.sampleapi.data.enums.InviteStatus
 import ru.droptableusers.sampleapi.data.models.base.InviteModel
 import ru.droptableusers.sampleapi.database.schema.InviteTable
 
@@ -13,7 +11,8 @@ class InvitePersistence {
         InviteModel(
             teamId = resultRow[InviteTable.teamId].value,
             userId = resultRow[InviteTable.userId].value,
-            type = resultRow[InviteTable.type]
+            type = resultRow[InviteTable.type],
+            id = resultRow[InviteTable.id].value
         )
 
     fun insert(inviteModel: InviteModel) {
@@ -28,10 +27,10 @@ class InvitePersistence {
         }
     }
 
-    fun selectByTeamId(teamId: Int): List<InviteModel> {
+    fun selectByTeamId(teamId: Int, status: InviteStatus): List<InviteModel> {
         return try {
             InviteTable.selectAll()
-                .where { InviteTable.teamId.eq(teamId) }
+                .where { InviteTable.teamId.eq(teamId) and InviteTable.type.eq(status)}
                 .map(::resultRowToInvite)
         } catch (e: Exception) {
             listOf()

@@ -7,12 +7,16 @@ import io.ktor.server.response.*
 import kotlinx.coroutines.runBlocking
 import ru.droptableusers.sampleapi.ApplicationConstants
 import ru.droptableusers.sampleapi.controller.AbstractController
+import ru.droptableusers.sampleapi.data.enums.InviteStatus
+import ru.droptableusers.sampleapi.data.models.base.InviteModel
 import ru.droptableusers.sampleapi.data.models.base.TeamModel
 import ru.droptableusers.sampleapi.data.models.inout.input.teams.CreateTeamRequest
 import ru.droptableusers.sampleapi.data.models.inout.output.ProfileOutputResponse
+import ru.droptableusers.sampleapi.data.models.inout.output.teams.InvitesRespondModel
 import ru.droptableusers.sampleapi.data.models.inout.output.teams.SmallTeamRespondModel
 import ru.droptableusers.sampleapi.data.models.inout.output.teams.TeamRespondModel
 import ru.droptableusers.sampleapi.database.persistence.GroupPersistence
+import ru.droptableusers.sampleapi.database.persistence.InvitePersistence
 import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
 
@@ -69,6 +73,64 @@ class AuthTeamsController(call: ApplicationCall) : AbstractController(call) {
             val teamId = TeamsPersistence().insert(targetTeamData)
             TeamsPersistence().addMember(UserPersistence().selectByUsername(login)!!.id, teamId!!)
             call.respond(HttpStatusCode.OK, teamId)
+        }
+    }
+
+    //Request from user to team
+    suspend fun apply() {
+        runBlocking {
+            val teamId = call.parameters["teamId"]!!.toInt()
+            val userId = UserPersistence().selectByUsername(login)!!.id
+
+            InvitePersistence().insert(
+                InviteModel(
+                    id = 0,
+                    teamId = teamId,
+                    userId = userId,
+                    type = InviteStatus.TO_TEAM
+                )
+            )
+            call.respond(HttpStatusCode.OK)
+        }
+    }
+
+    suspend fun accept() {
+        runBlocking {
+            val inviteId = call.parameters["inviteId"]!!.toInt()
+            val inviteData = InvitePersistence().selectById(inviteId)!!
+            val teamId = inviteData.teamId
+            val userId = inviteData.userId
+
+            TeamsPersistence().addMember(userId, teamId)
+            InvitePersistence().delete(inviteId)
+
+            call.respond(HttpStatusCode.OK)
+        }
+    }
+
+    suspend fun loadRequests() {
+        runBlocking {
+            val teamId = TeamsPersistence().selectByUserId(UserPersistence().selectByUsername(login)!!.id)!!
+            val requests = InvitePersistence().selectByTeamId(teamId, InviteStatus.TO_TEAM)
+            val respondModel = requests.map {
+                InvitesRespondModel(
+                    user = UserPersistence().selectById(it.userId)
+                        .let { user ->
+                            ProfileOutputResponse(
+                                username = user!!.username,
+                                firstName = user.firstName,
+                                lastName = user.lastName,
+                                tgId = user.tgLogin,
+                                registerAt = user.regTime,
+                                group = GroupPersistence().select(user.id)!!.group,
+                                id = user.id,
+                                description = user.description
+                            )
+                        },
+                    id = it.id
+                )
+            }
+            call.respond(HttpStatusCode.OK, respondModel)
         }
     }
 }
