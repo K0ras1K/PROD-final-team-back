@@ -59,6 +59,7 @@ class UsersController(val call: ApplicationCall) {
                     firstName = receive.firstName,
                     lastName = receive.lastName,
                     birthdayDate = receive.birthdayDate,
+                    id = 0
                 )
             UserPersistence().insert(targetUserData)
             println("after insert")
