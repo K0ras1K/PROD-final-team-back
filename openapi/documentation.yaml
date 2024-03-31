@@ -103,7 +103,7 @@ paths:
           content:
             '*/*':
               schema:
-                type: "object"
+                $ref: "#/components/schemas/TokenRespondOutput"
   /java:
     get:
       description: ""

@@ -3,7 +3,7 @@ package ru.droptableusers.sampleapi.init
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.transactions.transaction
-import ru.droptableusers.sampleapi.database.schema.UserTable
+import ru.droptableusers.sampleapi.database.schema.*
 
 /**
  * Database init
@@ -15,6 +15,12 @@ class DatabaseInit {
     val tables: List<Table> =
         listOf(
             UserTable,
+            SearchingForTable,
+            TagTable,
+            TeamsUsersTable,
+            TeamTable,
+            UserTable,
+            ValidationDataTable
         )
 
     /**

@@ -39,7 +39,7 @@ class UsersController(val call: ApplicationCall) {
             println("after validation")
             println(validations)
 
-            if (UserPersistence(receive.username).selectByUsername() != null) {
+            if (UserPersistence().selectByUsername(receive.username) != null) {
                 call.respond(HttpStatusCode.Conflict, ErrorResponse("Пользователь с таким логином уже зарегистрирован!"))
                 return@runBlocking
             }
@@ -56,10 +56,16 @@ class UsersController(val call: ApplicationCall) {
                     lastName = receive.lastName,
                     birthdayDate = receive.birthdayDate,
                 )
-            UserPersistence(receive.username).insert(targetUserData)
+            UserPersistence().insert(targetUserData)
             println("after insert")
 
-            call.respond(HttpStatusCode.Created)
+            val token =
+                JWT.create()
+                    .withClaim("username", targetUserData.username)
+                    .withClaim("passwordHash", targetUserData.password)
+                    .withExpiresAt(Date(System.currentTimeMillis() + 60 * 60 * 60 * 24 * 60))
+                    .sign(Algorithm.HMAC256(ApplicationConstants.SERVICE_SECRET_TOKEN))
+            call.respond(HttpStatusCode.Created, TokenRespondOutput(token))
         }
     }
 
@@ -67,12 +73,12 @@ class UsersController(val call: ApplicationCall) {
         runBlocking {
             val receive = call.receive<LoginInputModel>()
 
-            if (UserPersistence(receive.username).selectByUsername() == null) {
+            if (UserPersistence().selectByUsername(receive.username) == null) {
                 call.respond(HttpStatusCode.Unauthorized, ErrorResponse("Пользователь с указанным логином и паролем не найден"))
                 return@runBlocking
             }
 
-            val selectedUser = UserPersistence(receive.username).selectByUsername()!!
+            val selectedUser = UserPersistence().selectByUsername(receive.username)!!
 
             if (!BCrypt.checkpw(receive.password, selectedUser.password)) {
                 call.respond(HttpStatusCode.Unauthorized, ErrorResponse("Пользователь с указанным логином и паролем не найден"))
