@@ -15,7 +15,8 @@ import ru.droptableusers.sampleapi.database.schema.UserTable
  *
  * @author Roman K0ras1K Kalmykov
  */
-class UserPersistence() {
+class
+UserPersistence {
 
     private fun resultRowToUserModel(row: ResultRow): UserModel =
         UserModel(
@@ -88,7 +89,7 @@ class UserPersistence() {
         }
     }
 
-    fun delete(): Boolean {
+    fun delete(username: String): Boolean {
         return try {
             transaction {
                 UserTable.deleteWhere(op = { UserTable.username eq username }) > 0
