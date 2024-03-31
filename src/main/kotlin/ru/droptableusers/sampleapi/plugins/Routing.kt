@@ -109,6 +109,12 @@ fun Application.configureRouting() {
                 get("/{id}") {
                     VacancyController(call).get()
                 }
+                post{
+                    VacancyController(call).add()
+                }
+                delete("/{id}") {
+                    VacancyController(call).delete()
+                }
             }
             route("/tours") {
                 authenticate("auth-jwt") {
