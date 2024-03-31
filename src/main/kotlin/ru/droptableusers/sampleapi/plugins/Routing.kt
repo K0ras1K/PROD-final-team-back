@@ -44,7 +44,7 @@ fun Application.configureRouting() {
                 get("/load") {
 
                 }
-                authenticate {
+                authenticate("auth-jwt") {
                     post("/create") {
 
                     }
