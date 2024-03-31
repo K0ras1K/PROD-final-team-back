@@ -40,7 +40,10 @@ class UsersController(val call: ApplicationCall) {
             println(validations)
 
             if (UserPersistence().selectByUsername(receive.username) != null) {
-                call.respond(HttpStatusCode.Conflict, ErrorResponse("Пользователь с таким логином уже зарегистрирован!"))
+                call.respond(
+                    HttpStatusCode.Conflict,
+                    ErrorResponse("Пользователь с таким логином уже зарегистрирован!")
+                )
                 return@runBlocking
             }
 
@@ -74,14 +77,20 @@ class UsersController(val call: ApplicationCall) {
             val receive = call.receive<LoginInputModel>()
 
             if (UserPersistence().selectByUsername(receive.username) == null) {
-                call.respond(HttpStatusCode.Unauthorized, ErrorResponse("Пользователь с указанным логином и паролем не найден"))
+                call.respond(
+                    HttpStatusCode.Unauthorized,
+                    ErrorResponse("Пользователь с указанным логином и паролем не найден")
+                )
                 return@runBlocking
             }
 
             val selectedUser = UserPersistence().selectByUsername(receive.username)!!
 
             if (!BCrypt.checkpw(receive.password, selectedUser.password)) {
-                call.respond(HttpStatusCode.Unauthorized, ErrorResponse("Пользователь с указанным логином и паролем не найден"))
+                call.respond(
+                    HttpStatusCode.Unauthorized,
+                    ErrorResponse("Пользователь с указанным логином и паролем не найден")
+                )
                 return@runBlocking
             }
 
@@ -123,6 +132,7 @@ class UsersController(val call: ApplicationCall) {
             !lowercasePattern.containsMatchIn(
                 password,
             ) || !uppercasePattern.containsMatchIn(password) || !digitPattern.containsMatchIn(password) -> ValidationStatus.INVALID_FORMAT
+
             else -> ValidationStatus.ACCEPTED
         }
     }

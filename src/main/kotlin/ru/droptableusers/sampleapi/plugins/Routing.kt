@@ -16,7 +16,7 @@ import ru.droptableusers.sampleapi.controller.users.AuthUsersController
  */
 fun Application.configureRouting() {
     routing {
-        openAPI(path="openapi", swaggerFile = "openapi/documentation.yaml")
+        openAPI(path = "openapi", swaggerFile = "openapi/documentation.yaml")
 
         get("/") {
             call.respondText("Hello World!")

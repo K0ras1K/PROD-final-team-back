@@ -1,7 +1,7 @@
 openapi: "3.0.3"
 info:
-  title: "SampleAPI API"
-  description: "SampleAPI API"
+  title: "Ethereally API"
+  description: "Ethereally API"
   version: "1.0.0"
 servers:
   - url: "https://api.ethereally.space"

@@ -4,7 +4,7 @@ info:
   description: "SampleAPI API"
   version: "1.0.0"
 servers:
-- url: "https://SampleAPI"
+  - url: "https://SampleAPI"
 paths:
   /:
     get:
@@ -32,11 +32,11 @@ paths:
     get:
       description: ""
       parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
   /1.0/teams/loadmy:
     get:
       description: ""
@@ -147,22 +147,22 @@ components:
         password:
           type: "string"
       required:
-      - "username"
-      - "password"
+        - "username"
+        - "password"
     ErrorResponse:
       type: "object"
       properties:
         status:
           type: "string"
       required:
-      - "status"
+        - "status"
     TokenRespondOutput:
       type: "object"
       properties:
         token:
           type: "string"
       required:
-      - "token"
+        - "token"
     ProfileOutputResponse:
       type: "object"
       properties:
@@ -178,10 +178,10 @@ components:
           type: "integer"
           format: "int64"
       required:
-      - "username"
-      - "firstName"
-      - "lastName"
-      - "tgId"
+        - "username"
+        - "firstName"
+        - "lastName"
+        - "tgId"
     RegisterInputModel:
       type: "object"
       properties:
@@ -199,8 +199,8 @@ components:
           type: "integer"
           format: "int64"
       required:
-      - "username"
-      - "password"
-      - "tgLogin"
-      - "firstName"
-      - "lastName"
+        - "username"
+        - "password"
+        - "tgLogin"
+        - "firstName"
+        - "lastName"

@@ -8,7 +8,7 @@ import ru.droptableusers.sampleapi.database.schema.TeamTable
 import ru.droptableusers.sampleapi.database.schema.TeamsUsersTable
 
 class TeamsPersistance() {
-    private fun resultRowToTeamModel(resultRow: ResultRow)=
+    private fun resultRowToTeamModel(resultRow: ResultRow) =
         TeamModel(
             id = resultRow[TeamTable.id].value,
             name = resultRow[TeamTable.name],
@@ -17,7 +17,7 @@ class TeamsPersistance() {
             bannerUrl = resultRow[TeamTable.bannerUrl]
         )
 
-    fun insert(teamModel: TeamModel){
+    fun insert(teamModel: TeamModel) {
         try {
             transaction {
                 TeamTable.insert {
@@ -27,74 +27,72 @@ class TeamsPersistance() {
                     it[TeamTable.bannerUrl] = teamModel.bannerUrl
                 }
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    fun selectById(id: Int): TeamModel?{
-        return try{
+    fun selectById(id: Int): TeamModel? {
+        return try {
             transaction {
                 TeamTable.selectAll()
-                    .where{TeamTable.id.eq(id)}
+                    .where { TeamTable.id.eq(id) }
                     .single()
                     .let(::resultRowToTeamModel)
             }
-        }
-        catch (e: Exception){
+        } catch (e: Exception) {
             null
         }
     }
 
-    fun selectAll(limit: Int, offset: Long): List<TeamModel>{
-        return try{
+    fun selectAll(limit: Int, offset: Long): List<TeamModel> {
+        return try {
             transaction {
                 TeamTable.selectAll()
                     .limit(limit, offset = offset)
                     .map(::resultRowToTeamModel)
             }
-        }
-        catch (e: Exception){
+        } catch (e: Exception) {
             listOf()
         }
     }
 
-    fun update(teamModel: TeamModel): Boolean{
+    fun update(teamModel: TeamModel): Boolean {
         return try {
             transaction {
-                TeamTable.update ({TeamTable.id.eq(teamModel.id)}) {
+                TeamTable.update({ TeamTable.id.eq(teamModel.id) }) {
                     it[TeamTable.name] = teamModel.name
                     it[TeamTable.description] = teamModel.description
                     it[TeamTable.iconUrl] = teamModel.iconUrl
                     it[TeamTable.bannerUrl] = teamModel.bannerUrl
                 } > 0
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             false
         }
     }
 
-    fun delete(id: Int): Boolean{
+    fun delete(id: Int): Boolean {
         return try {
             transaction {
                 TeamTable.deleteWhere { TeamTable.id.eq(id) } > 0
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             false
         }
     }
 
-    fun removeMember(userId: Int): Boolean{
+    fun removeMember(userId: Int): Boolean {
         return try {
             transaction {
                 TeamsUsersTable.deleteWhere { TeamsUsersTable.userId.eq(id) } > 0
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             false
         }
     }
 
-    fun addMember(userId: Int, teamId: Int){
+    fun addMember(userId: Int, teamId: Int) {
         try {
             transaction {
                 TeamsUsersTable.insert {
@@ -102,25 +100,24 @@ class TeamsPersistance() {
                     it[TeamsUsersTable.teamId] = teamId
                 }
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
     private fun getTeammateId(resultRow: ResultRow): Int = resultRow[TeamsUsersTable.userId].value
 
-    fun selectTeammates(id: Int): List<Int>{
+    fun selectTeammates(id: Int): List<Int> {
         return try {
             transaction {
                 TeamsUsersTable.selectAll()
-                    .where{TeamsUsersTable.teamId.eq(id)}
+                    .where { TeamsUsersTable.teamId.eq(id) }
                     .map(::getTeammateId)
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             listOf()
         }
     }
-    
 
 
 }

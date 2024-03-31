@@ -7,7 +7,7 @@ import ru.droptableusers.sampleapi.controller.AbstractController
 import ru.droptableusers.sampleapi.data.models.inout.output.ProfileOutputResponse
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
 
-class AuthUsersController(call: ApplicationCall): AbstractController(call) {
+class AuthUsersController(call: ApplicationCall) : AbstractController(call) {
     suspend fun get() {
         val userData = UserPersistence().selectByUsername(login)!!
         val respondModel = ProfileOutputResponse(
