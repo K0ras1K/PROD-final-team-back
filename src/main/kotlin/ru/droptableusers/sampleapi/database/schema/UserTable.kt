@@ -9,7 +9,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
  * @author Roman K0ras1K Kalmykov
  */
 object UserTable : IntIdTable("users") {
-    val username = varchar("username", 16)
+    val username = varchar("username", 256)
     val password = varchar("password", 200)
     val tgLogin = varchar("tg_login", 100)
     val firstName = varchar("first_name", 40)
