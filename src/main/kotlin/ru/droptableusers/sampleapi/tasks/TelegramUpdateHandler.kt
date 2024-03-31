@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.model.ChosenInlineResult
 import com.pengrad.telegrambot.model.InlineQuery
 import com.pengrad.telegrambot.model.Update
 import com.pengrad.telegrambot.request.GetUpdates
+import com.pengrad.telegrambot.request.SendMessage
 import com.pengrad.telegrambot.response.GetUpdatesResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -15,6 +16,7 @@ import ru.droptableusers.sampleapi.data.enums.Group
 import ru.droptableusers.sampleapi.data.enums.TelegramChat
 import ru.droptableusers.sampleapi.data.models.base.GroupModel
 import ru.droptableusers.sampleapi.database.persistence.GroupPersistence
+import ru.droptableusers.sampleapi.database.persistence.UserPersistence
 
 object TelegramUpdateHandler {
     var updateId: Int = 0
@@ -31,11 +33,18 @@ object TelegramUpdateHandler {
                     val userId: Int = callbackQuery.data().split("-")[1].toInt()
                     println("Кнопка бана сработала!")
                     val groupData = GroupPersistence().select(userId)!!
+                    val userModel = UserPersistence().selectById(userId)!!
                     if (groupData.group == Group.NOT_VERIFIED) {
                         GroupPersistence().update(
                             GroupModel(
                                 id = groupData.id,
                                 group = Group.MEMBER,
+                            ),
+                        )
+                        TelegramChat.VERIFICATION.BOT.execute(
+                            SendMessage(
+                                TelegramChat.VERIFICATION.CHAT_ID,
+                                "Пользователь ${userModel.firstName} ${userModel.lastName} верифицирован",
                             ),
                         )
                     }
