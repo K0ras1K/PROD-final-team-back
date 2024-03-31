@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:13.3
+    container_name: postgres
+    environment:
+      POSTGRES_DB: "sampleapi"
+      POSTGRES_USER: "K0ras1K"
+      POSTGRES_PASSWORD: "Shah!9Sah@"
+    ports:
+      - "5432:5432"
+    networks:
+      - global
+
+  sampleapi:
+    build: .
+    container_name: sampleapi
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    networks:
+      - global
+
+networks:
+  global:
+    name: global

@@ -1,0 +1,156 @@
+openapi: "3.0.3"
+info:
+  title: "SampleAPI API"
+  description: "SampleAPI API"
+  version: "1.0.0"
+servers:
+- url: "https://api.ethereally.space"
+paths:
+  /:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Hello World!"
+  /1.0/users/login:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/LoginInputModel"
+        required: true
+      responses:
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    status: "Пользователь с указанным логином и паролем не найден"
+                Example#2:
+                  description: ""
+                  value:
+                    status: "Пользователь с указанным логином и паролем не найден"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TokenRespondOutput"
+  /1.0/users/register:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/RegisterInputModel"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: "Conflict"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    status: "Пользователь с таким логином уже зарегистрирован!"
+        "201":
+          description: "Created"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /java:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /kotlin:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Hello from Kotlin!"
+components:
+  schemas:
+    LoginInputModel:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+        password:
+          type: "string"
+      required:
+      - "username"
+      - "password"
+    ErrorResponse:
+      type: "object"
+      properties:
+        status:
+          type: "string"
+      required:
+      - "status"
+    TokenRespondOutput:
+      type: "object"
+      properties:
+        token:
+          type: "string"
+      required:
+      - "token"
+    RegisterInputModel:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+        password:
+          type: "string"
+        tgLogin:
+          type: "string"
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        birthdayDate:
+          type: "integer"
+          format: "int64"
+      required:
+      - "username"
+      - "password"
+      - "tgLogin"
+      - "firstName"
+      - "lastName"
