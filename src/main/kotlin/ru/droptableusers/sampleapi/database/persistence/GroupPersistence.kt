@@ -5,17 +5,18 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.droptableusers.sampleapi.data.models.base.GroupModel
 import ru.droptableusers.sampleapi.database.schema.GroupTable
+import ru.droptableusers.sampleapi.database.schema.UserTable.username
 
 class GroupPersistence {
-    fun select(username: String): GroupModel? {
+    fun select(id: Int): GroupModel? {
         return try {
             transaction {
                 GroupTable.selectAll()
-                    .where { GroupTable.username.eq(username) }
+                    .where { GroupTable.id.eq(id) }
                     .single()
                     .let {
                         GroupModel(
-                            username = username,
+                            id = id,
                             group = it[GroupTable.group]
                         )
                     }
@@ -29,7 +30,7 @@ class GroupPersistence {
         try {
             transaction {
                 GroupTable.insert {
-                    it[GroupTable.username] = groupModel.username
+                    it[GroupTable.id] = groupModel.id
                     it[GroupTable.group] = groupModel.group
                 }
             }

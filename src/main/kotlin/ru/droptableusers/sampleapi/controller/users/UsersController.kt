@@ -65,10 +65,10 @@ class UsersController(val call: ApplicationCall) {
                     birthdayDate = receive.birthdayDate,
                     id = 0
                 )
-            UserPersistence().insert(targetUserData)
+            val userModel = UserPersistence().insert(targetUserData)
             GroupPersistence().insert(
                 GroupModel(
-                    username = receive.username,
+                    id = userModel!!.id,
                     group = Group.NOT_VERIFIED
                 )
             )

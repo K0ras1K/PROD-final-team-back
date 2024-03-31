@@ -17,7 +17,7 @@ class AuthUsersController(call: ApplicationCall) : AbstractController(call) {
             lastName = userData.lastName,
             tgId = userData.tgLogin,
             registerAt = userData.regTime,
-            group = GroupPersistence().select(login)!!.group,
+            group = GroupPersistence().select(userData.id)!!.group,
             id = userData.id
         )
         call.respond(HttpStatusCode.OK, respondModel)

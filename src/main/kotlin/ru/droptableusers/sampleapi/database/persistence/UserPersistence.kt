@@ -15,8 +15,7 @@ import ru.droptableusers.sampleapi.database.schema.UserTable
  *
  * @author Roman K0ras1K Kalmykov
  */
-class
-UserPersistence {
+class UserPersistence {
 
     private fun resultRowToUserModel(row: ResultRow): UserModel =
         UserModel(
@@ -37,8 +36,8 @@ UserPersistence {
      * @param userModel
      * @author Roman K0ras1K Kalmykov
      */
-    fun insert(userModel: UserModel) {
-        try {
+    fun insert(userModel: UserModel): UserModel? {
+        return try {
             transaction {
                 UserTable.insert {
                     it[UserTable.username] = userModel.username
@@ -48,10 +47,13 @@ UserPersistence {
                     it[UserTable.birthdayDate] = userModel.birthdayDate
                     it[UserTable.tgLogin] = userModel.tgLogin
                     it[UserTable.regTime] = userModel.regTime
-                }
+                }.resultedValues!!.single().let (
+                    ::resultRowToUserModel
+                )
             }
         } catch (exception: Exception) {
             exception.printStackTrace()
+            null
         }
     }
 
