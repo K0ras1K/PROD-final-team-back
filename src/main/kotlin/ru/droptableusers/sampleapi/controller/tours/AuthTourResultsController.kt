@@ -18,10 +18,28 @@ class AuthTourResultsController(call: ApplicationCall) : AbstractController(call
                 tourName = it.name,
                 result = it.result
             ) }
-            call.respond(HttpStatusCode.OK, respondModels);
+            call.respond(HttpStatusCode.OK, respondModels)
         } catch (exception: Exception) {
             call.respond(HttpStatusCode.BadRequest, ErrorResponse(status = "Не передан корректный userId"))
         }
+    }
+
+    suspend fun getResultsByTourName() {
+        try {
+            val resultsList = ToursResultPersistence().selectByTourName(call.request.queryParameters["tourName"]!!)
+            val respondModels = resultsList.map { TourResultOutputResponse(
+                tourName = it.name,
+                result = it.result
+            ) }
+            call.respond(HttpStatusCode.OK, respondModels)
+        } catch (exception: Exception) {
+            call.respond(HttpStatusCode.BadRequest, ErrorResponse(status = "Не передан корректный tourName"))
+        }
+    }
+
+    suspend fun listTourNames() {
+        val resultsList = ToursResultPersistence().listAllNames()
+        call.respond(HttpStatusCode.OK, resultsList)
     }
 
 }

@@ -73,6 +73,12 @@ fun Application.configureRouting() {
                     get("/user") {
                         AuthTourResultsController(call).getResultsByUserId()
                     }
+                    get("/name") {
+                        AuthTourResultsController(call).getResultsByTourName()
+                    }
+                    get("/list") {
+                        AuthTourResultsController(call).listTourNames()
+                    }
                 }
             }
         }

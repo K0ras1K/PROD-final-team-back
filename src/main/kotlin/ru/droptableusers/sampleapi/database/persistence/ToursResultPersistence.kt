@@ -41,6 +41,29 @@ class ToursResultPersistence {
         }
     }
 
+    fun selectByTourName(tourName: String): List<TourResultModel> {
+        return try {
+            transaction {
+                ToursResultTable.selectAll()
+                    .where { ToursResultTable.name.eq(tourName) }
+                    .map(::resultRowToTourResult)
+            }
+        } catch (exception: Exception) {
+            listOf()
+        }
+    }
+
+    fun listAllNames(): List<String> {
+        return try {
+            transaction {
+                ToursResultTable.select(ToursResultTable.name)
+                    .map { it[ToursResultTable.name] }
+            }
+        } catch (exception: Exception) {
+            listOf()
+        }
+    }
+
     fun delete(userId: Int, tourName: String): Boolean {
         return try {
             transaction {
