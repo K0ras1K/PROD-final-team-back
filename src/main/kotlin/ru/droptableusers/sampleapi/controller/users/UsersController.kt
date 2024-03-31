@@ -25,9 +25,10 @@ class UsersController(val call: ApplicationCall) {
             println("after receive")
 
             val validations = mutableMapOf<String, ValidationStatus>()
+            println(receive)
 
             println("before validation")
-            validations["username"] = validateField(receive.username, 256, "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\\$")
+            validations["username"] = validateField(receive.username, 256, "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}\$")
             validations["password"] = validatePassword(receive.password)
 
             for (field in validations) {
