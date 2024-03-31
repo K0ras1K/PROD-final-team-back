@@ -1,4 +1,6 @@
 package ru.droptableusers.sampleapi.database.schema
 
-object SearchingForTable {
+import org.jetbrains.exposed.sql.Table
+
+object SearchingForTable: Table("searching_for") {
 }
