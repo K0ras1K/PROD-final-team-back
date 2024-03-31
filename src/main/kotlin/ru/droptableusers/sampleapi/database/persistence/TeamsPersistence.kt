@@ -128,8 +128,7 @@ class TeamsPersistence() {
                     .single()
                     .let(::getTeammateId)
             }
-        }
-        catch (exception: Exception) {
+        } catch (exception: Exception) {
             null
         }
     }

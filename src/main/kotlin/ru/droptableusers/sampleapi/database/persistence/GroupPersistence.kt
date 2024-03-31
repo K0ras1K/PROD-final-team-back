@@ -5,7 +5,6 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.droptableusers.sampleapi.data.models.base.GroupModel
 import ru.droptableusers.sampleapi.database.schema.GroupTable
-import ru.droptableusers.sampleapi.database.schema.UserTable.username
 
 class GroupPersistence {
     fun select(id: Int): GroupModel? {

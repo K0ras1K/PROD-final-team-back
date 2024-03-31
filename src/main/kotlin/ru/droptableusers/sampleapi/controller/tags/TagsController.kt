@@ -11,17 +11,17 @@ import ru.droptableusers.sampleapi.database.persistence.TagsPersistence
 import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
 
-class TagsController(call: ApplicationCall): AbstractController(call) {
+class TagsController(call: ApplicationCall) : AbstractController(call) {
 
-    private fun tagListByUserId(userId: Int): List<String>{
+    private fun tagListByUserId(userId: Int): List<String> {
         val tags = TagsPersistence().getTagsByIdList(UserPersistence().selectTagIds(userId))
-        return tags.map{it.tagString}
+        return tags.map { it.tagString }
     }
 
-    suspend fun getUserTags(){
+    suspend fun getUserTags() {
         runBlocking {
-           val userId = call.parameters["userId"]?.toInt()
-            if(userId != null){
+            val userId = call.parameters["userId"]?.toInt()
+            if (userId != null) {
                 call.respond(HttpStatusCode.OK, TagsOutput(tagListByUserId(userId)))
                 return@runBlocking
             }
@@ -29,12 +29,12 @@ class TagsController(call: ApplicationCall): AbstractController(call) {
         }
     }
 
-    suspend fun getTeamsTags(){
+    suspend fun getTeamsTags() {
         runBlocking {
             val teamId = call.parameters["teamId"]?.toInt()
-            if(teamId != null){
+            if (teamId != null) {
                 val tags = mutableSetOf<String>()
-                TeamsPersistence().selectTeammates(teamId).forEach{
+                TeamsPersistence().selectTeammates(teamId).forEach {
                     tags.addAll(tagListByUserId(it))
                 }
                 call.respond(HttpStatusCode.OK, TagsOutput(tags.toList()))

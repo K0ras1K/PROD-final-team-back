@@ -6,7 +6,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import ru.droptableusers.sampleapi.database.schema.ValidateDataTable
 
 class ValidateDataPersistence {
-    fun insert(firstName: String, lastName: String, birthdayDate: Long, email: String){
+    fun insert(firstName: String, lastName: String, birthdayDate: Long, email: String) {
         try {
             transaction {
                 ValidateDataTable.insert {
@@ -16,12 +16,12 @@ class ValidateDataPersistence {
                     it[ValidateDataTable.email] = email
                 }
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    fun delete(firstName: String, lastName: String, birthdayDate: Long, email: String): Boolean{
+    fun delete(firstName: String, lastName: String, birthdayDate: Long, email: String): Boolean {
         return try {
             transaction {
                 ValidateDataTable.deleteWhere {
@@ -31,12 +31,12 @@ class ValidateDataPersistence {
                             ValidateDataTable.email.eq(email)
                 } > 0
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             false
         }
     }
 
-    fun validate(firstName: String, lastName: String, birthdayDate: Long, email: String): Boolean{
+    fun validate(firstName: String, lastName: String, birthdayDate: Long, email: String): Boolean {
         return try {
             transaction {
                 ValidateDataTable.selectAll()
@@ -48,9 +48,9 @@ class ValidateDataPersistence {
                         ValidateDataTable.birthdayDate.eq(birthdayDate)
                     }.andWhere {
                         ValidateDataTable.email.eq(email)
-                    }.map{it}.isNotEmpty()
+                    }.map { it }.isNotEmpty()
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             false
         }
     }

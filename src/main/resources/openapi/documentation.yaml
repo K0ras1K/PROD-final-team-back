@@ -219,6 +219,43 @@ paths:
                   description: ""
                   value:
                     status: "Не передан корректный userId"
+  /1.0/users/invites/accept/{inviteId}:
+    post:
+      description: ""
+      parameters:
+      - name: "inviteId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /1.0/users/invites/apply/{userId}:
+    post:
+      description: ""
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+  /1.0/users/invites/load:
+    post:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/UserInvitesRespondModel"
   /1.0/users/login:
     post:
       description: ""
@@ -514,6 +551,16 @@ components:
           format: "int32"
       required:
       - "tour"
+    UserInvitesRespondModel:
+      type: "object"
+      properties:
+        team:
+          $ref: "#/components/schemas/SmallTeamRespondModel"
+        id:
+          type: "integer"
+          format: "int32"
+      required:
+      - "team"
     LoginInputModel:
       type: "object"
       properties:

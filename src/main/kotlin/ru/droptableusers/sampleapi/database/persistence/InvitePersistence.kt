@@ -30,7 +30,17 @@ class InvitePersistence {
     fun selectByTeamId(teamId: Int, status: InviteStatus): List<InviteModel> {
         return try {
             InviteTable.selectAll()
-                .where { InviteTable.teamId.eq(teamId) and InviteTable.type.eq(status)}
+                .where { InviteTable.teamId.eq(teamId) and InviteTable.type.eq(status) }
+                .map(::resultRowToInvite)
+        } catch (e: Exception) {
+            listOf()
+        }
+    }
+
+    fun selectModelsByUserId(userId: Int): List<InviteModel> {
+        return try {
+            InviteTable.selectAll()
+                .where { InviteTable.userId.eq(userId) and InviteTable.type.eq(InviteStatus.TO_USER) }
                 .map(::resultRowToInvite)
         } catch (e: Exception) {
             listOf()

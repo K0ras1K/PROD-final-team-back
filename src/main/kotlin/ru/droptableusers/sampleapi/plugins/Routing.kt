@@ -5,16 +5,14 @@ import io.ktor.server.auth.*
 import io.ktor.server.plugins.openapi.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import ru.droptableusers.sampleapi.controller.users.UsersController
 import ru.droptableusers.sampleapi.controller.HelloController
+import ru.droptableusers.sampleapi.controller.tags.TagsController
 import ru.droptableusers.sampleapi.controller.teams.AuthTeamsController
 import ru.droptableusers.sampleapi.controller.teams.PublicTeamsController
 import ru.droptableusers.sampleapi.controller.tours.AuthTourResultsController
 import ru.droptableusers.sampleapi.controller.users.AuthUsersController
-import ru.droptableusers.sampleapi.controller.tags.TagsController
+import ru.droptableusers.sampleapi.controller.users.UsersController
 import ru.droptableusers.sampleapi.controller.vacancies.VacancyController
-import ru.droptableusers.sampleapi.database.schema.ValidateDataTable
-import kotlin.math.round
 
 /**
  * Configure routing
@@ -48,13 +46,24 @@ fun Application.configureRouting() {
                     UsersController(call).login()
                 }
 
-                get("/tags/{userId}"){
+                get("/tags/{userId}") {
                     TagsController(call).getUserTags()
                 }
 
                 authenticate("auth-jwt") {
                     get("/my") {
                         AuthUsersController(call).get()
+                    }
+                    route("/invites") {
+                        post("/apply/{userId}") {
+                            AuthUsersController(call).apply()
+                        }
+                        post("/accept/{inviteId}") {
+                            AuthUsersController(call).accept()
+                        }
+                        post("/load") {
+                            AuthUsersController(call).getUserInvites()
+                        }
                     }
                 }
             }
@@ -63,7 +72,7 @@ fun Application.configureRouting() {
                     PublicTeamsController(call).loadAll()
                 }
 
-                get("/tags/{teamId}"){
+                get("/tags/{teamId}") {
                     TagsController(call).getTeamsTags()
                 }
 
@@ -88,8 +97,8 @@ fun Application.configureRouting() {
                     }
                 }
             }
-            route("/vacancy"){
-                get("/{id}"){
+            route("/vacancy") {
+                get("/{id}") {
                     VacancyController(call).get()
                 }
             }
