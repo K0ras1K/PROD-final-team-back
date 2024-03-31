@@ -2,6 +2,7 @@ package ru.droptableusers.sampleapi.controller.users
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import com.pengrad.telegrambot.request.SendMessage
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -10,6 +11,7 @@ import kotlinx.coroutines.runBlocking
 import org.mindrot.jbcrypt.BCrypt
 import ru.droptableusers.sampleapi.ApplicationConstants
 import ru.droptableusers.sampleapi.data.enums.Group
+import ru.droptableusers.sampleapi.data.enums.TelegramChat
 import ru.droptableusers.sampleapi.data.enums.ValidationStatus
 import ru.droptableusers.sampleapi.data.models.base.GroupModel
 import ru.droptableusers.sampleapi.data.models.base.UserModel
@@ -19,6 +21,9 @@ import ru.droptableusers.sampleapi.data.models.inout.output.ErrorResponse
 import ru.droptableusers.sampleapi.data.models.inout.output.TokenRespondOutput
 import ru.droptableusers.sampleapi.database.persistence.GroupPersistence
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
+import ru.droptableusers.sampleapi.database.persistence.ValidateDataPersistence
+import ru.droptableusers.sampleapi.tasks.Keyboard
+import ru.droptableusers.sampleapi.utils.DateUtils
 import java.util.*
 import java.util.regex.Pattern
 
@@ -47,7 +52,7 @@ class UsersController(val call: ApplicationCall) {
             if (UserPersistence().selectByUsername(receive.username) != null) {
                 call.respond(
                     HttpStatusCode.Conflict,
-                    ErrorResponse("Пользователь с таким логином уже зарегистрирован!")
+                    ErrorResponse("Пользователь с таким логином уже зарегистрирован!"),
                 )
                 return@runBlocking
             }
@@ -64,15 +69,42 @@ class UsersController(val call: ApplicationCall) {
                     lastName = receive.lastName,
                     birthdayDate = receive.birthdayDate,
                     id = 0,
-                    description = ""
+                    description = "",
                 )
             val userModel = UserPersistence().insert(targetUserData)
-            GroupPersistence().insert(
-                GroupModel(
-                    id = userModel!!.id,
-                    group = Group.NOT_VERIFIED
+            if (
+                !ValidateDataPersistence().validate(
+                    firstName = userModel!!.firstName,
+                    lastName = userModel.lastName,
+                    birthdayDate = userModel.birthdayDate,
+                    email = userModel.username,
                 )
-            )
+            ) {
+                GroupPersistence().insert(
+                    GroupModel(
+                        id = userModel!!.id,
+                        group = Group.NOT_VERIFIED,
+                    ),
+                )
+                TelegramChat.VERIFICATION.BOT.execute(
+                    SendMessage(
+                        TelegramChat.VERIFICATION.CHAT_ID,
+                        """
+                        Неизвестный пользователь.
+                        ${userModel.firstName} ${userModel.lastName}
+                        Дата рождения: ${DateUtils.getCurrentDateAsString(userModel.birthdayDate)}
+                        Почта: ${userModel.username}
+                        """.trimIndent(),
+                    ).replyMarkup(Keyboard.generateVerificationKeyboard(userModel.id)),
+                )
+            } else {
+                GroupPersistence().insert(
+                    GroupModel(
+                        id = userModel!!.id,
+                        group = Group.MEMBER,
+                    ),
+                )
+            }
             println("after insert")
 
             val token =
@@ -92,7 +124,7 @@ class UsersController(val call: ApplicationCall) {
             if (UserPersistence().selectByUsername(receive.username) == null) {
                 call.respond(
                     HttpStatusCode.Unauthorized,
-                    ErrorResponse("Пользователь с указанным логином и паролем не найден")
+                    ErrorResponse("Пользователь с указанным логином и паролем не найден"),
                 )
                 return@runBlocking
             }
@@ -102,7 +134,7 @@ class UsersController(val call: ApplicationCall) {
             if (!BCrypt.checkpw(receive.password, selectedUser.password)) {
                 call.respond(
                     HttpStatusCode.Unauthorized,
-                    ErrorResponse("Пользователь с указанным логином и паролем не найден")
+                    ErrorResponse("Пользователь с указанным логином и паролем не найден"),
                 )
                 return@runBlocking
             }

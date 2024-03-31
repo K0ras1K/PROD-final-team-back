@@ -49,6 +49,11 @@ dependencies {
 
     // DOTENV
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
+
+    //TELEGRAM
+    implementation("com.github.pengrad:java-telegram-bot-api:6.8.0")
+    implementation("org.telegram:telegrambots:5.3.0")
+
     // LOGGING
     implementation("ch.qos.logback:logback-classic:1.4.14")
     implementation("ch.qos.logback:logback-core:1.4.14")

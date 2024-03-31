@@ -1,5 +1,6 @@
 package ru.droptableusers.sampleapi.utils
 
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 /**
@@ -9,5 +10,5 @@ import org.slf4j.LoggerFactory
  * @author Roman K0ras1K Kalmykov
  */
 object Logger {
-    val logger = LoggerFactory.getLogger("DropTableUsers API")
+    val logger: Logger = LoggerFactory.getLogger("DropTableUsers API")
 }
