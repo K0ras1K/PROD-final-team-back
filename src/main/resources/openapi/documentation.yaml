@@ -122,7 +122,34 @@ paths:
   /1.0/teams/loadmy:
     get:
       description: ""
-  /1.0/tour-results/list:
+  /1.0/teams/tags/{teamId}:
+    get:
+      description: ""
+      parameters:
+      - name: "teamId"
+        in: "path"
+        required: true
+        schema:
+          type: "integer"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TagsOutput"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    status: "Не вписал userId"
+  /1.0/tours/list:
     get:
       description: ""
       responses:
@@ -133,12 +160,12 @@ paths:
               schema:
                 type: "array"
                 items:
-                  type: "string"
-  /1.0/tour-results/name:
+                  $ref: "#/components/schemas/TourOutputResponse"
+  /1.0/tours/results/name:
     get:
       description: ""
       parameters:
-      - name: "tourName"
+      - name: "tourId"
         in: "query"
         required: false
         schema:
@@ -162,8 +189,8 @@ paths:
                 Example#1:
                   description: ""
                   value:
-                    status: "Не передан корректный tourName"
-  /1.0/tour-results/user:
+                    status: "Не передан корректный tourId"
+  /1.0/tours/results/user:
     get:
       description: ""
       parameters:
@@ -266,6 +293,66 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/TokenRespondOutput"
+  /1.0/users/tags/{userId}:
+    get:
+      description: ""
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        schema:
+          type: "integer"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TagsOutput"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    status: "Не вписал userId"
+  /1.0/vacancy/{id}:
+    get:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "integer"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/VacancyRespond"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    status: "id == null"
   /java:
     get:
       description: ""
@@ -331,6 +418,9 @@ components:
           format: "int64"
         description:
           type: "string"
+        team:
+          type: "integer"
+          format: "int32"
       required:
       - "username"
       - "firstName"
@@ -382,16 +472,15 @@ components:
       required:
       - "team"
       - "users"
-    TourResultOutputResponse:
+    TagsOutput:
       type: "object"
       properties:
-        tourName:
-          type: "string"
-        result:
-          type: "number"
-          format: "float"
+        list:
+          type: "array"
+          items:
+            type: "string"
       required:
-      - "tourName"
+      - "list"
     ErrorResponse:
       type: "object"
       properties:
@@ -399,6 +488,32 @@ components:
           type: "string"
       required:
       - "status"
+    TourOutputResponse:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        year:
+          type: "integer"
+          format: "int32"
+        maxScore:
+          type: "integer"
+          format: "int32"
+      required:
+      - "name"
+    TourResultOutputResponse:
+      type: "object"
+      properties:
+        tour:
+          $ref: "#/components/schemas/TourOutputResponse"
+        result:
+          type: "number"
+          format: "float"
+        userId:
+          type: "integer"
+          format: "int32"
+      required:
+      - "tour"
     LoginInputModel:
       type: "object"
       properties:
@@ -438,3 +553,15 @@ components:
       - "tgLogin"
       - "firstName"
       - "lastName"
+    VacancyRespond:
+      type: "object"
+      properties:
+        teamId:
+          type: "integer"
+          format: "int32"
+        tags:
+          type: "array"
+          items:
+            type: "string"
+      required:
+      - "tags"
