@@ -8,12 +8,15 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import kotlinx.coroutines.runBlocking
 import org.mindrot.jbcrypt.BCrypt
+import ru.droptableusers.sampleapi.data.enums.Group
 import ru.droptableusers.sampleapi.data.enums.ValidationStatus
+import ru.droptableusers.sampleapi.data.models.base.GroupModel
 import ru.droptableusers.sampleapi.data.models.base.UserModel
 import ru.droptableusers.sampleapi.data.models.inout.input.users.LoginInputModel
 import ru.droptableusers.sampleapi.data.models.inout.input.users.RegisterInputModel
 import ru.droptableusers.sampleapi.data.models.inout.output.ErrorResponse
 import ru.droptableusers.sampleapi.data.models.inout.output.TokenRespondOutput
+import ru.droptableusers.sampleapi.database.persistence.GroupPersistence
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
 import java.util.*
 import java.util.regex.Pattern
@@ -62,6 +65,12 @@ class UsersController(val call: ApplicationCall) {
                     id = 0
                 )
             UserPersistence().insert(targetUserData)
+            GroupPersistence().insert(
+                GroupModel(
+                    username = receive.username,
+                    group = Group.NOT_VERIFIED
+                )
+            )
             println("after insert")
 
             val token =
