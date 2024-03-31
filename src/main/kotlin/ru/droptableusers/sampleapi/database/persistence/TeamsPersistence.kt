@@ -46,12 +46,19 @@ class TeamsPersistence() {
         }
     }
 
-    fun selectAll(limit: Int, offset: Long): List<TeamModel> {
+    fun selectAll(limit: Int? = null, offset: Long? = null): List<TeamModel> {
         return try {
-            transaction {
-                TeamTable.selectAll()
-                    .limit(limit, offset = offset)
-                    .map(::resultRowToTeamModel)
+            if (limit != null && offset != null){
+                transaction {
+                    TeamTable.selectAll()
+                        .limit(limit, offset = offset)
+                        .map(::resultRowToTeamModel)
+                }
+            } else {
+                transaction {
+                    TeamTable.selectAll()
+                        .map(::resultRowToTeamModel)
+                }
             }
         } catch (e: Exception) {
             listOf()

@@ -5,6 +5,7 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.droptableusers.sampleapi.data.models.base.UserModel
 import ru.droptableusers.sampleapi.database.schema.TagsUsersTable
+import ru.droptableusers.sampleapi.database.schema.TeamTable
 import ru.droptableusers.sampleapi.database.schema.UserTable
 
 /**
@@ -115,6 +116,18 @@ class UserPersistence {
             }
         } catch (e: Exception) {
             false
+        }
+    }
+
+    fun selectAllWithoutTeam(): List<UserModel>{
+        return try {
+            transaction {
+                val idList = TeamsPersistence().
+
+                listOf()
+            }
+        } catch (e: Exception){
+            listOf()
         }
     }
 
