@@ -26,7 +26,8 @@ class UserPersistence {
             firstName = row[UserTable.firstName],
             lastName = row[UserTable.lastName],
             birthdayDate = row[UserTable.birthdayDate],
-            id = row[UserTable.id].value
+            id = row[UserTable.id].value,
+            description = row[UserTable.description]
         )
 
 
@@ -47,6 +48,7 @@ class UserPersistence {
                     it[UserTable.birthdayDate] = userModel.birthdayDate
                     it[UserTable.tgLogin] = userModel.tgLogin
                     it[UserTable.regTime] = userModel.regTime
+                    it[UserTable.description] = userModel.description
                 }.resultedValues!!.single().let (
                     ::resultRowToUserModel
                 )
@@ -85,6 +87,7 @@ class UserPersistence {
                     it[UserTable.birthdayDate] = userModel.birthdayDate
                     it[UserTable.tgLogin] = userModel.tgLogin
                     it[UserTable.regTime] = userModel.regTime
+                    it[UserTable.description] = userModel.description
                 } > 0
             }
         } catch (exception: Exception) {

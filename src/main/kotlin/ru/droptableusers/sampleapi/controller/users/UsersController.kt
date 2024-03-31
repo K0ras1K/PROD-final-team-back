@@ -63,7 +63,8 @@ class UsersController(val call: ApplicationCall) {
                     firstName = receive.firstName,
                     lastName = receive.lastName,
                     birthdayDate = receive.birthdayDate,
-                    id = 0
+                    id = 0,
+                    description = ""
                 )
             val userModel = UserPersistence().insert(targetUserData)
             GroupPersistence().insert(

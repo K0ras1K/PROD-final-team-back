@@ -16,4 +16,5 @@ object UserTable : IntIdTable("users") {
     val lastName = varchar("last_name", 50)
     val birthdayDate = long("birthday_date")
     val regTime = long("reg_time")
+    val description = text("description")
 }
