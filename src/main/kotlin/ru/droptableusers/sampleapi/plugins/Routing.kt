@@ -7,6 +7,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import ru.droptableusers.sampleapi.UsersController
 import ru.droptableusers.sampleapi.controller.HelloController
+import ru.droptableusers.sampleapi.controller.users.AuthUsersController
 
 /**
  * Configure routing
@@ -38,6 +39,11 @@ fun Application.configureRouting() {
                 }
                 post("/login") {
                     UsersController(call).login()
+                }
+                authenticate("auth-jwt") {
+                    get("/my") {
+                        AuthUsersController(call).get()
+                    }
                 }
             }
             route("/teams") {

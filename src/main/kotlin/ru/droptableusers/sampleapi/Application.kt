@@ -38,9 +38,9 @@ fun Application.module() {
     }
     Initialization.init()
     configureSerialization()
-    configureRouting()
     configureJWT()
     configureSwagger()
+    configureRouting()
     Logger.logger.info("Successfully started api")
 }
 
