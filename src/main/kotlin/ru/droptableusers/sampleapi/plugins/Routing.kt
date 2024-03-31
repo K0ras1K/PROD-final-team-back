@@ -69,8 +69,10 @@ fun Application.configureRouting() {
                 }
             }
             route("/tour-results") {
-                get("/user") {
-                    AuthTourResultsController(call).getResultsByUserId()
+                authenticate("auth-jwt") {
+                    get("/user") {
+                        AuthTourResultsController(call).getResultsByUserId()
+                    }
                 }
             }
         }
