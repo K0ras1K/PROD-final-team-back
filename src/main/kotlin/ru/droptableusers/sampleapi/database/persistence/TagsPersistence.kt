@@ -41,6 +41,19 @@ class TagsPersistence {
         }
     }
 
+    fun selectByText(text: String): TagModel? {
+        return try {
+            transaction {
+                TagTable.selectAll()
+                    .where { TagTable.text.eq(text) }
+                    .single()
+                    .let(::resultRowToTag)
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     fun delete(id: Int): Boolean {
         return try {
             transaction {
