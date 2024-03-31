@@ -7,7 +7,7 @@ import ru.droptableusers.sampleapi.data.models.base.TeamModel
 import ru.droptableusers.sampleapi.database.schema.TeamTable
 import ru.droptableusers.sampleapi.database.schema.TeamsUsersTable
 
-class TeamsPersistance() {
+class TeamsPersistence() {
     private fun resultRowToTeamModel(resultRow: ResultRow) =
         TeamModel(
             id = resultRow[TeamTable.id].value,
@@ -118,6 +118,5 @@ class TeamsPersistance() {
             listOf()
         }
     }
-
 
 }

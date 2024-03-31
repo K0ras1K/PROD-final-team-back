@@ -7,16 +7,16 @@ import kotlinx.coroutines.runBlocking
 import ru.droptableusers.sampleapi.controller.AbstractController
 import ru.droptableusers.sampleapi.data.models.inout.output.ProfileOutputResponse
 import ru.droptableusers.sampleapi.data.models.inout.output.teams.TeamRespondModel
-import ru.droptableusers.sampleapi.database.persistence.TeamsPersistance
+import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
 
 class AuthTeamsController(call: ApplicationCall) : AbstractController(call) {
     suspend fun loadTeam() {
         runBlocking {
             val teamId = call.parameters["id"]!!.toInt()
-            val teamData = TeamsPersistance().selectById(teamId)
+            val teamData = TeamsPersistence().selectById(teamId)
             val users: List<ProfileOutputResponse> = UserPersistence().selectByIdList(
-                TeamsPersistance().selectTeammates(
+                TeamsPersistence().selectTeammates(
                     teamId
                 )
             ).map {
