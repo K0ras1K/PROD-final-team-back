@@ -15,7 +15,6 @@ class DatabaseInit {
     val tables: List<Table> =
         listOf(
             UserTable,
-            SearchingForTable,
             TagTable,
             TeamsUsersTable,
             TeamTable,
