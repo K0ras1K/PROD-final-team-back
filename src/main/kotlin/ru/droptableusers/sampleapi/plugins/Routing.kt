@@ -50,6 +50,14 @@ fun Application.configureRouting() {
                     TagsController(call).getUserTags()
                 }
 
+                post("/{userId}") {
+                    AuthUsersController(call).updateUser()
+                }
+
+                post("/{userId}/password") {
+                    AuthUsersController(call).updateUserPassword()
+                }
+
                 authenticate("auth-jwt") {
                     get("/my") {
                         AuthUsersController(call).get()

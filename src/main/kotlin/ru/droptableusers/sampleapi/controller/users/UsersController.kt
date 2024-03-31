@@ -24,6 +24,7 @@ import ru.droptableusers.sampleapi.database.persistence.UserPersistence
 import ru.droptableusers.sampleapi.database.persistence.ValidateDataPersistence
 import ru.droptableusers.sampleapi.tasks.Keyboard
 import ru.droptableusers.sampleapi.utils.DateUtils
+import ru.droptableusers.sampleapi.utils.Validation
 import java.util.*
 import java.util.regex.Pattern
 
@@ -37,8 +38,8 @@ class UsersController(val call: ApplicationCall) {
             println(receive)
 
             println("before validation")
-            validations["username"] = validateField(receive.username, 256, "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}\$")
-            validations["password"] = validatePassword(receive.password)
+            validations["username"] = Validation.validateField(receive.username, 256, "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}\$")
+            validations["password"] = Validation.validatePassword(receive.password)
 
             for (field in validations) {
                 if (field.value != ValidationStatus.ACCEPTED) {
@@ -149,36 +150,4 @@ class UsersController(val call: ApplicationCall) {
         }
     }
 
-    private fun validateField(
-        field: String,
-        maxLength: Int?,
-        pattern: String?,
-    ): ValidationStatus {
-        if (field == "") {
-            return ValidationStatus.ACCEPTED
-        }
-        if (maxLength != null && field.length > maxLength) {
-            return ValidationStatus.INVALID_LENGTH
-        }
-        if (pattern != null && !Pattern.matches(pattern, field)) {
-            return ValidationStatus.INVALID_FORMAT
-        }
-        return ValidationStatus.ACCEPTED
-    }
-
-    private fun validatePassword(password: String): ValidationStatus {
-        val lowercasePattern = Regex("[a-z]")
-        val uppercasePattern = Regex("[A-Z]")
-        val digitPattern = Regex("\\d")
-
-        return when {
-            password.length < 6 -> ValidationStatus.INVALID_LENGTH
-            password.length > 100 -> ValidationStatus.INVALID_LENGTH
-            !lowercasePattern.containsMatchIn(
-                password,
-            ) || !uppercasePattern.containsMatchIn(password) || !digitPattern.containsMatchIn(password) -> ValidationStatus.INVALID_FORMAT
-
-            else -> ValidationStatus.ACCEPTED
-        }
-    }
 }
