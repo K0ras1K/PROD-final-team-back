@@ -3,7 +3,9 @@ package ru.droptableusers.sampleapi.database.persistence
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
+import ru.droptableusers.sampleapi.data.models.base.TagModel
 import ru.droptableusers.sampleapi.data.models.base.UserModel
+import ru.droptableusers.sampleapi.database.schema.TagsUsersTable
 import ru.droptableusers.sampleapi.database.schema.UserTable
 
 /**
@@ -105,6 +107,20 @@ class UserPersistence() {
                     .map(::resultRowToUserModel)
             }
         } catch (exception: Exception) {
+            listOf()
+        }
+    }
+
+    fun selectTagIds(userId: Int): List<Int>{
+        return try {
+            transaction {
+                TagsUsersTable.selectAll()
+                    .where { TagsUsersTable.userId eq userId}
+                    .map {
+                        it[TagsUsersTable.tagId].value
+                    }
+            }
+        } catch (e: Exception){
             listOf()
         }
     }

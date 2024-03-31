@@ -19,11 +19,13 @@ class TeamsPersistance() {
 
     fun insert(teamModel: TeamModel){
         try {
-            TeamTable.insert {
-                it[TeamTable.name] = teamModel.name
-                it[TeamTable.description] = teamModel.description
-                it[TeamTable.iconUrl] = teamModel.iconUrl
-                it[TeamTable.bannerUrl] = teamModel.bannerUrl
+            transaction {
+                TeamTable.insert {
+                    it[TeamTable.name] = teamModel.name
+                    it[TeamTable.description] = teamModel.description
+                    it[TeamTable.iconUrl] = teamModel.iconUrl
+                    it[TeamTable.bannerUrl] = teamModel.bannerUrl
+                }
             }
         } catch (e: Exception){
             e.printStackTrace()
@@ -81,9 +83,11 @@ class TeamsPersistance() {
 
     fun addMember(userId: Int, teamId: Int){
         try {
-            TeamsUsersTable.insert {
-                it[TeamsUsersTable.userId] = userId
-                it[TeamsUsersTable.teamId] = teamId
+            transaction {
+                TeamsUsersTable.insert {
+                    it[TeamsUsersTable.userId] = userId
+                    it[TeamsUsersTable.teamId] = teamId
+                }
             }
         } catch (e: Exception){
             e.printStackTrace()
