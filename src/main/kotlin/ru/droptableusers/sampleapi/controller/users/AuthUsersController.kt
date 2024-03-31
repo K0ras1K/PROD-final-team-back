@@ -6,6 +6,7 @@ import io.ktor.server.response.*
 import ru.droptableusers.sampleapi.controller.AbstractController
 import ru.droptableusers.sampleapi.data.models.inout.output.ProfileOutputResponse
 import ru.droptableusers.sampleapi.database.persistence.GroupPersistence
+import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
 
 class AuthUsersController(call: ApplicationCall) : AbstractController(call) {
@@ -19,7 +20,8 @@ class AuthUsersController(call: ApplicationCall) : AbstractController(call) {
             registerAt = userData.regTime,
             group = GroupPersistence().select(userData.id)!!.group,
             id = userData.id,
-            description = userData.description
+            description = userData.description,
+            team = TeamsPersistence().selectByUserId(userData.id) ?: -1
         )
         call.respond(HttpStatusCode.OK, respondModel)
     }
