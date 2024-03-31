@@ -1,1 +1,0 @@
-memberSearchIndex = [{"p":"ru.droptableusers.sampleapi","c":"TestJavaClass","l":"sayHello()"},{"p":"ru.droptableusers.sampleapi","c":"TestJavaClass","l":"TestJavaClass()","u":"%3Cinit%3E()"}];updateSearchResults();
