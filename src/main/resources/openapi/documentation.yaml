@@ -215,12 +215,26 @@ components:
     ProfileOutputResponse:
       type: "object"
       properties:
+        id:
+          type: "integer"
+          format: "int32"
         username:
           type: "string"
         firstName:
           type: "string"
         lastName:
           type: "string"
+        group:
+          type: "string"
+          enum:
+          - "ADMIN"
+          - "MEMBER"
+          - "OLD_MEMBER"
+          - "NOT_VERIFIED"
+          - "MENTOR"
+          - "JURY"
+          - "ORGANIZER"
+          - "PRODUCT"
         tgId:
           type: "string"
         registerAt:
@@ -230,6 +244,7 @@ components:
       - "username"
       - "firstName"
       - "lastName"
+      - "group"
       - "tgId"
     TeamRespondModel:
       type: "object"
