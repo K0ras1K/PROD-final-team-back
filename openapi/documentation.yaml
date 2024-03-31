@@ -4,7 +4,7 @@ info:
   description: "SampleAPI API"
   version: "1.0.0"
 servers:
-  - url: "https://SampleAPI"
+  - url: "https://api.ethereally.space"
 paths:
   /:
     get:
@@ -71,6 +71,16 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/TokenRespondOutput"
+  /1.0/users/my:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ProfileOutputResponse"
   /1.0/users/register:
     post:
       description: ""
@@ -153,6 +163,25 @@ components:
           type: "string"
       required:
         - "token"
+    ProfileOutputResponse:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        tgId:
+          type: "string"
+        registerAt:
+          type: "integer"
+          format: "int64"
+      required:
+        - "username"
+        - "firstName"
+        - "lastName"
+        - "tgId"
     RegisterInputModel:
       type: "object"
       properties:
