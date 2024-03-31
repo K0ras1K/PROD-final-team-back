@@ -26,7 +26,7 @@ class TeamsPersistance() {
                 it[TeamTable.bannerUrl] = teamModel.bannerUrl
             }
         } catch (e: Exception){
-
+            e.printStackTrace()
         }
     }
 
@@ -69,13 +69,34 @@ class TeamsPersistance() {
         }
     }
 
+    fun removeMember(userId: Int): Boolean{
+        return try {
+            transaction {
+                TeamsUsersTable.deleteWhere { TeamsUsersTable.userId.eq(id) } > 0
+            }
+        } catch (e: Exception){
+            false
+        }
+    }
+
+    fun addMember(userId: Int, teamId: Int){
+        try {
+            TeamsUsersTable.insert {
+                it[TeamsUsersTable.userId] = userId
+                it[TeamsUsersTable.teamId] = teamId
+            }
+        } catch (e: Exception){
+            e.printStackTrace()
+        }
+    }
+
     private fun getTeammateId(resultRow: ResultRow): Int = resultRow[TeamsUsersTable.userId].value
 
     fun selectTeammates(id: Int): List<Int>{
         return try {
             transaction {
-                TeamTable.selectAll()
-                    .where{TeamTable.id.eq(id)}
+                TeamsUsersTable.selectAll()
+                    .where{TeamsUsersTable.teamId.eq(id)}
                     .map(::getTeammateId)
             }
         } catch (e: Exception){
