@@ -8,6 +8,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
 import ru.droptableusers.sampleapi.ApplicationConstants
+import ru.droptableusers.sampleapi.data.models.inout.output.ErrorResponse
 
 fun Application.configureJWT() {
     install(Authentication) {
@@ -21,7 +22,7 @@ fun Application.configureJWT() {
                 }
             }
             challenge { defaultScheme, realm ->
-                call.respond(HttpStatusCode.Unauthorized, "Token is not valid or has expired")
+                call.respond(HttpStatusCode.Unauthorized, ErrorResponse("Token is not valid or has expired"))
             }
         }
     }

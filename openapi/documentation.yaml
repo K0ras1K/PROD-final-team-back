@@ -1,10 +1,10 @@
 openapi: "3.0.3"
 info:
-  title: "Ethereally API"
-  description: "Ethereally API"
+  title: "SampleAPI API"
+  description: "SampleAPI API"
   version: "1.0.0"
 servers:
-  - url: "https://api.ethereally.space"
+  - url: "https://SampleAPI"
 paths:
   /:
     get:
@@ -25,9 +25,43 @@ paths:
   /1.0/teams/create:
     post:
       description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/CreateTeamRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "integer"
+                format: "int32"
   /1.0/teams/load:
     get:
       description: ""
+      parameters:
+        - name: "limit"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "offset"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/SmallTeamRespondModel"
   /1.0/teams/load/{id}:
     get:
       description: ""
@@ -37,6 +71,13 @@ paths:
           required: true
           schema:
             type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TeamRespondModel"
   /1.0/teams/loadmy:
     get:
       description: ""
@@ -139,6 +180,69 @@ paths:
                   value: "Hello from Kotlin!"
 components:
   schemas:
+    CreateTeamRequest:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        description:
+          type: "string"
+      required:
+        - "name"
+        - "description"
+    SmallTeamRespondModel:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int32"
+        name:
+          type: "string"
+        description:
+          type: "string"
+        iconUrl:
+          type: "string"
+        bannerUrl:
+          type: "string"
+        membersCount:
+          type: "integer"
+          format: "int32"
+      required:
+        - "name"
+        - "description"
+        - "iconUrl"
+        - "bannerUrl"
+    ProfileOutputResponse:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        tgId:
+          type: "string"
+        registerAt:
+          type: "integer"
+          format: "int64"
+      required:
+        - "username"
+        - "firstName"
+        - "lastName"
+        - "tgId"
+    TeamRespondModel:
+      type: "object"
+      properties:
+        team:
+          $ref: "#/components/schemas/SmallTeamRespondModel"
+        users:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/ProfileOutputResponse"
+      required:
+        - "team"
+        - "users"
     LoginInputModel:
       type: "object"
       properties:
@@ -163,25 +267,6 @@ components:
           type: "string"
       required:
         - "token"
-    ProfileOutputResponse:
-      type: "object"
-      properties:
-        username:
-          type: "string"
-        firstName:
-          type: "string"
-        lastName:
-          type: "string"
-        tgId:
-          type: "string"
-        registerAt:
-          type: "integer"
-          format: "int64"
-      required:
-        - "username"
-        - "firstName"
-        - "lastName"
-        - "tgId"
     RegisterInputModel:
       type: "object"
       properties:

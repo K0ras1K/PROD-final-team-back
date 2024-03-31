@@ -27,6 +27,7 @@ UserPersistence {
             firstName = row[UserTable.firstName],
             lastName = row[UserTable.lastName],
             birthdayDate = row[UserTable.birthdayDate],
+            id = row[UserTable.id].value
         )
 
 
