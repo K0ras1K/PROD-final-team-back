@@ -5,7 +5,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.plugins.openapi.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import ru.droptableusers.sampleapi.UsersController
+import ru.droptableusers.sampleapi.controller.users.UsersController
 import ru.droptableusers.sampleapi.controller.HelloController
 import ru.droptableusers.sampleapi.controller.teams.AuthTeamsController
 import ru.droptableusers.sampleapi.controller.teams.PublicTeamsController

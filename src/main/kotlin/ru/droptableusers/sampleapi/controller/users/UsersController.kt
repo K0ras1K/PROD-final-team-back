@@ -1,4 +1,4 @@
-package ru.droptableusers.sampleapi
+package ru.droptableusers.sampleapi.controller.users
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
@@ -8,6 +8,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import kotlinx.coroutines.runBlocking
 import org.mindrot.jbcrypt.BCrypt
+import ru.droptableusers.sampleapi.ApplicationConstants
 import ru.droptableusers.sampleapi.data.enums.Group
 import ru.droptableusers.sampleapi.data.enums.ValidationStatus
 import ru.droptableusers.sampleapi.data.models.base.GroupModel
@@ -77,7 +78,7 @@ class UsersController(val call: ApplicationCall) {
                 JWT.create()
                     .withClaim("username", targetUserData.username)
                     .withClaim("passwordHash", targetUserData.password)
-                    .withExpiresAt(Date(System.currentTimeMillis() + 60 * 60 * 60 * 24 * 60))
+                    .withExpiresAt(Date(System.currentTimeMillis() + 1000L * 60L * 60L * 24L * 14L))
                     .sign(Algorithm.HMAC256(ApplicationConstants.SERVICE_SECRET_TOKEN))
             call.respond(HttpStatusCode.Created, TokenRespondOutput(token))
         }
