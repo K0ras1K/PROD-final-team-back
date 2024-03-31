@@ -6,6 +6,8 @@ import io.ktor.server.plugins.openapi.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import ru.droptableusers.sampleapi.controller.HelloController
+import ru.droptableusers.sampleapi.controller.files.AuthUploadController
+import ru.droptableusers.sampleapi.controller.files.PublicDownloadController
 import ru.droptableusers.sampleapi.controller.tags.TagsController
 import ru.droptableusers.sampleapi.controller.teams.AuthTeamsController
 import ru.droptableusers.sampleapi.controller.teams.PublicTeamsController
@@ -33,11 +35,12 @@ fun Application.configureRouting() {
             call.respondText("Hello from Kotlin!")
         }
 
-//        post("/1.0/users/register") {
-//            UsersController(call).register()
-//        }
-
         route("/1.0") {
+            route("/public") {
+                get("/{folder_name}/{file_name}") {
+                    PublicDownloadController(call).donwload()
+                }
+            }
             route("/users") {
                 post("/register") {
                     UsersController(call).register()
@@ -101,7 +104,6 @@ fun Application.configureRouting() {
                         AuthTeamsController(call).loadRequests()
                     }
                     get("/loadmy") {
-
                     }
                 }
             }
@@ -122,7 +124,15 @@ fun Application.configureRouting() {
                         AuthTourResultsController(call).listTours()
                     }
                 }
-
+            }
+            route("/files") {
+                route("/upload") {
+                    authenticate("auth-jwt") {
+                        post("/pdf") {
+                            AuthUploadController(call).uploadPdfFile()
+                        }
+                    }
+                }
             }
         }
     }
