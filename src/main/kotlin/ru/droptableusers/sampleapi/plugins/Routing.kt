@@ -9,6 +9,7 @@ import ru.droptableusers.sampleapi.controller.users.UsersController
 import ru.droptableusers.sampleapi.controller.HelloController
 import ru.droptableusers.sampleapi.controller.teams.AuthTeamsController
 import ru.droptableusers.sampleapi.controller.teams.PublicTeamsController
+import ru.droptableusers.sampleapi.controller.tours.AuthTourResultsController
 import ru.droptableusers.sampleapi.controller.users.AuthUsersController
 
 /**
@@ -65,6 +66,11 @@ fun Application.configureRouting() {
                     get("/loadmy") {
 
                     }
+                }
+            }
+            route("/tour-results") {
+                get("/user") {
+                    AuthTourResultsController(call).getResultsByUserId()
                 }
             }
         }
