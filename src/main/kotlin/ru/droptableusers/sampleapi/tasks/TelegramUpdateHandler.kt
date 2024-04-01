@@ -2,8 +2,6 @@ package ru.droptableusers.sampleapi.tasks
 
 import com.pengrad.telegrambot.UpdatesListener
 import com.pengrad.telegrambot.model.CallbackQuery
-import com.pengrad.telegrambot.model.ChosenInlineResult
-import com.pengrad.telegrambot.model.InlineQuery
 import com.pengrad.telegrambot.model.Message
 import com.pengrad.telegrambot.model.Update
 import com.pengrad.telegrambot.request.GetUpdates
@@ -26,9 +24,11 @@ object TelegramUpdateHandler {
         for (update in updates) {
             println(update)
             try {
-                val inlineQuery: InlineQuery? = update.inlineQuery()
-                val chosenInlineResult: ChosenInlineResult? = update.chosenInlineResult()
-                val callbackQuery: CallbackQuery? = update.callbackQuery() ?: continue
+                val callbackQuery: CallbackQuery? = update.callbackQuery()
+                val message: Message? = update.message()
+                if (message != null) {
+                    println(message.text())
+                }
                 if (callbackQuery!!.data().startsWith("verif-")) {
                     val userId: Int = callbackQuery.data().split("-")[1].toInt()
                     println("Кнопка бана сработала!")
@@ -53,12 +53,6 @@ object TelegramUpdateHandler {
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-            }
-            try {
-                val message: Message = update.message() ?: continue
-                println(message.text())
-            } catch (exception: Exception) {
-                exception.printStackTrace()
             }
         }
     }
