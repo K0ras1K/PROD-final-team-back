@@ -18,7 +18,45 @@ paths:
                 type: "string"
               examples:
                 Example#1:
-                  value: "DropTableUsers API 1.0"
+                  value: "DropTableUsers API 1.0."
+  /1.0/admin/analytics/tour/{tourId}:
+    get:
+      description: ""
+      parameters:
+      - name: "tourId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "403":
+          description: "Forbidden"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TourAnalyticResponse"
+  /1.0/admin/analytics/user/{id}:
+    get:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "integer"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserAnalyticResponse"
   /1.0/admin/groups/set:
     post:
       description: ""
@@ -377,6 +415,13 @@ paths:
         required: true
         schema:
           type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
   /1.0/users/invites/load:
     get:
       description: ""
@@ -609,6 +654,61 @@ paths:
                     status: "id == null"
 components:
   schemas:
+    TourScoreAnalyticResponse:
+      type: "object"
+      properties:
+        height:
+          type: "number"
+          format: "float"
+        count:
+          type: "integer"
+          format: "int32"
+    TourAnalyticResponse:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        averageMedian:
+          type: "number"
+          format: "float"
+        averageAlgebraic:
+          type: "number"
+          format: "float"
+        users:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/TourScoreAnalyticResponse"
+      required:
+      - "name"
+      - "users"
+    UserTourAnalyticResponse:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        score:
+          type: "number"
+          format: "float"
+        maxScore:
+          type: "integer"
+          format: "int32"
+      required:
+      - "name"
+    UserAnalyticResponse:
+      type: "object"
+      properties:
+        tours:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/UserTourAnalyticResponse"
+        averageMedian:
+          type: "number"
+          format: "float"
+        averageAlgebraic:
+          type: "number"
+          format: "float"
+      required:
+      - "tours"
     GroupSetRequestModel:
       type: "object"
       properties:
@@ -675,6 +775,12 @@ components:
           format: "int64"
         description:
           type: "string"
+        major:
+          type: "string"
+          enum:
+          - "BACKEND"
+          - "FRONTEND"
+          - "MOBILE"
         team:
           type: "integer"
           format: "int32"
@@ -685,6 +791,7 @@ components:
       - "group"
       - "tgId"
       - "description"
+      - "major"
     InvitesRespondModel:
       type: "object"
       properties:
@@ -837,12 +944,19 @@ components:
         birthdayDate:
           type: "integer"
           format: "int64"
+        major:
+          type: "string"
+          enum:
+          - "BACKEND"
+          - "FRONTEND"
+          - "MOBILE"
       required:
       - "username"
       - "password"
       - "tgLogin"
       - "firstName"
       - "lastName"
+      - "major"
     RemoveUserInputModel:
       type: "object"
       properties:
