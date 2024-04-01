@@ -67,10 +67,9 @@ fun Application.configureRouting() {
                     get("/my") {
                         AuthUsersController(call).get()
                     }
-                    post("/invites/apply/{userId}") {
-                        AuthUsersController(call).apply()
-                    }
-                    route("/invites") {
+                }
+                route("/invites") {
+                    authenticate("auth-jwt") {
                         post("/apply/{userId}") {
                             AuthUsersController(call).apply()
                         }
