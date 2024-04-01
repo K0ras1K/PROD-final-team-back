@@ -3,7 +3,7 @@ run-name: Run application via docker compose
 on: [push]
 jobs:
   test-run:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: ${{ fromJSON(vars.DEFAULT_JOB_TIMEOUT) }}
     steps:
       - uses: actions/checkout@v4
@@ -34,7 +34,7 @@ jobs:
         shell: bash
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: test-run
     steps:
       - name: Checkout Code
