@@ -158,6 +158,9 @@ fun Application.configureRouting() {
                         get("/list") {
                             AdminDocumentsController(call).listDocuments()
                         }
+                        post("/create") {
+                            AdminDocumentsController(call).addDocument()
+                        }
                     }
                     route("/analytics") {
                         get("/tour/{tourId}") {
