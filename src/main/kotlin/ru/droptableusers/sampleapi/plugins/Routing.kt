@@ -5,7 +5,6 @@ import io.ktor.server.auth.*
 import io.ktor.server.plugins.openapi.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import ru.droptableusers.sampleapi.controller.HelloController
 import ru.droptableusers.sampleapi.controller.files.AuthUploadController
 import ru.droptableusers.sampleapi.controller.files.PublicDownloadController
 import ru.droptableusers.sampleapi.controller.tags.TagsController
@@ -28,9 +27,6 @@ fun Application.configureRouting() {
         get("/") {
             call.respondText("Hello World!")
         }
-        get("/kotlin") {
-            call.respondText("Hello from Kotlin!")
-        }
 
         route("/1.0") {
             route("/public") {
@@ -50,11 +46,11 @@ fun Application.configureRouting() {
                     TagsController(call).getUserTags()
                 }
 
-                post("/tags/{userId}"){
+                post("/tags/{userId}") {
                     TagsController(call).addUserTags()
                 }
 
-                delete("/tags/{userId}"){
+                delete("/tags/{userId}") {
                     TagsController(call).removeUserTag()
                 }
 
@@ -92,7 +88,6 @@ fun Application.configureRouting() {
                     TagsController(call).getTeamsTags()
                 }
 
-
                 authenticate("auth-jwt") {
                     post("/create") {
                         AuthTeamsController(call).createTeam()
@@ -117,7 +112,7 @@ fun Application.configureRouting() {
                 get("/{id}") {
                     VacancyController(call).get()
                 }
-                post{
+                post {
                     VacancyController(call).add()
                 }
                 delete("/{id}") {
