@@ -21,16 +21,17 @@ class TourAnalyticController(call: ApplicationCall) : AbstractController(call) {
             if (GroupPersistence().select(user.id)!!.group.ordinal > Group.MENTOR.ordinal) {
                 call.respond(HttpStatusCode.Forbidden)
             } else {
-                call.respond(HttpStatusCode.OK, getTourAnalyticById(tourId))
+                val tagId = call.parameters["tagId"]?.toInt() ?: -1
+                call.respond(HttpStatusCode.OK, getTourAnalyticByIdAndTagId(tourId, tagId))
             }
         }
     }
 
-    private fun getTourAnalyticById(tourId: Int): TourAnalyticResponse {
+    private fun getTourAnalyticByIdAndTagId(tourId: Int, tagId: Int): TourAnalyticResponse {
         val averageAlgebraic = TourAnalytics.handleAverageAlgebraic(tourId)
         val averageMedian = TourAnalytics.handleAverageMedian(tourId)
 
-        val scores = TourAnalytics.handleGraph(tourId, 5)
+        val scores = TourAnalytics.handleGraph(tourId, 5, tagId)
 
         return TourAnalyticResponse(
             users = scores.values.toList(),
