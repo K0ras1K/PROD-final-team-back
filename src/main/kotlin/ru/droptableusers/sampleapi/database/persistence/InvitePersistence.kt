@@ -22,7 +22,7 @@ class InvitePersistence {
                 InviteTable.insert {
                     it[InviteTable.teamId] = inviteModel.teamId
                     it[InviteTable.userId] = inviteModel.userId
-                    it[InviteTable.type] = type
+                    it[InviteTable.type] = inviteModel.type
                 }
             }
         } catch (e: Exception) {
