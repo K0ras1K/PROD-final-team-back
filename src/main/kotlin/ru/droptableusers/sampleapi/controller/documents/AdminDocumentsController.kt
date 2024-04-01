@@ -9,6 +9,7 @@ import ru.droptableusers.sampleapi.controller.AbstractController
 import ru.droptableusers.sampleapi.data.models.base.DocumentConditionModel
 import ru.droptableusers.sampleapi.data.models.base.DocumentModel
 import ru.droptableusers.sampleapi.data.models.inout.input.documents.DocumentCreateInput
+import ru.droptableusers.sampleapi.data.models.inout.input.documents.DocumentUpdateInput
 import ru.droptableusers.sampleapi.data.models.inout.output.ErrorResponse
 import ru.droptableusers.sampleapi.data.models.inout.output.documents.DocumentConditionOutputResponse
 import ru.droptableusers.sampleapi.data.models.inout.output.documents.DocumentOutputResponse
@@ -75,18 +76,65 @@ class AdminDocumentsController(call: ApplicationCall) : AbstractController(call)
                 template = inputDocument.template,
                 extensions = inputDocument.extensions.joinToString(",")
             )
-            val document = DocumentsPersistence().insertDocument(documentModel)
+            val document = DocumentsPersistence().insertDocument(documentModel)!!
+            val conditions = mutableSetOf<DocumentConditionModel>()
             inputDocument.conditions.forEach {
                 val conditionModel = DocumentConditionModel(
                     id = 0,
-                    documentId = document!!.id,
+                    documentId = document.id,
                     fieldName = it.fieldName,
                     condition = it.condition,
                     value = it.value
                 )
-                DocumentsPersistence().insertDocumentCondition(conditionModel)
+                conditions.add(DocumentsPersistence().insertDocumentCondition(conditionModel)!!)
             }
-            call.respond(HttpStatusCode.OK, "{\"id\": "+ document!!.id + "}")
+            val response = DocumentOutputResponse(
+                id = document.id,
+                name = document.name,
+                description = document.description,
+                required = document.required,
+                template = document.template,
+                extensions = inputDocument.extensions,
+                conditions = conditions.map {
+                    DocumentConditionOutputResponse(
+                        id = it.id,
+                        fieldName = it.fieldName,
+                        condition = it.condition,
+                        value = it.value
+                    )
+                }
+            )
+            call.respond(HttpStatusCode.OK, response)
+        }
+    }
+
+    suspend fun editDocument() {
+        runBlocking {
+            if (userGroup.group.ordinal > 1) {
+                call.respond(HttpStatusCode.Forbidden, ErrorResponse("Forbidden"))
+                return@runBlocking
+            }
+            val inputDocument = call.receive<DocumentUpdateInput>()
+            val documentModel = DocumentModel(
+                id = inputDocument.id,
+                name = inputDocument.name,
+                description = inputDocument.description,
+                required = inputDocument.required,
+                template = inputDocument.template,
+                extensions = inputDocument.extensions.joinToString(",")
+            )
+            DocumentsPersistence().updateDocument(documentModel)
+            inputDocument.conditions.forEach {
+                val conditionModel = DocumentConditionModel(
+                    id = it.id,
+                    documentId = inputDocument.id,
+                    fieldName = it.fieldName,
+                    condition = it.condition,
+                    value = it.value
+                )
+                DocumentsPersistence().updateDocumentCondition(conditionModel)
+            }
+            call.respond(HttpStatusCode.OK, "{\"success\": true}")
         }
     }
 
