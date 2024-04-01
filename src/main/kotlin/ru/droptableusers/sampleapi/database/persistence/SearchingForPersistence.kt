@@ -14,16 +14,15 @@ class SearchingForPersistence {
             teamId = resultRow[SearchingForTable.teamId].value,
         )
 
-    fun selectByTeamId(teamId: Int): SearchingForModel? {
+    fun selectByTeamId(teamId: Int): List<SearchingForModel> {
         return try {
             transaction {
                 SearchingForTable.selectAll()
                     .where { SearchingForTable.teamId.eq(teamId) }
-                    .single()
-                    .let(::resultRowToSearchingFor)
+                    .map(::resultRowToSearchingFor)
             }
         } catch (e: Exception) {
-            null
+            listOf()
         }
     }
 
