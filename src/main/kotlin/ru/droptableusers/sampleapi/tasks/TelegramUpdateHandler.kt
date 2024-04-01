@@ -16,6 +16,7 @@ import ru.droptableusers.sampleapi.data.enums.TelegramChat
 import ru.droptableusers.sampleapi.data.models.base.GroupModel
 import ru.droptableusers.sampleapi.database.persistence.GroupPersistence
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
+import ru.droptableusers.sampleapi.telegram.handler.TextHandler
 
 object TelegramUpdateHandler {
     var updateId: Int = 0
@@ -28,6 +29,7 @@ object TelegramUpdateHandler {
                 val message: Message? = update.message()
                 if (message != null) {
                     println(message.text())
+                    TextHandler(message).handle()
                 }
                 if (callbackQuery != null) {
                     if (callbackQuery!!.data().startsWith("verif-")) {
