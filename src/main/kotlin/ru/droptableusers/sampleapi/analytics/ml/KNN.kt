@@ -6,24 +6,24 @@ import ru.droptableusers.sampleapi.data.models.base.TeamModel
 
 object KNN {
     fun sort(
-        teams: Map<TeamModel, List<String>>,
-        tags: List<String>,
-    ): List<TeamModel> {
+        teams: Map<TeamModel, Set<String>>,
+        tags: Set<String>,
+    ): Set<TeamModel> {
         val result = mutableMapOf<TeamModel, Double>()
         teams.forEach { (k, v) ->
             result[k] = sort(v, tags)
         }
 
         result.toList().sortedBy { (_, value) -> value }
-        return result.keys.toList()
+        return result.keys
     }
 
     /**
      * @return average distance
      */
     private fun sort(
-        teamTags: List<String>,
-        tags: List<String>,
+        teamTags: Set<String>,
+        tags: Set<String>,
     ): Double {
         val neighbors = mutableMapOf<String, Double>()
         tags.forEach { tag ->
@@ -41,7 +41,6 @@ object KNN {
 
         neighbors.toList().sortedBy { (_, value) -> value }.toMap()
 
-        // нужно вернуть среднее первых 3-х значений (если их меньше, то тех, которые есть)
         var sum = 0.0
         var n = 0
         neighbors.forEach {
