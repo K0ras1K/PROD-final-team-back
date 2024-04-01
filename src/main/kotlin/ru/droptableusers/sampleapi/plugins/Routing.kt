@@ -28,9 +28,6 @@ fun Application.configureRouting() {
         get("/") {
             call.respondText("Hello World!")
         }
-        get("/java") {
-            call.respondText(HelloController.handle(call))
-        }
         get("/kotlin") {
             call.respondText("Hello from Kotlin!")
         }
