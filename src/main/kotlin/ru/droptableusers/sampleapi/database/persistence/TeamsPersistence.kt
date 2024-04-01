@@ -121,6 +121,8 @@ class TeamsPersistence() {
 
     private fun getTeammateId(resultRow: ResultRow): Int = resultRow[TeamsUsersTable.userId].value
 
+    private fun getTeamId(resultRow: ResultRow): Int = resultRow[TeamsUsersTable.teamId].value
+
     fun selectTeammates(id: Int): List<Int> {
         return try {
             transaction {
@@ -139,7 +141,7 @@ class TeamsPersistence() {
                 TeamsUsersTable.selectAll()
                     .where { TeamsUsersTable.userId.eq(id) }
                     .single()
-                    .let(::getTeammateId)
+                    .let(::getTeamId)
             }
         } catch (exception: Exception) {
             null
