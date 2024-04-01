@@ -19,7 +19,9 @@ import ru.droptableusers.sampleapi.data.models.inout.input.users.LoginInputModel
 import ru.droptableusers.sampleapi.data.models.inout.input.users.RegisterInputModel
 import ru.droptableusers.sampleapi.data.models.inout.output.ErrorResponse
 import ru.droptableusers.sampleapi.data.models.inout.output.TokenRespondOutput
+import ru.droptableusers.sampleapi.data.models.inout.output.users.ProfileOutputResponse
 import ru.droptableusers.sampleapi.database.persistence.GroupPersistence
+import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
 import ru.droptableusers.sampleapi.database.persistence.ValidateDataPersistence
 import ru.droptableusers.sampleapi.tasks.Keyboard
@@ -120,6 +122,24 @@ class UsersController(val call: ApplicationCall) {
         }
     }
 
+    suspend fun selectWithoutTeam(){
+        val outputList = UserPersistence().allUsersWithoutTeam().map {
+            ProfileOutputResponse(
+                username = it.username,
+                firstName = it.firstName,
+                lastName = it.lastName,
+                tgLogin = it.tgLogin,
+                registerAt = it.regTime,
+                group = GroupPersistence().select(it.id)!!.group,
+                id = it.id,
+                description = it.description,
+                team = TeamsPersistence().selectByUserId(it.id) ?: -1,
+                major = it.major,
+            )
+        }
+        call.respond(HttpStatusCode.OK, outputList)
+    }
+
     suspend fun login() {
         runBlocking {
             val receive = call.receive<LoginInputModel>()
@@ -152,4 +172,5 @@ class UsersController(val call: ApplicationCall) {
             call.respond(TokenRespondOutput(token))
         }
     }
+
 }
