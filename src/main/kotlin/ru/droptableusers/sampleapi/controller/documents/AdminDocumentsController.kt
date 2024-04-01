@@ -138,4 +138,12 @@ class AdminDocumentsController(call: ApplicationCall) : AbstractController(call)
         }
     }
 
+    suspend fun deleteDocument() {
+        runBlocking {
+            val documentId = call.parameters["documentId"]!!.toInt()
+            DocumentsPersistence().deleteDocumentById(documentId)
+            call.respond(HttpStatusCode.OK, "{\"success\": true}")
+        }
+    }
+
 }
