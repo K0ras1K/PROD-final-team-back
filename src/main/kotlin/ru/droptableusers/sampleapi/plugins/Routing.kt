@@ -50,15 +50,15 @@ fun Application.configureRouting() {
                     TagsController(call).addUserTags()
                 }
 
-                delete("/tags/{userId}") {
+                delete("/tags") {
                     TagsController(call).removeUserTag()
                 }
 
-                post("/{userId}") {
+                patch("/{userId}") {
                     AuthUsersController(call).updateUser()
                 }
 
-                post("/{userId}/password") {
+                patch("/{userId}/password") {
                     AuthUsersController(call).updateUserPassword()
                 }
 
@@ -73,7 +73,7 @@ fun Application.configureRouting() {
                         post("/accept/{inviteId}") {
                             AuthUsersController(call).accept()
                         }
-                        post("/load") {
+                        get("/load") {
                             AuthUsersController(call).getUserInvites()
                         }
                     }

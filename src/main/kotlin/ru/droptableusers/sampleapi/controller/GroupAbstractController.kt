@@ -9,9 +9,7 @@ import ru.droptableusers.sampleapi.database.schema.GroupTable.group
 import ru.droptableusers.sampleapi.utils.GroupUtils
 
 abstract class GroupAbstractController(call: ApplicationCall) : AbstractController(call) {
-    suspend fun validateGroup(group: Group) {
-        if (!GroupUtils.hasGroup(login, group)) {
-            call.respond(HttpStatusCode.BadRequest, ErrorResponse("У вас недостаточно прав!"))
-        }
-    }
+    suspend fun validateGroup(group: Group): Boolean
+        = GroupUtils.hasGroup(login, group)
+
 }

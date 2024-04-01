@@ -160,6 +160,7 @@ class UserPersistence {
         try {
             transaction {
                 TagsUsersTable.insert {
+                    it[TagsUsersTable.id] = "$tagId/$userId"
                     it[TagsUsersTable.tagId] = tagId
                     it[TagsUsersTable.userId] = userId
                 }

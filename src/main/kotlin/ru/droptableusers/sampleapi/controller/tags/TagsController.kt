@@ -8,6 +8,7 @@ import kotlinx.coroutines.runBlocking
 import ru.droptableusers.sampleapi.data.models.inout.input.tags.AddUserTagsInputModel
 import ru.droptableusers.sampleapi.data.models.inout.input.tags.RemoveUserInputModel
 import ru.droptableusers.sampleapi.data.models.inout.output.ErrorResponse
+import ru.droptableusers.sampleapi.data.models.inout.output.tags.TagObjectOutput
 import ru.droptableusers.sampleapi.data.models.inout.output.tags.TagsOutput
 import ru.droptableusers.sampleapi.database.persistence.TagsPersistence
 import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
@@ -16,9 +17,11 @@ import ru.droptableusers.sampleapi.database.schema.UserTable
 
 class TagsController(val call: ApplicationCall) {
 
-    private fun tagListByUserId(userId: Int): List<String>{
+    private fun tagListByUserId(userId: Int): List<TagObjectOutput>{
         val tags = TagsPersistence().getTagsByIdList(UserPersistence().selectTagIds(userId))
-        return tags.map{it.tagString}
+        return tags.map{
+            TagObjectOutput(it.id, it.tagString)
+        }
     }
 
     suspend fun getUserTags(){
@@ -55,7 +58,7 @@ class TagsController(val call: ApplicationCall) {
         runBlocking {
             val teamId = call.parameters["teamId"]?.toInt()
             if(teamId != null){
-                val tags = mutableSetOf<String>()
+                val tags = mutableSetOf<TagObjectOutput>()
                 TeamsPersistence().selectTeammates(teamId).forEach{
                     tags.addAll(tagListByUserId(it))
                 }

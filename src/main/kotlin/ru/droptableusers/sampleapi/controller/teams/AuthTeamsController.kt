@@ -12,6 +12,7 @@ import ru.droptableusers.sampleapi.data.enums.InviteStatus
 import ru.droptableusers.sampleapi.data.models.base.InviteModel
 import ru.droptableusers.sampleapi.data.models.base.TeamModel
 import ru.droptableusers.sampleapi.data.models.inout.input.teams.CreateTeamRequest
+import ru.droptableusers.sampleapi.data.models.inout.output.ErrorResponse
 import ru.droptableusers.sampleapi.data.models.inout.output.ProfileOutputResponse
 import ru.droptableusers.sampleapi.data.models.inout.output.teams.InvitesRespondModel
 import ru.droptableusers.sampleapi.data.models.inout.output.teams.SmallTeamRespondModel
@@ -66,7 +67,10 @@ class AuthTeamsController(call: ApplicationCall) : GroupAbstractController(call)
     suspend fun createTeam() {
         runBlocking {
             // Проверка на наличие группы
-            validateGroup(Group.MEMBER)
+            if(!validateGroup(Group.MEMBER)){
+                call.respond(HttpStatusCode.BadRequest, ErrorResponse("У вас недостаточно прав!"))
+                return@runBlocking
+            }
             val receive = call.receive<CreateTeamRequest>()
 
             val targetTeamData =
