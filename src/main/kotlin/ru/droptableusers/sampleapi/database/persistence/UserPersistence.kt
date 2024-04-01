@@ -144,6 +144,18 @@ class UserPersistence {
         }
     }
 
+    fun allUsersWithoutTeam(): List<UserModel>{
+        return try {
+            transaction {
+                UserTable.selectAll()
+                    .where {TagsUsersTable.userId.notInList(TeamsPersistence().selectAllMembers())}
+                    .map(::resultRowToUserModel)
+            }
+        } catch (e: Exception){
+            listOf()
+        }
+    }
+
     fun addTag(userId: Int, tagId: Int){
         try {
             transaction {

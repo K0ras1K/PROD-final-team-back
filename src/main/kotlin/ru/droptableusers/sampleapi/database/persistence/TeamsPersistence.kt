@@ -139,4 +139,15 @@ class TeamsPersistence() {
         }
     }
 
+    fun selectAllMembers(): List<Int>{
+        return try {
+            transaction {
+                TeamsUsersTable.selectAll()
+                    .map(::getTeammateId)
+            }
+        } catch (e: Exception) {
+            listOf()
+        }
+    }
+
 }
