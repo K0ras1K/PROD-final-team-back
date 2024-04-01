@@ -24,23 +24,25 @@ import ru.droptableusers.sampleapi.database.persistence.GroupPersistence
 import ru.droptableusers.sampleapi.database.persistence.InvitePersistence
 import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
+import ru.droptableusers.sampleapi.utils.Logger
 import ru.droptableusers.sampleapi.utils.Validation
 import java.util.*
 
 class AuthUsersController(call: ApplicationCall) : AbstractController(call) {
     suspend fun get() {
         val userData = UserPersistence().selectByUsername(login)!!
-        val respondModel = ProfileOutputResponse(
-            username = login,
-            firstName = userData.firstName,
-            lastName = userData.lastName,
-            tgId = userData.tgLogin,
-            registerAt = userData.regTime,
-            group = GroupPersistence().select(userData.id)!!.group,
-            id = userData.id,
-            description = userData.description,
-            team = TeamsPersistence().selectByUserId(userData.id) ?: -1
-        )
+        val respondModel =
+            ProfileOutputResponse(
+                username = login,
+                firstName = userData.firstName,
+                lastName = userData.lastName,
+                tgId = userData.tgLogin,
+                registerAt = userData.regTime,
+                group = GroupPersistence().select(userData.id)!!.group,
+                id = userData.id,
+                description = userData.description,
+                team = TeamsPersistence().selectByUserId(userData.id) ?: -1,
+            )
         call.respond(HttpStatusCode.OK, respondModel)
     }
 
@@ -77,19 +79,22 @@ class AuthUsersController(call: ApplicationCall) : AbstractController(call) {
         }
     }
 
-    //Send team request to user
+    // Send team request to user
     suspend fun apply() {
         runBlocking {
             val userId = call.parameters["userId"]!!.toInt()
+            Logger.logger.info("UserId - $userId")
             val teamId = TeamsPersistence().selectByUserId(UserPersistence().selectByUsername(login)!!.id)!!
+            Logger.logger.info("TeamId - $teamId")
             InvitePersistence().insert(
                 InviteModel(
                     id = 0,
                     teamId = teamId,
                     userId = userId,
-                    type = InviteStatus.TO_USER
-                )
+                    type = InviteStatus.TO_USER,
+                ),
             )
+            call.respond(HttpStatusCode.OK)
         }
     }
 
@@ -109,21 +114,22 @@ class AuthUsersController(call: ApplicationCall) : AbstractController(call) {
             val userId = UserPersistence().selectByUsername(login)!!.id
             val invites = InvitePersistence().selectModelsByUserId(userId)
 
-            val respondModel = invites.map {
-                UserInvitesRespondModel(
-                    TeamsPersistence().selectById(it.teamId).let { team ->
-                        SmallTeamRespondModel(
-                            id = team!!.id,
-                            name = team.name,
-                            description = team.description,
-                            iconUrl = team.iconUrl,
-                            bannerUrl = team.bannerUrl,
-                            membersCount = TeamsPersistence().selectTeammates(team.id).size
-                        )
-                    },
-                    it.id
-                )
-            }
+            val respondModel =
+                invites.map {
+                    UserInvitesRespondModel(
+                        TeamsPersistence().selectById(it.teamId).let { team ->
+                            SmallTeamRespondModel(
+                                id = team!!.id,
+                                name = team.name,
+                                description = team.description,
+                                iconUrl = team.iconUrl,
+                                bannerUrl = team.bannerUrl,
+                                membersCount = TeamsPersistence().selectTeammates(team.id).size,
+                            )
+                        },
+                        it.id,
+                    )
+                }
             call.respond(HttpStatusCode.OK, respondModel)
         }
     }
