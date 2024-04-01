@@ -12,7 +12,6 @@ import ru.droptableusers.sampleapi.database.persistence.GroupPersistence
 import ru.droptableusers.sampleapi.database.persistence.ToursPersistence
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
 
-// TODO add to Route (& check class)
 class TourAnalyticController(call: ApplicationCall) : AbstractController(call) {
     suspend fun getTourAnalytic() {
         runBlocking {
@@ -22,16 +21,17 @@ class TourAnalyticController(call: ApplicationCall) : AbstractController(call) {
                 call.respond(HttpStatusCode.Forbidden)
             } else {
                 val tagId = call.parameters["tagId"]?.toInt() ?: -1
-                call.respond(HttpStatusCode.OK, getTourAnalyticByIdAndTagId(tourId, tagId))
+                val step = call.parameters["step"]?.toInt() ?: 5
+                call.respond(HttpStatusCode.OK, getTourAnalyticByIdAndTagId(tourId, step, tagId))
             }
         }
     }
 
-    private fun getTourAnalyticByIdAndTagId(tourId: Int, tagId: Int): TourAnalyticResponse {
-        val averageAlgebraic = TourAnalytics.handleAverageAlgebraic(tourId)
-        val averageMedian = TourAnalytics.handleAverageMedian(tourId)
+    private fun getTourAnalyticByIdAndTagId(tourId: Int, step: Int, tagId: Int): TourAnalyticResponse {
+        val averageAlgebraic = TourAnalytics.handleAverageAlgebraic(tourId, tagId)
+        val averageMedian = TourAnalytics.handleAverageMedian(tourId, tagId)
 
-        val scores = TourAnalytics.handleGraph(tourId, 5, tagId)
+        val scores = TourAnalytics.handleGraph(tourId, step, tagId)
 
         return TourAnalyticResponse(
             users = scores.values.toList(),
