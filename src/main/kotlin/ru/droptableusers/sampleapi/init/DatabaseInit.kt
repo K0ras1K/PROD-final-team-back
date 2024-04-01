@@ -23,11 +23,12 @@ class DatabaseInit {
             SearchingForTable,
             TagsUsersTable,
             ToursResultTable,
+            TelegramsTable,
             ValidateDataTable,
             SearchingForTagsTable,
             DocumentsTable,
             DocumentConditionsTable,
-            FilledDocumentsTable
+            FilledDocumentsTable,
         )
 
     /**
