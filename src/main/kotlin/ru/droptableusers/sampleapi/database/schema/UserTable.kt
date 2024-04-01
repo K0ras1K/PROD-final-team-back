@@ -16,7 +16,7 @@ object UserTable : IntIdTable("users") {
     val firstName = varchar("first_name", 40)
     val lastName = varchar("last_name", 50)
     val birthdayDate = long("birthday_date")
-    val major = enumerationByName("major", 20, Major::class)
+    val major = enumerationByName("major", 20, Major::class).nullable()
     val regTime = long("reg_time")
     val description = text("description")
 }

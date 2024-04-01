@@ -18,6 +18,7 @@ import ru.droptableusers.sampleapi.controller.tours.AuthTourResultsController
 import ru.droptableusers.sampleapi.controller.users.AuthUsersController
 import ru.droptableusers.sampleapi.controller.users.UsersController
 import ru.droptableusers.sampleapi.controller.vacancies.VacancyController
+import ru.droptableusers.sampleapi.utils.Logger
 
 /**
  * Configure routing
@@ -77,6 +78,7 @@ fun Application.configureRouting() {
                             AuthUsersController(call).apply()
                         }
                         post("/accept/{inviteId}") {
+                            println("хуй")
                             AuthUsersController(call).accept()
                         }
                         get("/load") {

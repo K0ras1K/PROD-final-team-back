@@ -1,23 +1,25 @@
+@file:Suppress("LABEL_NAME_CLASH")
+
 package ru.droptableusers.sampleapi.analytics.ml;
 
-import de.nycode.bcrypt.verify
-import io.ktor.server.http.content.*
-import ru.droptableusers.sampleapi.data.models.base.GroupModel
 import ru.droptableusers.sampleapi.data.models.base.TeamModel
 
-@Suppress("LABEL_NAME_CLASH")
-class KNN {
+object KNN {
 
-    fun sort(teams: Map<TeamModel, List<String>>, tags: List<String>) {
-        val distances = mutableListOf<Double>()
+    fun sort(teams: Map<TeamModel, List<String>>, tags: List<String>) : List<TeamModel> {
         val result = mutableMapOf<TeamModel, Double>()
+        teams.forEach { (k, v) ->
+            result[k] = sort(v, tags)
+        }
 
+        result.toList().sortedBy { (_, value) -> value }
+        return result.keys.toList()
     }
 
     /**
      * @return average distance
      */
-    fun sort(teamTags: List<String>, tags: List<String>): Double {
+    private fun sort(teamTags: List<String>, tags: List<String>): Double {
         val neighbors = mutableMapOf<String, Double>()
         tags.forEach { tag ->
             val vector = getVector(tag) ?: return@forEach
@@ -44,6 +46,7 @@ class KNN {
         return sum / neighbors.size
     }
 
+    // TODO dataset
     private fun getVector(tag: String) : Vector? {
         return when (tag) {
             "python" -> Vector(tag, 1.0, 0.0, 0.0)

@@ -102,10 +102,13 @@ class AuthUsersController(call: ApplicationCall) : AbstractController(call) {
     suspend fun accept() {
         runBlocking {
             val inviteId = call.parameters["inviteId"]!!.toInt()
-
+            Logger.logger.info("inviteId - $inviteId")
             val inviteData = InvitePersistence().selectById(inviteId)!!
+            Logger.logger.info("1. inviteData - $inviteData")
             InvitePersistence().delete(inviteId)
+            Logger.logger.info("2. inviteData - $inviteData")
             TeamsPersistence().addMember(inviteData.userId, inviteData.teamId)
+            Logger.logger.info("3. inviteData - $inviteData")
             call.respond(HttpStatusCode.OK)
         }
     }
