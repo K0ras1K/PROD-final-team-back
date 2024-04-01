@@ -33,6 +33,7 @@ class KNN {
 
         neighbors.toList().sortedBy { (_, value) -> value }.toMap()
 
+        // нужно вернуть среднее первых 3-х значений (если их меньше, то тех, которые есть)
         var sum = 0.0
         var n = 0
         neighbors.forEach {

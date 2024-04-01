@@ -7,7 +7,7 @@ object MainKeyboard {
     fun generate(): InlineKeyboardMarkup {
         return InlineKeyboardMarkup(
             arrayOf(
-                InlineKeyboardButton("Мой профиль").callbackData("show-profile"),
+                InlineKeyboardButton("\uD83E\uDDD1\u200D\uD83D\uDCBC Мой профиль").callbackData("show-profile"),
             ),
             arrayOf(
                 InlineKeyboardButton("Команды").callbackData("show-teams"),
