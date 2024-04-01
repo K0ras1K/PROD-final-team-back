@@ -13,7 +13,7 @@ class TagsPersistence {
     private fun resultRowToTag(resultRow: ResultRow) =
         TagModel(
             id = resultRow[TagTable.id].value,
-            tagString = resultRow[TagTable.text]
+            tagString = resultRow[TagTable.text],
         )
 
     fun insert(tagString: String) {

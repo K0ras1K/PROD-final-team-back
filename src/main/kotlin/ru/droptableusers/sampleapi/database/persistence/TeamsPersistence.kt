@@ -14,7 +14,7 @@ class TeamsPersistence() {
             name = resultRow[TeamTable.name],
             description = resultRow[TeamTable.description],
             iconUrl = resultRow[TeamTable.iconUrl],
-            bannerUrl = resultRow[TeamTable.bannerUrl]
+            bannerUrl = resultRow[TeamTable.bannerUrl],
         )
 
     fun insert(teamModel: TeamModel): Int? {
@@ -45,9 +45,13 @@ class TeamsPersistence() {
             null
         }
     }
-    fun selectAll(limit: Int? = null, offset: Long? = null): List<TeamModel> {
+
+    fun selectAll(
+        limit: Int? = null,
+        offset: Long? = null,
+    ): List<TeamModel> {
         return try {
-            if (limit != null && offset != null){
+            if (limit != null && offset != null) {
                 transaction {
                     TeamTable.selectAll()
                         .limit(limit, offset = offset)
@@ -99,7 +103,10 @@ class TeamsPersistence() {
         }
     }
 
-    fun addMember(userId: Int, teamId: Int) {
+    fun addMember(
+        userId: Int,
+        teamId: Int,
+    ) {
         try {
             transaction {
                 TeamsUsersTable.insert {
@@ -139,7 +146,7 @@ class TeamsPersistence() {
         }
     }
 
-    fun selectAllMembers(): List<Int>{
+    fun selectAllMembers(): List<Int> {
         return try {
             transaction {
                 TeamsUsersTable.selectAll()
@@ -149,5 +156,4 @@ class TeamsPersistence() {
             listOf()
         }
     }
-
 }

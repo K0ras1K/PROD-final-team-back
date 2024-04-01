@@ -5,6 +5,8 @@ import io.ktor.server.auth.*
 import io.ktor.server.plugins.openapi.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import ru.droptableusers.sampleapi.controller.analytics.TourAnalyticController
+import ru.droptableusers.sampleapi.controller.analytics.UserAnalyticController
 import ru.droptableusers.sampleapi.controller.files.AuthUploadController
 import ru.droptableusers.sampleapi.controller.files.PublicDownloadController
 import ru.droptableusers.sampleapi.controller.groups.AuthGroupController
@@ -149,6 +151,14 @@ fun Application.configureRouting() {
                     route("/groups") {
                         post("/set") {
                             AuthGroupController(call).setGroup()
+                        }
+                    }
+                    route("/analytics") {
+                        get("/tour/{tourId}") {
+                            TourAnalyticController(call).getTourAnalytic()
+                        }
+                        get("/user/{id}") {
+                            UserAnalyticController(call).getUserAnalytic()
                         }
                     }
                 }

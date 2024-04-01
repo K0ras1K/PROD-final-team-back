@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class TourResultOutputResponse(
     val tour: TourOutputResponse,
     val result: Float,
-    val userId: Int
+    val userId: Int,
 )

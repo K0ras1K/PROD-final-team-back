@@ -4,5 +4,5 @@ import ru.droptableusers.sampleapi.data.enums.Group
 
 data class GroupModel(
     val id: Int,
-    val group: Group
+    val group: Group,
 )

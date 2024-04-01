@@ -3,7 +3,6 @@ package ru.droptableusers.sampleapi.analytics
 import ru.droptableusers.sampleapi.database.persistence.ToursPersistence
 
 object UserAnalytics {
-
     /**
      * @return percent
      *
@@ -27,5 +26,4 @@ object UserAnalytics {
 
         return AnalyticsUtil.averageMedian(results)
     }
-
 }

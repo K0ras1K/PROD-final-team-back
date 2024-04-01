@@ -6,5 +6,5 @@ import ru.droptableusers.sampleapi.data.models.inout.output.teams.SmallTeamRespo
 @Serializable
 data class UserInvitesRespondModel(
     val team: SmallTeamRespondModel,
-    val id: Int
+    val id: Int,
 )

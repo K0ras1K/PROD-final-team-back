@@ -6,7 +6,12 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import ru.droptableusers.sampleapi.database.schema.ValidateDataTable
 
 class ValidateDataPersistence {
-    fun insert(firstName: String, lastName: String, birthdayDate: Long, email: String) {
+    fun insert(
+        firstName: String,
+        lastName: String,
+        birthdayDate: Long,
+        email: String,
+    ) {
         try {
             transaction {
                 ValidateDataTable.insert {
@@ -21,14 +26,19 @@ class ValidateDataPersistence {
         }
     }
 
-    fun delete(firstName: String, lastName: String, birthdayDate: Long, email: String): Boolean {
+    fun delete(
+        firstName: String,
+        lastName: String,
+        birthdayDate: Long,
+        email: String,
+    ): Boolean {
         return try {
             transaction {
                 ValidateDataTable.deleteWhere {
                     ValidateDataTable.firstName.eq(firstName) and
-                            ValidateDataTable.lastName.eq(lastName) and
-                            ValidateDataTable.birthdayDate.eq(birthdayDate) and
-                            ValidateDataTable.email.eq(email)
+                        ValidateDataTable.lastName.eq(lastName) and
+                        ValidateDataTable.birthdayDate.eq(birthdayDate) and
+                        ValidateDataTable.email.eq(email)
                 } > 0
             }
         } catch (e: Exception) {
@@ -36,7 +46,12 @@ class ValidateDataPersistence {
         }
     }
 
-    fun validate(firstName: String, lastName: String, birthdayDate: Long, email: String): Boolean {
+    fun validate(
+        firstName: String,
+        lastName: String,
+        birthdayDate: Long,
+        email: String,
+    ): Boolean {
         return try {
             transaction {
                 ValidateDataTable.selectAll()

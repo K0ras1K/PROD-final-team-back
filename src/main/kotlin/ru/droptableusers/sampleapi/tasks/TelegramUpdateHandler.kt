@@ -24,8 +24,8 @@ object TelegramUpdateHandler {
     fun handle(updates: List<Update>) {
         println("Started handling updates")
         for (update in updates) {
-            println(update.toString())
             try {
+                val message = update.message()
                 val inlineQuery: InlineQuery? = update.inlineQuery()
                 val chosenInlineResult: ChosenInlineResult? = update.chosenInlineResult()
                 val callbackQuery: CallbackQuery? = update.callbackQuery() ?: return

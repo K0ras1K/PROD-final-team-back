@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class EditUserModel(
     val description: String,
-    val tgLogin: String
+    val tgLogin: String,
 )

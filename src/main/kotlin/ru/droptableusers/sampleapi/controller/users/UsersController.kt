@@ -26,7 +26,6 @@ import ru.droptableusers.sampleapi.tasks.Keyboard
 import ru.droptableusers.sampleapi.utils.DateUtils
 import ru.droptableusers.sampleapi.utils.Validation
 import java.util.*
-import java.util.regex.Pattern
 
 class UsersController(val call: ApplicationCall) {
     suspend fun register() {
@@ -38,7 +37,8 @@ class UsersController(val call: ApplicationCall) {
             println(receive)
 
             println("before validation")
-            validations["username"] = Validation.validateField(receive.username, 256, "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}\$")
+            validations["username"] =
+                Validation.validateField(receive.username, 256, "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}\$")
             validations["password"] = Validation.validatePassword(receive.password)
 
             for (field in validations) {
@@ -71,6 +71,7 @@ class UsersController(val call: ApplicationCall) {
                     birthdayDate = receive.birthdayDate,
                     id = 0,
                     description = "",
+                    major = receive.major,
                 )
             val userModel = UserPersistence().insert(targetUserData)
             if (
@@ -151,5 +152,4 @@ class UsersController(val call: ApplicationCall) {
             call.respond(TokenRespondOutput(token))
         }
     }
-
 }
