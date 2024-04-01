@@ -25,7 +25,7 @@ fun Application.configureRouting() {
         openAPI(path = "openapi", swaggerFile = "openapi/documentation.yaml")
 
         get("/") {
-            call.respondText("Hello World!")
+            call.respondText("DropTableUsers API 1.0")
         }
 
         route("/1.0") {
