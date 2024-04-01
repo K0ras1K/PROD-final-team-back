@@ -2,8 +2,7 @@ package ru.droptableusers.sampleapi.tasks
 
 import com.pengrad.telegrambot.UpdatesListener
 import com.pengrad.telegrambot.model.CallbackQuery
-import com.pengrad.telegrambot.model.ChosenInlineResult
-import com.pengrad.telegrambot.model.InlineQuery
+import com.pengrad.telegrambot.model.Message
 import com.pengrad.telegrambot.model.Update
 import com.pengrad.telegrambot.request.GetUpdates
 import com.pengrad.telegrambot.request.SendMessage
@@ -22,31 +21,36 @@ object TelegramUpdateHandler {
     var updateId: Int = 0
 
     fun handle(updates: List<Update>) {
-        println("Started handling updates")
         for (update in updates) {
+            println(update)
             try {
-                val message = update.message()
-                val inlineQuery: InlineQuery? = update.inlineQuery()
-                val chosenInlineResult: ChosenInlineResult? = update.chosenInlineResult()
-                val callbackQuery: CallbackQuery? = update.callbackQuery() ?: return
-                if (callbackQuery!!.data().startsWith("verif-")) {
-                    val userId: Int = callbackQuery.data().split("-")[1].toInt()
-                    println("Кнопка бана сработала!")
-                    val groupData = GroupPersistence().select(userId)!!
-                    val userModel = UserPersistence().selectById(userId)!!
-                    if (groupData.group == Group.NOT_VERIFIED) {
-                        GroupPersistence().update(
-                            GroupModel(
-                                id = groupData.id,
-                                group = Group.MEMBER,
-                            ),
-                        )
-                        TelegramChat.VERIFICATION.BOT.execute(
-                            SendMessage(
-                                TelegramChat.VERIFICATION.CHAT_ID,
-                                "Пользователь ${userModel.firstName} ${userModel.lastName} верифицирован",
-                            ),
-                        )
+                val callbackQuery: CallbackQuery? = update.callbackQuery()
+                val message: Message? = update.message()
+                if (message != null) {
+                    println(message.text())
+                }
+                if (callbackQuery != null) {
+                    if (callbackQuery!!.data().startsWith("verif-")) {
+                        val userId: Int = callbackQuery.data().split("-")[1].toInt()
+                        println("Кнопка бана сработала!")
+                        val groupData = GroupPersistence().select(userId)!!
+                        val userModel = UserPersistence().selectById(userId)!!
+                        if (groupData.group == Group.NOT_VERIFIED) {
+                            GroupPersistence().update(
+                                GroupModel(
+                                    id = groupData.id,
+                                    group = Group.MEMBER,
+                                ),
+                            )
+                            TelegramChat.VERIFICATION.BOT.execute(
+                                SendMessage(
+                                    TelegramChat.VERIFICATION.CHAT_ID,
+                                    "Пользователь ${userModel.firstName} ${userModel.lastName} верифицирован",
+                                ),
+                            )
+                        }
+                    }
+                    if (callbackQuery.data().startsWith("show-teams")) {
                     }
                 }
             } catch (e: Exception) {
