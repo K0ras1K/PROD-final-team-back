@@ -13,7 +13,7 @@ services:
       - global
 
   sampleapi:
-    build: .
+    image: ghcr.io/k0ras1k/droptableusers-api:latest
     container_name: sampleapi
     depends_on:
       - postgres
