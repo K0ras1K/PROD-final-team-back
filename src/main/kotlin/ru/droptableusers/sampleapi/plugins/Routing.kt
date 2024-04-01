@@ -53,6 +53,14 @@ fun Application.configureRouting() {
                     TagsController(call).getUserTags()
                 }
 
+                post("/tags/{userId}"){
+                    TagsController(call).addUserTags()
+                }
+
+                delete("/tags/{userId}"){
+                    TagsController(call).removeUserTag()
+                }
+
                 post("/{userId}") {
                     AuthUsersController(call).updateUser()
                 }
@@ -86,6 +94,7 @@ fun Application.configureRouting() {
                 get("/tags/{teamId}") {
                     TagsController(call).getTeamsTags()
                 }
+
 
                 authenticate("auth-jwt") {
                     post("/create") {

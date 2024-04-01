@@ -4,15 +4,12 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
-import io.ktor.server.sessions.*
 import kotlinx.coroutines.runBlocking
-import ru.droptableusers.sampleapi.controller.AbstractController
 import ru.droptableusers.sampleapi.data.models.inout.input.vacancies.VacancyInputModel
 import ru.droptableusers.sampleapi.data.models.inout.output.ErrorResponse
 import ru.droptableusers.sampleapi.data.models.inout.output.vacancies.VacancyRespond
 import ru.droptableusers.sampleapi.database.persistence.SearchingForPersistence
 import ru.droptableusers.sampleapi.database.persistence.TagsPersistence
-import ru.droptableusers.sampleapi.database.schema.SearchingForTable
 
 class VacancyController(val call: ApplicationCall){
     suspend fun get(){
