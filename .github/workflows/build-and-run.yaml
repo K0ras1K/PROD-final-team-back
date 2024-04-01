@@ -2,7 +2,7 @@ name: Build and run
 run-name: Run application via docker compose
 on: [push]
 jobs:
-  docker-compose:
+  test-run:
     runs-on: ubuntu-latest
     timeout-minutes: ${{ fromJSON(vars.DEFAULT_JOB_TIMEOUT) }}
     steps:
@@ -14,7 +14,7 @@ jobs:
         run: |
           docker compose up &
           COMPOSE_PID=$!
-          sleep 180
+          sleep 20
           if kill -0 $COMPOSE_PID 2>/dev/null; then
             echo "Application has been running for 3 minutes, stopping now"
             docker compose down
@@ -35,6 +35,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    needs: test-run
     steps:
       - name: Checkout Code
         uses: actions/checkout@v1
