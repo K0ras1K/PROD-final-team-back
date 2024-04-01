@@ -46,7 +46,7 @@ fun Application.configureRouting() {
                     TagsController(call).getUserTags()
                 }
 
-                post("/tags/{userId}") {
+                post("/tags") {
                     TagsController(call).addUserTags()
                 }
 
