@@ -18,7 +18,46 @@ paths:
                 type: "string"
               examples:
                 Example#1:
-                  value: "Hello World!"
+                  value: "DropTableUsers API 1.0"
+  /1.0/files/upload/pdf:
+    post:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+                format: "uuid"
+  /1.0/public/{folder_name}/{file_name}:
+    get:
+      description: ""
+      parameters:
+      - name: "file_name"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      - name: "folder_name"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK <br> A file response"
+          content:
+            application/*:
+              schema:
+                type: "object"
+                format: "binary"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "object"
   /1.0/teams/accept/{inviteId}:
     post:
       description: ""
@@ -61,6 +100,17 @@ paths:
               $ref: "#/components/schemas/CreateTeamRequest"
         required: true
       responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    status: "У вас недостаточно прав!"
         "200":
           description: "OK"
           content:
@@ -219,6 +269,64 @@ paths:
                   description: ""
                   value:
                     status: "Не передан корректный userId"
+  /1.0/users/{userId}:
+    post:
+      description: ""
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/EditUserModel"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "{\"success\": true}"
+  /1.0/users/{userId}/password:
+    post:
+      description: ""
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/EditUserPassword"
+        required: true
+      responses:
+        "201":
+          description: "Created"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TokenRespondOutput"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    status: "Старый пароль указан неверно"
   /1.0/users/invites/accept/{inviteId}:
     post:
       description: ""
@@ -330,7 +438,44 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/TokenRespondOutput"
+  /1.0/users/tags:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/AddUserTagsInputModel"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
   /1.0/users/tags/{userId}:
+    delete:
+      description: ""
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/RemoveUserInputModel"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
     get:
       description: ""
       parameters:
@@ -357,7 +502,60 @@ paths:
                   description: ""
                   value:
                     status: "Не вписал userId"
+  /1.0/vacancy:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/VacancyInputModel"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
   /1.0/vacancy/{id}:
+    delete:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "integer"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    status: "id == null"
+        "202":
+          description: "Accepted"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    status: "Не существовало или ошибка, но пусть будет accepted"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
     get:
       description: ""
       parameters:
@@ -390,31 +588,15 @@ paths:
                   description: ""
                   value:
                     status: "id == null"
-  /java:
-    get:
-      description: ""
-      responses:
-        "200":
-          description: "OK"
-          content:
-            text/plain:
-              schema:
-                type: "string"
-  /kotlin:
-    get:
-      description: ""
-      responses:
-        "200":
-          description: "OK"
-          content:
-            text/plain:
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "Hello from Kotlin!"
 components:
   schemas:
+    ErrorResponse:
+      type: "object"
+      properties:
+        status:
+          type: "string"
+      required:
+      - "status"
     CreateTeamRequest:
       type: "object"
       properties:
@@ -441,13 +623,13 @@ components:
           type: "string"
           enum:
           - "ADMIN"
+          - "ORGANIZER"
+          - "JURY"
+          - "PRODUCT"
+          - "MENTOR"
           - "MEMBER"
           - "OLD_MEMBER"
           - "NOT_VERIFIED"
-          - "MENTOR"
-          - "JURY"
-          - "ORGANIZER"
-          - "PRODUCT"
         tgId:
           type: "string"
         registerAt:
@@ -518,13 +700,6 @@ components:
             type: "string"
       required:
       - "list"
-    ErrorResponse:
-      type: "object"
-      properties:
-        status:
-          type: "string"
-      required:
-      - "status"
     TourOutputResponse:
       type: "object"
       properties:
@@ -551,6 +726,33 @@ components:
           format: "int32"
       required:
       - "tour"
+    EditUserModel:
+      type: "object"
+      properties:
+        description:
+          type: "string"
+        tgLogin:
+          type: "string"
+      required:
+      - "description"
+      - "tgLogin"
+    EditUserPassword:
+      type: "object"
+      properties:
+        oldPassword:
+          type: "string"
+        newPassword:
+          type: "string"
+      required:
+      - "oldPassword"
+      - "newPassword"
+    TokenRespondOutput:
+      type: "object"
+      properties:
+        token:
+          type: "string"
+      required:
+      - "token"
     UserInvitesRespondModel:
       type: "object"
       properties:
@@ -571,13 +773,6 @@ components:
       required:
       - "username"
       - "password"
-    TokenRespondOutput:
-      type: "object"
-      properties:
-        token:
-          type: "string"
-      required:
-      - "token"
     RegisterInputModel:
       type: "object"
       properties:
@@ -600,6 +795,41 @@ components:
       - "tgLogin"
       - "firstName"
       - "lastName"
+    AddUserTagsInputModel:
+      type: "object"
+      properties:
+        userId:
+          type: "integer"
+          format: "int32"
+        tagIdList:
+          type: "array"
+          items:
+            type: "integer"
+            format: "int32"
+      required:
+      - "tagIdList"
+    RemoveUserInputModel:
+      type: "object"
+      properties:
+        userId:
+          type: "integer"
+          format: "int32"
+        tagId:
+          type: "integer"
+          format: "int32"
+    VacancyInputModel:
+      type: "object"
+      properties:
+        teamId:
+          type: "integer"
+          format: "int32"
+        tagList:
+          type: "array"
+          items:
+            type: "integer"
+            format: "int32"
+      required:
+      - "tagList"
     VacancyRespond:
       type: "object"
       properties:
