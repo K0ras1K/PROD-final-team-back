@@ -6,5 +6,5 @@ data class InviteModel(
     val id: Int,
     val teamId: Int,
     val userId: Int,
-    val type: InviteStatus
+    val type: InviteStatus,
 )

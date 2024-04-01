@@ -39,7 +39,7 @@ dependencies {
     implementation("io.ktor:ktor-server-auth-jwt:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
 
-    //SWAGGER
+    // SWAGGER
     implementation("io.github.smiley4:ktor-swagger-ui:2.8.0")
     implementation("io.ktor:ktor-server-openapi:$ktor_version")
 
@@ -50,7 +50,7 @@ dependencies {
     // DOTENV
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
 
-    //TELEGRAM
+    // TELEGRAM
     implementation("com.github.pengrad:java-telegram-bot-api:6.8.0")
     implementation("org.telegram:telegrambots:5.3.0")
 

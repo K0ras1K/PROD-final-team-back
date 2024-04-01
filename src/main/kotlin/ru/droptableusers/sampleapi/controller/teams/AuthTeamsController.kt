@@ -13,10 +13,10 @@ import ru.droptableusers.sampleapi.data.models.base.InviteModel
 import ru.droptableusers.sampleapi.data.models.base.TeamModel
 import ru.droptableusers.sampleapi.data.models.inout.input.teams.CreateTeamRequest
 import ru.droptableusers.sampleapi.data.models.inout.output.ErrorResponse
-import ru.droptableusers.sampleapi.data.models.inout.output.ProfileOutputResponse
 import ru.droptableusers.sampleapi.data.models.inout.output.teams.InvitesRespondModel
 import ru.droptableusers.sampleapi.data.models.inout.output.teams.SmallTeamRespondModel
 import ru.droptableusers.sampleapi.data.models.inout.output.teams.TeamRespondModel
+import ru.droptableusers.sampleapi.data.models.inout.output.users.ProfileOutputResponse
 import ru.droptableusers.sampleapi.database.persistence.GroupPersistence
 import ru.droptableusers.sampleapi.database.persistence.InvitePersistence
 import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
@@ -53,6 +53,7 @@ class AuthTeamsController(call: ApplicationCall) : GroupAbstractController(call)
                         id = it.id,
                         description = it.description,
                         team = TeamsPersistence().selectByUserId(it.id) ?: -1,
+                        major = it.major,
                     )
                 }
             val teamOutput =
@@ -67,7 +68,7 @@ class AuthTeamsController(call: ApplicationCall) : GroupAbstractController(call)
     suspend fun createTeam() {
         runBlocking {
             // Проверка на наличие группы
-            if(!validateGroup(Group.MEMBER)){
+            if (!validateGroup(Group.MEMBER)) {
                 call.respond(HttpStatusCode.BadRequest, ErrorResponse("У вас недостаточно прав!"))
                 return@runBlocking
             }
@@ -140,6 +141,7 @@ class AuthTeamsController(call: ApplicationCall) : GroupAbstractController(call)
                                         id = user.id,
                                         description = user.description,
                                         team = TeamsPersistence().selectByUserId(user.id) ?: -1,
+                                        major = user.major,
                                     )
                                 },
                         id = it.id,

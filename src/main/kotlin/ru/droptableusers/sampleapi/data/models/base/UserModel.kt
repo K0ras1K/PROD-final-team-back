@@ -1,5 +1,7 @@
 package ru.droptableusers.sampleapi.data.models.base
 
+import ru.droptableusers.sampleapi.data.enums.Major
+
 data class UserModel(
     val id: Int,
     val username: String,
@@ -9,5 +11,6 @@ data class UserModel(
     val lastName: String,
     val birthdayDate: Long,
     val regTime: Long,
-    var description: String
+    val major: Major,
+    var description: String,
 )

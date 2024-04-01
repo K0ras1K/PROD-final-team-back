@@ -16,7 +16,6 @@ import ru.droptableusers.sampleapi.database.schema.UserTable
  * @author Roman K0ras1K Kalmykov
  */
 class UserPersistence {
-
     private fun resultRowToUserModel(row: ResultRow): UserModel =
         UserModel(
             username = row[UserTable.username],
@@ -27,9 +26,9 @@ class UserPersistence {
             lastName = row[UserTable.lastName],
             birthdayDate = row[UserTable.birthdayDate],
             id = row[UserTable.id].value,
-            description = row[UserTable.description]
+            description = row[UserTable.description],
+            major = row[UserTable.major],
         )
-
 
     /**
      * Insert
@@ -50,7 +49,7 @@ class UserPersistence {
                     it[UserTable.regTime] = userModel.regTime
                     it[UserTable.description] = userModel.description
                 }.resultedValues!!.single().let(
-                    ::resultRowToUserModel
+                    ::resultRowToUserModel,
                 )
             }
         } catch (exception: Exception) {
@@ -144,19 +143,22 @@ class UserPersistence {
         }
     }
 
-    fun allUsersWithoutTeam(): List<UserModel>{
+    fun allUsersWithoutTeam(): List<UserModel> {
         return try {
             transaction {
                 UserTable.selectAll()
-                    .where {TagsUsersTable.userId.notInList(TeamsPersistence().selectAllMembers())}
+                    .where { TagsUsersTable.userId.notInList(TeamsPersistence().selectAllMembers()) }
                     .map(::resultRowToUserModel)
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             listOf()
         }
     }
 
-    fun addTag(userId: Int, tagId: Int){
+    fun addTag(
+        userId: Int,
+        tagId: Int,
+    ) {
         try {
             transaction {
                 TagsUsersTable.insert {
@@ -165,22 +167,24 @@ class UserPersistence {
                     it[TagsUsersTable.userId] = userId
                 }
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    fun removeTag(userId: Int, tagId: Int): Boolean{
+    fun removeTag(
+        userId: Int,
+        tagId: Int,
+    ): Boolean {
         return try {
             transaction {
                 TagsUsersTable.deleteWhere {
                     TagsUsersTable.userId.eq(userId) and
-                    TagsUsersTable.tagId.eq(tagId)
+                        TagsUsersTable.tagId.eq(tagId)
                 } > 0
             }
-        }  catch (e: Exception){
+        } catch (e: Exception) {
             false
         }
     }
-
 }

@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class VacancyRespond(
     val teamId: Int,
-    val tags: List<String>
+    val tags: List<String>,
 )

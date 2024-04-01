@@ -5,5 +5,5 @@ data class DocumentConditionModel(
     val documentId: Int,
     val fieldName: String,
     val value: String,
-    val condition: String
+    val condition: String,
 )

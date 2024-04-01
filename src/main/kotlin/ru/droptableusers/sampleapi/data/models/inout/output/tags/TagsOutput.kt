@@ -8,5 +8,5 @@ data class TagsOutput(val list: List<TagObjectOutput>)
 @Serializable
 data class TagObjectOutput(
     val id: Int,
-    val tag: String
+    val tag: String,
 )

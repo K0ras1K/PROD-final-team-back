@@ -5,6 +5,8 @@ import io.ktor.server.auth.*
 import io.ktor.server.plugins.openapi.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import ru.droptableusers.sampleapi.controller.analytics.TourAnalyticController
+import ru.droptableusers.sampleapi.controller.analytics.UserAnalyticController
 import ru.droptableusers.sampleapi.controller.documents.AdminDocumentsController
 import ru.droptableusers.sampleapi.controller.files.AuthUploadController
 import ru.droptableusers.sampleapi.controller.files.PublicDownloadController
@@ -68,7 +70,9 @@ fun Application.configureRouting() {
                     get("/my") {
                         AuthUsersController(call).get()
                     }
-                    route("/invites") {
+                }
+                route("/invites") {
+                    authenticate("auth-jwt") {
                         post("/apply/{userId}") {
                             AuthUsersController(call).apply()
                         }
@@ -153,6 +157,14 @@ fun Application.configureRouting() {
                     route("/documents") {
                         get("/list") {
                             AdminDocumentsController(call).listDocuments()
+                        }
+                    }
+                    route("/analytics") {
+                        get("/tour/{tourId}") {
+                            TourAnalyticController(call).getTourAnalytic()
+                        }
+                        get("/user/{id}") {
+                            UserAnalyticController(call).getUserAnalytic()
                         }
                     }
                 }

@@ -1,6 +1,7 @@
 package ru.droptableusers.sampleapi.database.schema
 
 import org.jetbrains.exposed.dao.id.IntIdTable
+import ru.droptableusers.sampleapi.data.enums.Major
 
 /**
  * User table
@@ -15,6 +16,7 @@ object UserTable : IntIdTable("users") {
     val firstName = varchar("first_name", 40)
     val lastName = varchar("last_name", 50)
     val birthdayDate = long("birthday_date")
+    val major = enumerationByName("major", 20, Major::class)
     val regTime = long("reg_time")
     val description = text("description")
 }

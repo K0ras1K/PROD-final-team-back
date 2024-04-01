@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RemoveVacancyInputModel(
     val vacancyId: Int,
-    val tagId: Int
+    val tagId: Int,
 )

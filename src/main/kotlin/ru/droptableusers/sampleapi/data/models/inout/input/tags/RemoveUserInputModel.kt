@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RemoveUserInputModel(
     val userId: Int,
-    val tagId: Int
+    val tagId: Int,
 )

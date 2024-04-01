@@ -6,5 +6,5 @@ data class DocumentModel(
     val description: String,
     val required: Boolean,
     val template: String,
-    val extensions: String
+    val extensions: String,
 )

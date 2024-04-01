@@ -4,7 +4,6 @@ import ru.droptableusers.sampleapi.data.enums.ValidationStatus
 import java.util.regex.Pattern
 
 object Validation {
-
     fun validateField(
         field: String,
         maxLength: Int?,
@@ -37,5 +36,4 @@ object Validation {
             else -> ValidationStatus.ACCEPTED
         }
     }
-
 }

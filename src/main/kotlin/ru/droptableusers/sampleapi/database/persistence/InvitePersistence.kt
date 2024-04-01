@@ -2,6 +2,7 @@ package ru.droptableusers.sampleapi.database.persistence
 
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.transactions.transaction
 import ru.droptableusers.sampleapi.data.enums.InviteStatus
 import ru.droptableusers.sampleapi.data.models.base.InviteModel
 import ru.droptableusers.sampleapi.database.schema.InviteTable
@@ -12,26 +13,33 @@ class InvitePersistence {
             teamId = resultRow[InviteTable.teamId].value,
             userId = resultRow[InviteTable.userId].value,
             type = resultRow[InviteTable.type],
-            id = resultRow[InviteTable.id].value
+            id = resultRow[InviteTable.id].value,
         )
 
     fun insert(inviteModel: InviteModel) {
         try {
-            InviteTable.insert {
-                it[InviteTable.teamId] = inviteModel.teamId
-                it[InviteTable.userId] = inviteModel.userId
-                it[InviteTable.type] = type
+            transaction {
+                InviteTable.insert {
+                    it[InviteTable.teamId] = inviteModel.teamId
+                    it[InviteTable.userId] = inviteModel.userId
+                    it[InviteTable.type] = inviteModel.type
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    fun selectByTeamId(teamId: Int, status: InviteStatus): List<InviteModel> {
+    fun selectByTeamId(
+        teamId: Int,
+        status: InviteStatus,
+    ): List<InviteModel> {
         return try {
-            InviteTable.selectAll()
-                .where { InviteTable.teamId.eq(teamId) and InviteTable.type.eq(status) }
-                .map(::resultRowToInvite)
+            transaction {
+                InviteTable.selectAll()
+                    .where { InviteTable.teamId.eq(teamId) and InviteTable.type.eq(status) }
+                    .map(::resultRowToInvite)
+            }
         } catch (e: Exception) {
             listOf()
         }
@@ -39,9 +47,11 @@ class InvitePersistence {
 
     fun selectModelsByUserId(userId: Int): List<InviteModel> {
         return try {
-            InviteTable.selectAll()
-                .where { InviteTable.userId.eq(userId) and InviteTable.type.eq(InviteStatus.TO_USER) }
-                .map(::resultRowToInvite)
+            transaction {
+                InviteTable.selectAll()
+                    .where { InviteTable.userId.eq(userId) and InviteTable.type.eq(InviteStatus.TO_USER) }
+                    .map(::resultRowToInvite)
+            }
         } catch (e: Exception) {
             listOf()
         }
@@ -49,9 +59,11 @@ class InvitePersistence {
 
     fun selectByUserId(userId: Int): List<InviteModel> {
         return try {
-            InviteTable.selectAll()
-                .where { InviteTable.userId.eq(userId) }
-                .map(::resultRowToInvite)
+            transaction {
+                InviteTable.selectAll()
+                    .where { InviteTable.userId.eq(userId) }
+                    .map(::resultRowToInvite)
+            }
         } catch (e: Exception) {
             listOf()
         }
@@ -59,10 +71,12 @@ class InvitePersistence {
 
     fun selectById(id: Int): InviteModel? {
         return try {
-            InviteTable.selectAll()
-                .where { InviteTable.id.eq(id) }
-                .single()
-                .let(::resultRowToInvite)
+            transaction {
+                InviteTable.selectAll()
+                    .where { InviteTable.id.eq(id) }
+                    .single()
+                    .let(::resultRowToInvite)
+            }
         } catch (e: Exception) {
             null
         }
@@ -70,7 +84,9 @@ class InvitePersistence {
 
     fun delete(id: Int): Boolean {
         return try {
-            InviteTable.deleteWhere(op = { InviteTable.id.eq(id) }) > 0
+            transaction {
+                InviteTable.deleteWhere(op = { InviteTable.id.eq(id) }) > 0
+            }
         } catch (e: Exception) {
             false
         }
