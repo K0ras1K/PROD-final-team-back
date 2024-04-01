@@ -16,8 +16,7 @@ import ru.droptableusers.sampleapi.data.models.inout.output.documents.DocumentOu
 import ru.droptableusers.sampleapi.database.persistence.DocumentsPersistence
 
 class AdminDocumentsController(call: ApplicationCall) : AbstractController(call) {
-
-    private fun compareDocumentAndConditions(conditions: List<DocumentConditionModel>): Map<Int, List<DocumentConditionModel>>  {
+    private fun compareDocumentAndConditions(conditions: List<DocumentConditionModel>): Map<Int, List<DocumentConditionModel>> {
         val result = HashMap<Int, ArrayList<DocumentConditionModel>>()
         conditions.forEach {
             if (result.containsKey(it.documentId) && result[it.documentId] != null) {
@@ -25,7 +24,7 @@ class AdminDocumentsController(call: ApplicationCall) : AbstractController(call)
             } else {
                 result[it.documentId] = arrayListOf(it)
             }
-        };
+        }
         return mapOf()
     }
 
@@ -39,24 +38,26 @@ class AdminDocumentsController(call: ApplicationCall) : AbstractController(call)
             val documents = DocumentsPersistence().listDocuments()
             val conditions = compareDocumentAndConditions(DocumentsPersistence().listDocumentConditions())
             // TODO Возвращать полную ссылку на файл?
-            val respondModels = documents.map {
-                DocumentOutputResponse(
-                    id = it.id,
-                    name = it.name,
-                    description = it.description,
-                    required = it.required,
-                    template = it.template,
-                    extensions = it.extensions.split(","),
-                    conditions = conditions[it.id].orEmpty().map { condition ->
-                        DocumentConditionOutputResponse(
-                            id = condition.id,
-                            fieldName = condition.fieldName,
-                            condition = condition.condition,
-                            value = condition.value
-                        )
-                    }
-                )
-            }
+            val respondModels =
+                documents.map {
+                    DocumentOutputResponse(
+                        id = it.id,
+                        name = it.name,
+                        description = it.description,
+                        required = it.required,
+                        template = it.template,
+                        extensions = it.extensions.split(","),
+                        conditions =
+                            conditions[it.id].orEmpty().map { condition ->
+                                DocumentConditionOutputResponse(
+                                    id = condition.id,
+                                    fieldName = condition.fieldName,
+                                    condition = condition.condition,
+                                    value = condition.value,
+                                )
+                            },
+                    )
+                }
             call.respond(HttpStatusCode.OK, respondModels)
         }
     }
@@ -68,42 +69,46 @@ class AdminDocumentsController(call: ApplicationCall) : AbstractController(call)
                 return@runBlocking
             }
             val inputDocument = call.receive<DocumentCreateInput>()
-            val documentModel = DocumentModel(
-                id = 0,
-                name = inputDocument.name,
-                description = inputDocument.description,
-                required = inputDocument.required,
-                template = inputDocument.template,
-                extensions = inputDocument.extensions.joinToString(",")
-            )
+            val documentModel =
+                DocumentModel(
+                    id = 0,
+                    name = inputDocument.name,
+                    description = inputDocument.description,
+                    required = inputDocument.required,
+                    template = inputDocument.template,
+                    extensions = inputDocument.extensions.joinToString(","),
+                )
             val document = DocumentsPersistence().insertDocument(documentModel)!!
             val conditions = mutableSetOf<DocumentConditionModel>()
             inputDocument.conditions.forEach {
-                val conditionModel = DocumentConditionModel(
-                    id = 0,
-                    documentId = document.id,
-                    fieldName = it.fieldName,
-                    condition = it.condition,
-                    value = it.value
-                )
-                conditions.add(DocumentsPersistence().insertDocumentCondition(conditionModel)!!)
-            }
-            val response = DocumentOutputResponse(
-                id = document.id,
-                name = document.name,
-                description = document.description,
-                required = document.required,
-                template = document.template,
-                extensions = inputDocument.extensions,
-                conditions = conditions.map {
-                    DocumentConditionOutputResponse(
-                        id = it.id,
+                val conditionModel =
+                    DocumentConditionModel(
+                        id = 0,
+                        documentId = document.id,
                         fieldName = it.fieldName,
                         condition = it.condition,
-                        value = it.value
+                        value = it.value,
                     )
-                }
-            )
+                conditions.add(DocumentsPersistence().insertDocumentCondition(conditionModel)!!)
+            }
+            val response =
+                DocumentOutputResponse(
+                    id = document.id,
+                    name = document.name,
+                    description = document.description,
+                    required = document.required,
+                    template = document.template,
+                    extensions = inputDocument.extensions,
+                    conditions =
+                        conditions.map {
+                            DocumentConditionOutputResponse(
+                                id = it.id,
+                                fieldName = it.fieldName,
+                                condition = it.condition,
+                                value = it.value,
+                            )
+                        },
+                )
             call.respond(HttpStatusCode.OK, response)
         }
     }
@@ -115,27 +120,28 @@ class AdminDocumentsController(call: ApplicationCall) : AbstractController(call)
                 return@runBlocking
             }
             val inputDocument = call.receive<DocumentUpdateInput>()
-            val documentModel = DocumentModel(
-                id = inputDocument.id,
-                name = inputDocument.name,
-                description = inputDocument.description,
-                required = inputDocument.required,
-                template = inputDocument.template,
-                extensions = inputDocument.extensions.joinToString(",")
-            )
+            val documentModel =
+                DocumentModel(
+                    id = inputDocument.id,
+                    name = inputDocument.name,
+                    description = inputDocument.description,
+                    required = inputDocument.required,
+                    template = inputDocument.template,
+                    extensions = inputDocument.extensions.joinToString(","),
+                )
             DocumentsPersistence().updateDocument(documentModel)
             inputDocument.conditions.forEach {
-                val conditionModel = DocumentConditionModel(
-                    id = it.id,
-                    documentId = inputDocument.id,
-                    fieldName = it.fieldName,
-                    condition = it.condition,
-                    value = it.value
-                )
+                val conditionModel =
+                    DocumentConditionModel(
+                        id = it.id,
+                        documentId = inputDocument.id,
+                        fieldName = it.fieldName,
+                        condition = it.condition,
+                        value = it.value,
+                    )
                 DocumentsPersistence().updateDocumentCondition(conditionModel)
             }
             call.respond(HttpStatusCode.OK, "{\"success\": true}")
         }
     }
-
 }

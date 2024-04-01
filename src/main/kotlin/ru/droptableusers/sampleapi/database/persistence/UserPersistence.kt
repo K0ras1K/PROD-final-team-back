@@ -157,14 +157,17 @@ class UserPersistence {
         }
     }
 
-    fun containsTagId(userId: Int, tagId: Int): Boolean{
+    fun containsTagId(
+        userId: Int,
+        tagId: Int,
+    ): Boolean {
         return try {
             transaction {
                 TagsUsersTable.selectAll()
-                    .where { TagsUsersTable.userId.eq(userId)}
+                    .where { TagsUsersTable.userId.eq(userId) }
                     .andWhere { TagsUsersTable.tagId.eq(tagId) }
             }.count() > 0
-        } catch (e: Exception){
+        } catch (e: Exception) {
             false
         }
     }

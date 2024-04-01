@@ -76,7 +76,7 @@ class TagsPersistence {
         }
     }
 
-    fun getAllTags():List<TagModel>{
+    fun getAllTags(): List<TagModel> {
         return try {
             transaction {
                 TagTable.selectAll()

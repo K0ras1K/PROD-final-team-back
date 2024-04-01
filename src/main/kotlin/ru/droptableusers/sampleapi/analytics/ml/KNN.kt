@@ -1,12 +1,14 @@
 @file:Suppress("LABEL_NAME_CLASH")
 
-package ru.droptableusers.sampleapi.analytics.ml;
+package ru.droptableusers.sampleapi.analytics.ml
 
 import ru.droptableusers.sampleapi.data.models.base.TeamModel
 
 object KNN {
-
-    fun sort(teams: Map<TeamModel, List<String>>, tags: List<String>) : List<TeamModel> {
+    fun sort(
+        teams: Map<TeamModel, List<String>>,
+        tags: List<String>,
+    ): List<TeamModel> {
         val result = mutableMapOf<TeamModel, Double>()
         teams.forEach { (k, v) ->
             result[k] = sort(v, tags)
@@ -19,19 +21,23 @@ object KNN {
     /**
      * @return average distance
      */
-    private fun sort(teamTags: List<String>, tags: List<String>): Double {
+    private fun sort(
+        teamTags: List<String>,
+        tags: List<String>,
+    ): Double {
         val neighbors = mutableMapOf<String, Double>()
         tags.forEach { tag ->
             val vector = getVector(tag) ?: return@forEach
 
-            teamTags.forEach {  teamTag ->
+            teamTags.forEach { teamTag ->
                 val teamTagVector = getVector(teamTag) ?: return@forEach
                 neighbors[teamTag] = vector.distQ(teamTagVector)
             }
         }
 
-        if (neighbors.isEmpty())
+        if (neighbors.isEmpty()) {
             return Double.MAX_VALUE
+        }
 
         neighbors.toList().sortedBy { (_, value) -> value }.toMap()
 
@@ -40,19 +46,19 @@ object KNN {
         var n = 0
         neighbors.forEach {
             sum += it.value
-            if (++n == 3)
+            if (++n == 3) {
                 return sum / 3.0
+            }
         }
         return sum / neighbors.size
     }
 
     // TODO dataset
-    private fun getVector(tag: String) : Vector? {
+    private fun getVector(tag: String): Vector? {
         return when (tag) {
             "python" -> Vector(tag, 1.0, 0.0, 0.0)
             "docker" -> Vector(tag, 0.5, 0.0, 0.0)
             else -> null
         }
     }
-
 }

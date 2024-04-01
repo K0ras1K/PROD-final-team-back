@@ -9,5 +9,5 @@ data class DocumentCreateInput(
     val required: Boolean,
     val template: String,
     val extensions: List<String>,
-    val conditions: List<DocumentConditionCreateInput>
+    val conditions: List<DocumentConditionCreateInput>,
 )

@@ -70,17 +70,22 @@ class TagsController(val call: ApplicationCall) {
 
     suspend fun getAllTags() {
         runBlocking {
-            call.respond(HttpStatusCode.OK, TagsOutput(TagsPersistence().getAllTags().map {
-                TagObjectOutput(it.id, it.tagString)
-            }))
+            call.respond(
+                HttpStatusCode.OK,
+                TagsOutput(
+                    TagsPersistence().getAllTags().map {
+                        TagObjectOutput(it.id, it.tagString)
+                    },
+                ),
+            )
         }
     }
 
-    suspend fun createTags(){
-        runBlocking{
+    suspend fun createTags() {
+        runBlocking {
             val createInput = call.receive<CreateTagsInputModel>()
 
-            createInput.tagList.forEach{
+            createInput.tagList.forEach {
                 TagsPersistence().insert(it)
             }
 
@@ -88,11 +93,11 @@ class TagsController(val call: ApplicationCall) {
         }
     }
 
-    suspend fun deleteTags(){
-        runBlocking{
+    suspend fun deleteTags() {
+        runBlocking {
             val createInput = call.receive<DeleteTagsInputModel>()
 
-            createInput.tagIdList.forEach{
+            createInput.tagIdList.forEach {
                 TagsPersistence().delete(it)
             }
 

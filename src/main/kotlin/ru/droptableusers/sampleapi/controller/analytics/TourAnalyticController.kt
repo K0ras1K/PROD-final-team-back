@@ -27,7 +27,11 @@ class TourAnalyticController(call: ApplicationCall) : AbstractController(call) {
         }
     }
 
-    private fun getTourAnalyticByIdAndTagId(tourId: Int, step: Int, tagId: Int): TourAnalyticResponse {
+    private fun getTourAnalyticByIdAndTagId(
+        tourId: Int,
+        step: Int,
+        tagId: Int,
+    ): TourAnalyticResponse {
         val averageAlgebraic = TourAnalytics.handleAverageAlgebraic(tourId, tagId)
         val averageMedian = TourAnalytics.handleAverageMedian(tourId, tagId)
 

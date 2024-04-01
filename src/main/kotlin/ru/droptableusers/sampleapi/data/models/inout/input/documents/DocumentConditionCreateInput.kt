@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class DocumentConditionCreateInput(
     val fieldName: String,
     val condition: String,
-    val value: String
+    val value: String,
 )

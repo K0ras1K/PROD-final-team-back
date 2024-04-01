@@ -18,8 +18,6 @@ import ru.droptableusers.sampleapi.controller.tours.AuthTourResultsController
 import ru.droptableusers.sampleapi.controller.users.AuthUsersController
 import ru.droptableusers.sampleapi.controller.users.UsersController
 import ru.droptableusers.sampleapi.controller.vacancies.VacancyController
-import ru.droptableusers.sampleapi.database.persistence.TagsPersistence
-import ru.droptableusers.sampleapi.utils.Logger
 
 /**
  * Configure routing
@@ -177,12 +175,12 @@ fun Application.configureRouting() {
                         }
                     }
 
-                    route("/tags"){
-                        get{
+                    route("/tags") {
+                        get {
                             TagsController(call).getAllTags()
                         }
 
-                        post{
+                        post {
                             TagsController(call).createTags()
                         }
 

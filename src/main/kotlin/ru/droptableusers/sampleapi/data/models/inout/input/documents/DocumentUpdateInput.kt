@@ -10,5 +10,5 @@ data class DocumentUpdateInput(
     val required: Boolean,
     val template: String,
     val extensions: List<String>,
-    val conditions: List<DocumentConditionUpdateInput>
+    val conditions: List<DocumentConditionUpdateInput>,
 )

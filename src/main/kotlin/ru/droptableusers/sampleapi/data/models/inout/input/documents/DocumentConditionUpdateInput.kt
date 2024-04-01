@@ -7,5 +7,5 @@ data class DocumentConditionUpdateInput(
     val id: Int,
     val fieldName: String,
     val condition: String,
-    val value: String
+    val value: String,
 )
