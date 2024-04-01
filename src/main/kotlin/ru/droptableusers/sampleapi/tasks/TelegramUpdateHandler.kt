@@ -29,27 +29,29 @@ object TelegramUpdateHandler {
                 if (message != null) {
                     println(message.text())
                 }
-                if (callbackQuery!!.data().startsWith("verif-")) {
-                    val userId: Int = callbackQuery.data().split("-")[1].toInt()
-                    println("Кнопка бана сработала!")
-                    val groupData = GroupPersistence().select(userId)!!
-                    val userModel = UserPersistence().selectById(userId)!!
-                    if (groupData.group == Group.NOT_VERIFIED) {
-                        GroupPersistence().update(
-                            GroupModel(
-                                id = groupData.id,
-                                group = Group.MEMBER,
-                            ),
-                        )
-                        TelegramChat.VERIFICATION.BOT.execute(
-                            SendMessage(
-                                TelegramChat.VERIFICATION.CHAT_ID,
-                                "Пользователь ${userModel.firstName} ${userModel.lastName} верифицирован",
-                            ),
-                        )
+                if (callbackQuery != null) {
+                    if (callbackQuery!!.data().startsWith("verif-")) {
+                        val userId: Int = callbackQuery.data().split("-")[1].toInt()
+                        println("Кнопка бана сработала!")
+                        val groupData = GroupPersistence().select(userId)!!
+                        val userModel = UserPersistence().selectById(userId)!!
+                        if (groupData.group == Group.NOT_VERIFIED) {
+                            GroupPersistence().update(
+                                GroupModel(
+                                    id = groupData.id,
+                                    group = Group.MEMBER,
+                                ),
+                            )
+                            TelegramChat.VERIFICATION.BOT.execute(
+                                SendMessage(
+                                    TelegramChat.VERIFICATION.CHAT_ID,
+                                    "Пользователь ${userModel.firstName} ${userModel.lastName} верифицирован",
+                                ),
+                            )
+                        }
                     }
-                }
-                if (callbackQuery.data().startsWith("show-teams")) {
+                    if (callbackQuery.data().startsWith("show-teams")) {
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
