@@ -14,6 +14,6 @@ data class ProfileOutputResponse(
     val tgId: String,
     val registerAt: Long,
     val description: String,
-    val major: Major,
+    val major: Major?,
     val team: Int,
 )

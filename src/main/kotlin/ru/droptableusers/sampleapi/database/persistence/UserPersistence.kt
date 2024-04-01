@@ -48,6 +48,7 @@ class UserPersistence {
                     it[UserTable.tgLogin] = userModel.tgLogin
                     it[UserTable.regTime] = userModel.regTime
                     it[UserTable.description] = userModel.description
+                    it[UserTable.major] = userModel.major
                 }.resultedValues!!.single().let(
                     ::resultRowToUserModel,
                 )

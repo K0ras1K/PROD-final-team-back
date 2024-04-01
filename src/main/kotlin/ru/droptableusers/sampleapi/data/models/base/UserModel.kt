@@ -11,6 +11,6 @@ data class UserModel(
     val lastName: String,
     val birthdayDate: Long,
     val regTime: Long,
-    val major: Major,
+    val major: Major?,
     var description: String,
 )
