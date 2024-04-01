@@ -7,6 +7,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import ru.droptableusers.sampleapi.controller.files.AuthUploadController
 import ru.droptableusers.sampleapi.controller.files.PublicDownloadController
+import ru.droptableusers.sampleapi.controller.groups.AuthGroupController
 import ru.droptableusers.sampleapi.controller.tags.TagsController
 import ru.droptableusers.sampleapi.controller.teams.AuthTeamsController
 import ru.droptableusers.sampleapi.controller.teams.PublicTeamsController
@@ -137,6 +138,15 @@ fun Application.configureRouting() {
                     authenticate("auth-jwt") {
                         post("/pdf") {
                             AuthUploadController(call).uploadPdfFile()
+                        }
+                    }
+                }
+            }
+            route("/admin") {
+                authenticate("auth-jwt") {
+                    route("/groups") {
+                        post("/set") {
+                            AuthGroupController(call).setGroup()
                         }
                     }
                 }

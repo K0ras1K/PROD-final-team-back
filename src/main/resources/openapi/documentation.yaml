@@ -19,6 +19,31 @@ paths:
               examples:
                 Example#1:
                   value: "DropTableUsers API 1.0"
+  /1.0/admin/groups/set:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/GroupSetRequestModel"
+        required: true
+      responses:
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "У вас недостаточно прав!"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
   /1.0/files/upload/pdf:
     post:
       description: ""
@@ -270,7 +295,7 @@ paths:
                   value:
                     status: "Не передан корректный userId"
   /1.0/users/{userId}:
-    post:
+    patch:
       description: ""
       parameters:
       - name: "userId"
@@ -295,7 +320,7 @@ paths:
                 Example#1:
                   value: "{\"success\": true}"
   /1.0/users/{userId}/password:
-    post:
+    patch:
       description: ""
       parameters:
       - name: "userId"
@@ -353,7 +378,7 @@ paths:
         schema:
           type: "string"
   /1.0/users/invites/load:
-    post:
+    get:
       description: ""
       responses:
         "200":
@@ -439,6 +464,21 @@ paths:
               schema:
                 $ref: "#/components/schemas/TokenRespondOutput"
   /1.0/users/tags:
+    delete:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/RemoveUserInputModel"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
     post:
       description: ""
       requestBody:
@@ -455,27 +495,6 @@ paths:
               schema:
                 type: "object"
   /1.0/users/tags/{userId}:
-    delete:
-      description: ""
-      parameters:
-      - name: "userId"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
-      requestBody:
-        content:
-          '*/*':
-            schema:
-              $ref: "#/components/schemas/RemoveUserInputModel"
-        required: true
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "object"
     get:
       description: ""
       parameters:
@@ -590,6 +609,25 @@ paths:
                     status: "id == null"
 components:
   schemas:
+    GroupSetRequestModel:
+      type: "object"
+      properties:
+        userId:
+          type: "integer"
+          format: "int32"
+        group:
+          type: "string"
+          enum:
+          - "ADMIN"
+          - "ORGANIZER"
+          - "JURY"
+          - "PRODUCT"
+          - "MENTOR"
+          - "MEMBER"
+          - "OLD_MEMBER"
+          - "NOT_VERIFIED"
+      required:
+      - "group"
     ErrorResponse:
       type: "object"
       properties:
@@ -691,13 +729,23 @@ components:
       required:
       - "team"
       - "users"
+    TagObjectOutput:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int32"
+        tag:
+          type: "string"
+      required:
+      - "tag"
     TagsOutput:
       type: "object"
       properties:
         list:
           type: "array"
           items:
-            type: "string"
+            $ref: "#/components/schemas/TagObjectOutput"
       required:
       - "list"
     TourOutputResponse:
@@ -795,6 +843,15 @@ components:
       - "tgLogin"
       - "firstName"
       - "lastName"
+    RemoveUserInputModel:
+      type: "object"
+      properties:
+        userId:
+          type: "integer"
+          format: "int32"
+        tagId:
+          type: "integer"
+          format: "int32"
     AddUserTagsInputModel:
       type: "object"
       properties:
@@ -808,15 +865,6 @@ components:
             format: "int32"
       required:
       - "tagIdList"
-    RemoveUserInputModel:
-      type: "object"
-      properties:
-        userId:
-          type: "integer"
-          format: "int32"
-        tagId:
-          type: "integer"
-          format: "int32"
     VacancyInputModel:
       type: "object"
       properties:
