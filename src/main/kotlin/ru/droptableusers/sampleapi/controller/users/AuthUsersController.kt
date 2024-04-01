@@ -36,7 +36,7 @@ class AuthUsersController(call: ApplicationCall) : AbstractController(call) {
                 username = login,
                 firstName = userData.firstName,
                 lastName = userData.lastName,
-                tgId = userData.tgLogin,
+                tgLogin = userData.tgLogin,
                 registerAt = userData.regTime,
                 group = GroupPersistence().select(userData.id)!!.group,
                 id = userData.id,

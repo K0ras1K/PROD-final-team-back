@@ -11,22 +11,26 @@ class TextHandler(val message: Message) {
     fun handle() {
         if (message.text() == "/start") {
             StateMachine.removeStatus(message.chat().id())
-            val userId =
-                UserPersistence().selectByTelegramId(
-                    "@${
-                        message.chat().username()
-                    }",
-                )!!.id
-            if (TelegramPersistence().selectByUserId(userId) == null
-            ) {
-                TelegramPersistence().insert(
-                    TelegramModel(
-                        userId = userId,
-                        telegramId = message.chat().id(),
-                    ),
-                )
+            try {
+                val userId =
+                    UserPersistence().selectByTelegramId(
+                        "@${
+                            message.chat().username()
+                        }",
+                    )!!.id
+                if (TelegramPersistence().selectByUserId(userId) == null
+                ) {
+                    TelegramPersistence().insert(
+                        TelegramModel(
+                            userId = userId,
+                            telegramId = message.chat().id(),
+                        ),
+                    )
+                }
+                MainMessage(message.chat().id()).create()
+            } catch (exception: Exception) {
+                MainMessage(message.chat().id()).createNotRegistered()
             }
-            MainMessage(message.chat().id()).create()
         }
     }
 }

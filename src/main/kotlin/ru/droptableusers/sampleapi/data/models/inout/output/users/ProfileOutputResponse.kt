@@ -11,7 +11,7 @@ data class ProfileOutputResponse(
     val firstName: String,
     val lastName: String,
     val group: Group,
-    val tgId: String,
+    val tgLogin: String,
     val registerAt: Long,
     val description: String,
     val major: Major?,
