@@ -28,9 +28,6 @@ fun Application.configureRouting() {
         get("/") {
             call.respondText("Hello World!")
         }
-        get("/java") {
-            call.respondText(HelloController.handle(call))
-        }
         get("/kotlin") {
             call.respondText("Hello from Kotlin!")
         }
@@ -51,6 +48,14 @@ fun Application.configureRouting() {
 
                 get("/tags/{userId}") {
                     TagsController(call).getUserTags()
+                }
+
+                post("/tags/{userId}"){
+                    TagsController(call).addUserTags()
+                }
+
+                delete("/tags/{userId}"){
+                    TagsController(call).removeUserTag()
                 }
 
                 post("/{userId}") {
@@ -86,6 +91,7 @@ fun Application.configureRouting() {
                 get("/tags/{teamId}") {
                     TagsController(call).getTeamsTags()
                 }
+
 
                 authenticate("auth-jwt") {
                     post("/create") {

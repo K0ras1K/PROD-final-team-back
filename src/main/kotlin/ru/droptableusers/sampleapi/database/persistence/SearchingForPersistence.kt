@@ -1,14 +1,12 @@
 package ru.droptableusers.sampleapi.database.persistence
 
-import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.droptableusers.sampleapi.data.models.base.SearchingForModel
 import ru.droptableusers.sampleapi.database.schema.SearchingForTable
 import ru.droptableusers.sampleapi.database.schema.SearchingForTagsTable
+import ru.droptableusers.sampleapi.database.schema.TagsUsersTable
 
 class SearchingForPersistence {
     private fun resultRowToSearchingFor(resultRow: ResultRow) =
@@ -100,7 +98,33 @@ class SearchingForPersistence {
         }
     }
 
-    fun deleteTags(searchingForId: Int): Boolean {
+    fun addTag(searchingForId: Int, tagId: Int){
+        try {
+            transaction {
+                SearchingForTagsTable.insert {
+                    it[SearchingForTagsTable.tagId] = tagId
+                    it[SearchingForTagsTable.searchingForId] = searchingForId
+                }
+            }
+        } catch (e: Exception){
+            e.printStackTrace()
+        }
+    }
+
+    fun removeTag(searchingForId: Int, tagId: Int): Boolean{
+        return try {
+            transaction {
+                SearchingForTagsTable.deleteWhere {
+                    SearchingForTagsTable.searchingForId.eq(searchingForId) and
+                            SearchingForTagsTable.tagId.eq(tagId)
+                } > 0
+            }
+        }  catch (e: Exception){
+            false
+        }
+    }
+
+    fun removeAllTags(searchingForId: Int): Boolean {
         return try {
             transaction {
                 SearchingForTagsTable.deleteWhere {

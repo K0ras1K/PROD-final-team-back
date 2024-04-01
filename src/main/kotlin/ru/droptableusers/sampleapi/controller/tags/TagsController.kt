@@ -2,14 +2,17 @@ package ru.droptableusers.sampleapi.controller.tags
 
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import kotlinx.coroutines.runBlocking
-import ru.droptableusers.sampleapi.controller.AbstractController
+import ru.droptableusers.sampleapi.data.models.inout.input.tags.AddUserTagsInputModel
+import ru.droptableusers.sampleapi.data.models.inout.input.tags.RemoveUserInputModel
 import ru.droptableusers.sampleapi.data.models.inout.output.ErrorResponse
 import ru.droptableusers.sampleapi.data.models.inout.output.tags.TagsOutput
 import ru.droptableusers.sampleapi.database.persistence.TagsPersistence
 import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
+import ru.droptableusers.sampleapi.database.schema.UserTable
 
 class TagsController(val call: ApplicationCall) {
 
@@ -20,7 +23,7 @@ class TagsController(val call: ApplicationCall) {
 
     suspend fun getUserTags(){
         runBlocking {
-           val userId = call.parameters["userId"]?.toInt()
+            val userId = call.parameters["userId"]?.toInt()
             if(userId != null){
                 call.respond(HttpStatusCode.OK, TagsOutput(tagListByUserId(userId)))
                 return@runBlocking
@@ -28,6 +31,25 @@ class TagsController(val call: ApplicationCall) {
             call.respond(HttpStatusCode.BadRequest, ErrorResponse("Не вписал userId"))
         }
     }
+
+    suspend fun addUserTags(){
+        runBlocking {
+            val tagsInput = call.receive<AddUserTagsInputModel>()
+            tagsInput.tagIdList.forEach {
+                UserPersistence().addTag(tagsInput.userId, it)
+            }
+            call.respond(HttpStatusCode.OK)
+        }
+    }
+
+    suspend fun removeUserTag(){
+        runBlocking {
+            val removeInput = call.receive<RemoveUserInputModel>()
+            UserPersistence().removeTag(removeInput.userId, removeInput.tagId)
+            call.respond(HttpStatusCode.OK)
+        }
+    }
+
 
     suspend fun getTeamsTags(){
         runBlocking {
@@ -43,5 +65,6 @@ class TagsController(val call: ApplicationCall) {
             call.respond(HttpStatusCode.BadRequest, ErrorResponse("Не вписал userId"))
         }
     }
+
 
 }

@@ -143,4 +143,31 @@ class UserPersistence {
             listOf()
         }
     }
+
+    fun addTag(userId: Int, tagId: Int){
+        try {
+            transaction {
+                TagsUsersTable.insert {
+                    it[TagsUsersTable.tagId] = tagId
+                    it[TagsUsersTable.userId] = userId
+                }
+            }
+        } catch (e: Exception){
+            e.printStackTrace()
+        }
+    }
+
+    fun removeTag(userId: Int, tagId: Int): Boolean{
+        return try {
+            transaction {
+                TagsUsersTable.deleteWhere {
+                    TagsUsersTable.userId.eq(userId) and
+                    TagsUsersTable.tagId.eq(tagId)
+                } > 0
+            }
+        }  catch (e: Exception){
+            false
+        }
+    }
+
 }
