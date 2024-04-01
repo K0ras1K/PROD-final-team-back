@@ -7,14 +7,23 @@ import io.ktor.server.response.*
 import kotlinx.coroutines.runBlocking
 import ru.droptableusers.sampleapi.analytics.ml.KNN
 import ru.droptableusers.sampleapi.data.models.base.TeamModel
-import ru.droptableusers.sampleapi.data.models.inout.input.teams.CreateTeamRequest
 import ru.droptableusers.sampleapi.data.models.inout.input.teams.TagsTeamRequest
 import ru.droptableusers.sampleapi.data.models.inout.output.teams.SmallTeamRespondModel
 import ru.droptableusers.sampleapi.database.persistence.SearchingForPersistence
 import ru.droptableusers.sampleapi.database.persistence.TagsPersistence
 import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
 
+/**
+ * Public teams controller
+ *
+ * @property call
+ * @constructor Create empty Public teams controller
+ */
 class PublicTeamsController(val call: ApplicationCall) {
+    /**
+     * Load all
+     *
+     */
     suspend fun loadAll() {
         runBlocking {
             val limit = call.request.queryParameters["limit"]!!.toInt()
@@ -34,6 +43,10 @@ class PublicTeamsController(val call: ApplicationCall) {
         }
     }
 
+    /**
+     * Load all by m l
+     *
+     */
     // TODO add to Route
     suspend fun loadAllByML() {
         runBlocking {
@@ -51,17 +64,18 @@ class PublicTeamsController(val call: ApplicationCall) {
                 teamsAndTags[it] = tags
             }
 
-            val allTeams = KNN.sort(teamsAndTags, receive.tags.toSet())
-                .map {
-                    SmallTeamRespondModel(
-                        id = it.id,
-                        name = it.name,
-                        description = it.description,
-                        iconUrl = it.iconUrl,
-                        bannerUrl = it.bannerUrl,
-                        membersCount = TeamsPersistence().selectTeammates(it.id).size,
-                    )
-                }
+            val allTeams =
+                KNN.sort(teamsAndTags, receive.tags.toSet())
+                    .map {
+                        SmallTeamRespondModel(
+                            id = it.id,
+                            name = it.name,
+                            description = it.description,
+                            iconUrl = it.iconUrl,
+                            bannerUrl = it.bannerUrl,
+                            membersCount = TeamsPersistence().selectTeammates(it.id).size,
+                        )
+                    }
             call.respond(HttpStatusCode.OK, allTeams)
         }
     }

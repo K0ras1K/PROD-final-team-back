@@ -152,5 +152,4 @@ class AdminDocumentsController(call: ApplicationCall) : AbstractController(call)
             call.respond(HttpStatusCode.OK, "{\"success\": true}")
         }
     }
-
 }
