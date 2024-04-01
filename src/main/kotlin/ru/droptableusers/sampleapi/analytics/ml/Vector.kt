@@ -10,7 +10,7 @@ data class Vector (
 ) {
 
     fun distQ(vector: Vector): Double {
-        return ((vector.x - this.x).pow(2) + (vector.y - this.y).pow(2)) * weight
+        return ((vector.x - this.x).pow(2) + (vector.y - this.y).pow(2)) / weight
     }
 
 }
