@@ -18,6 +18,7 @@ import ru.droptableusers.sampleapi.controller.tours.AuthTourResultsController
 import ru.droptableusers.sampleapi.controller.users.AuthUsersController
 import ru.droptableusers.sampleapi.controller.users.UsersController
 import ru.droptableusers.sampleapi.controller.vacancies.VacancyController
+import ru.droptableusers.sampleapi.database.persistence.TagsPersistence
 import ru.droptableusers.sampleapi.utils.Logger
 
 /**
@@ -173,6 +174,20 @@ fun Application.configureRouting() {
                         }
                         get("/user/{id}") {
                             UserAnalyticController(call).getUserAnalytic()
+                        }
+                    }
+
+                    route("/tags"){
+                        get{
+                            TagsController(call).getAllTags()
+                        }
+
+                        post{
+                            TagsController(call).createTags()
+                        }
+
+                        delete {
+                            TagsController(call).deleteTags()
                         }
                     }
                 }
