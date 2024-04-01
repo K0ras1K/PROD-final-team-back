@@ -27,6 +27,9 @@ fun Application.configureRouting() {
         get("/") {
             call.respondText("Hello World!")
         }
+        get("/kotlin") {
+            call.respondText("Hello from Kotlin!")
+        }
 
         route("/1.0") {
             route("/public") {
