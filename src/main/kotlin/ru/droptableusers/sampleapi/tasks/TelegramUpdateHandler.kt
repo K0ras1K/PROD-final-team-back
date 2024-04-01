@@ -23,8 +23,8 @@ object TelegramUpdateHandler {
     var updateId: Int = 0
 
     fun handle(updates: List<Update>) {
-        println("Started handling updates")
         for (update in updates) {
+            println(update)
             try {
                 val inlineQuery: InlineQuery? = update.inlineQuery()
                 val chosenInlineResult: ChosenInlineResult? = update.chosenInlineResult()
