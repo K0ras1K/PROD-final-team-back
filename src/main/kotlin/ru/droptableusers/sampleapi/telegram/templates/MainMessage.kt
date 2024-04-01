@@ -3,6 +3,7 @@ package ru.droptableusers.sampleapi.telegram.templates
 import com.pengrad.telegrambot.request.EditMessageText
 import com.pengrad.telegrambot.request.SendMessage
 import ru.droptableusers.sampleapi.data.enums.TelegramChat
+import ru.droptableusers.sampleapi.telegram.keyboard.MainKeyboard
 
 class MainMessage(val chatId: Long) {
     fun create() {
@@ -13,7 +14,7 @@ class MainMessage(val chatId: Long) {
                 Привет! Это бот проекта DropTableUsers
                 Готов начинать?
                 """.trimIndent(),
-            ),
+            ).replyMarkup(MainKeyboard.generate()),
         )
     }
 
@@ -26,7 +27,7 @@ class MainMessage(val chatId: Long) {
                 Привет! Это бот проекта DropTableUsers
                 Готов начинать?
                 """.trimIndent(),
-            ),
+            ).replyMarkup(MainKeyboard.generate()),
         )
     }
 }
