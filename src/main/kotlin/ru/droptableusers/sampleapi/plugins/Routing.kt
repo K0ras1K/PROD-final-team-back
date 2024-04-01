@@ -46,7 +46,7 @@ fun Application.configureRouting() {
                     UsersController(call).login()
                 }
 
-                get("/withoutTeam"){
+                get("/withoutTeam") {
                     UsersController(call).selectWithoutTeam()
                 }
 

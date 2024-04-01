@@ -23,7 +23,18 @@ import ru.droptableusers.sampleapi.database.persistence.InvitePersistence
 import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
 
+/**
+ * Auth teams controller
+ *
+ * @constructor
+ *
+ * @param call
+ */
 class AuthTeamsController(call: ApplicationCall) : GroupAbstractController(call) {
+    /**
+     * Load team
+     *
+     */
     suspend fun loadTeam() {
         runBlocking {
             val teamId = call.parameters["id"]!!.toInt()
@@ -66,6 +77,10 @@ class AuthTeamsController(call: ApplicationCall) : GroupAbstractController(call)
         }
     }
 
+    /**
+     * Create team
+     *
+     */
     suspend fun createTeam() {
         runBlocking {
             // Проверка на наличие группы
@@ -90,6 +105,10 @@ class AuthTeamsController(call: ApplicationCall) : GroupAbstractController(call)
         }
     }
 
+    /**
+     * Apply
+     *
+     */
     // Request from user to team
     suspend fun apply() {
         runBlocking {
@@ -108,6 +127,10 @@ class AuthTeamsController(call: ApplicationCall) : GroupAbstractController(call)
         }
     }
 
+    /**
+     * Accept
+     *
+     */
     suspend fun accept() {
         runBlocking {
             val inviteId = call.parameters["inviteId"]!!.toInt()
@@ -122,6 +145,10 @@ class AuthTeamsController(call: ApplicationCall) : GroupAbstractController(call)
         }
     }
 
+    /**
+     * Load requests
+     *
+     */
     suspend fun loadRequests() {
         runBlocking {
             val teamId = TeamsPersistence().selectByUserId(UserPersistence().selectByUsername(login)!!.id)!!
@@ -152,6 +179,10 @@ class AuthTeamsController(call: ApplicationCall) : GroupAbstractController(call)
         }
     }
 
+    /**
+     * Load my
+     *
+     */
     suspend fun loadMy() {
         runBlocking {
             val teamId =
