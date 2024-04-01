@@ -94,6 +94,9 @@ fun Application.configureRouting() {
                 get("/load") {
                     PublicTeamsController(call).loadAll()
                 }
+                get("/loadml") {
+                    PublicTeamsController(call).loadAllByML()
+                }
 
                 get("/tags/{teamId}") {
                     TagsController(call).getTeamsTags()
