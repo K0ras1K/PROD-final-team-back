@@ -112,7 +112,7 @@ class UsersController(val call: ApplicationCall) {
                 JWT.create()
                     .withClaim("username", targetUserData.username)
                     .withClaim("passwordHash", targetUserData.password)
-                    .withClaim("id", targetUserData.id)
+                    .withClaim("id", userModel.id)
                     .withExpiresAt(Date(System.currentTimeMillis() + 1000L * 60L * 60L * 24L * 14L))
                     .sign(Algorithm.HMAC256(ApplicationConstants.SERVICE_SECRET_TOKEN))
             call.respond(HttpStatusCode.Created, TokenRespondOutput(token))

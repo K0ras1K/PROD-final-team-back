@@ -5,6 +5,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.plugins.openapi.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import ru.droptableusers.sampleapi.controller.documents.AdminDocumentsController
 import ru.droptableusers.sampleapi.controller.files.AuthUploadController
 import ru.droptableusers.sampleapi.controller.files.PublicDownloadController
 import ru.droptableusers.sampleapi.controller.groups.AuthGroupController
@@ -147,6 +148,11 @@ fun Application.configureRouting() {
                     route("/groups") {
                         post("/set") {
                             AuthGroupController(call).setGroup()
+                        }
+                    }
+                    route("/documents") {
+                        get("/list") {
+                            AdminDocumentsController(call).listDocuments()
                         }
                     }
                 }
