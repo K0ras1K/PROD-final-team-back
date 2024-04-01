@@ -65,6 +65,7 @@ class AuthUsersController(call: ApplicationCall) : AbstractController(call) {
                     JWT.create()
                         .withClaim("username", user.username)
                         .withClaim("passwordHash", user.password)
+                        .withClaim("id", user.id)
                         .withExpiresAt(Date(System.currentTimeMillis() + 1000L * 60L * 60L * 24L * 14L))
                         .sign(Algorithm.HMAC256(ApplicationConstants.SERVICE_SECRET_TOKEN))
                 call.respond(HttpStatusCode.Created, TokenRespondOutput(token))
