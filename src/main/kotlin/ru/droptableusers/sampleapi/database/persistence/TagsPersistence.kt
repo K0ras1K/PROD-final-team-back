@@ -75,4 +75,15 @@ class TagsPersistence {
             listOf()
         }
     }
+
+    fun getAllTags(): List<TagModel> {
+        return try {
+            transaction {
+                TagTable.selectAll()
+                    .map(::resultRowToTag)
+            }
+        } catch (e: Exception) {
+            listOf()
+        }
+    }
 }

@@ -10,5 +10,5 @@ data class DocumentOutputResponse(
     val required: Boolean,
     val template: String,
     val extensions: List<String>,
-    val conditions: List<DocumentConditionOutputResponse>
+    val conditions: List<DocumentConditionOutputResponse>,
 )

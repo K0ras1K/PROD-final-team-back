@@ -18,7 +18,7 @@ paths:
                 type: "string"
               examples:
                 Example#1:
-                  value: "DropTableUsers API 1.0"
+                  value: "DropTableUsers API 1.0."
   /1.0/admin/analytics/tour/{tourId}:
     get:
       description: ""
@@ -28,6 +28,16 @@ paths:
         required: true
         schema:
           type: "string"
+      - name: "tagId"
+        in: "query"
+        required: false
+        schema:
+          type: "integer"
+      - name: "step"
+        in: "query"
+        required: false
+        schema:
+          type: "integer"
       responses:
         "403":
           description: "Forbidden"
@@ -83,7 +93,7 @@ paths:
           content:
             '*/*':
               schema:
-                type: "string"
+                $ref: "#/components/schemas/DocumentOutputResponse"
   /1.0/admin/documents/list:
     get:
       description: ""
@@ -107,6 +117,36 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/DocumentOutputResponse"
+  /1.0/admin/documents/update:
+    patch:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/DocumentUpdateInput"
+        required: true
+      responses:
+        "403":
+          description: "Forbidden"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    status: "Forbidden"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "{\"success\": true}"
   /1.0/admin/groups/set:
     post:
       description: ""
@@ -128,6 +168,46 @@ paths:
                   value: "У вас недостаточно прав!"
         "200":
           description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /1.0/admin/tags:
+    delete:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/DeleteTagsInputModel"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TagsOutput"
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/CreateTagsInputModel"
+        required: true
+      responses:
+        "201":
+          description: "Created"
           content:
             '*/*':
               schema:
@@ -848,6 +928,50 @@ components:
       - "template"
       - "extensions"
       - "conditions"
+    DocumentConditionUpdateInput:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int32"
+        fieldName:
+          type: "string"
+        condition:
+          type: "string"
+        value:
+          type: "string"
+      required:
+      - "fieldName"
+      - "condition"
+      - "value"
+    DocumentUpdateInput:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int32"
+        name:
+          type: "string"
+        description:
+          type: "string"
+        required:
+          type: "boolean"
+        template:
+          type: "string"
+        extensions:
+          type: "array"
+          items:
+            type: "string"
+        conditions:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/DocumentConditionUpdateInput"
+      required:
+      - "name"
+      - "description"
+      - "template"
+      - "extensions"
+      - "conditions"
     GroupSetRequestModel:
       type: "object"
       properties:
@@ -867,6 +991,44 @@ components:
           - "NOT_VERIFIED"
       required:
       - "group"
+    DeleteTagsInputModel:
+      type: "object"
+      properties:
+        tagIdList:
+          type: "array"
+          items:
+            type: "integer"
+            format: "int32"
+      required:
+      - "tagIdList"
+    TagObjectOutput:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int32"
+        tag:
+          type: "string"
+      required:
+      - "tag"
+    TagsOutput:
+      type: "object"
+      properties:
+        list:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/TagObjectOutput"
+      required:
+      - "list"
+    CreateTagsInputModel:
+      type: "object"
+      properties:
+        tagList:
+          type: "array"
+          items:
+            type: "string"
+      required:
+      - "tagList"
     CreateTeamRequest:
       type: "object"
       properties:
@@ -900,7 +1062,7 @@ components:
           - "MEMBER"
           - "OLD_MEMBER"
           - "NOT_VERIFIED"
-        tgId:
+        tgLogin:
           type: "string"
         registerAt:
           type: "integer"
@@ -921,9 +1083,8 @@ components:
       - "firstName"
       - "lastName"
       - "group"
-      - "tgId"
+      - "tgLogin"
       - "description"
-      - "major"
     InvitesRespondModel:
       type: "object"
       properties:
@@ -968,25 +1129,6 @@ components:
       required:
       - "team"
       - "users"
-    TagObjectOutput:
-      type: "object"
-      properties:
-        id:
-          type: "integer"
-          format: "int32"
-        tag:
-          type: "string"
-      required:
-      - "tag"
-    TagsOutput:
-      type: "object"
-      properties:
-        list:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/TagObjectOutput"
-      required:
-      - "list"
     TourOutputResponse:
       type: "object"
       properties:

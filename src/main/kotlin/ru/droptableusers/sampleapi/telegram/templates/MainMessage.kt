@@ -18,6 +18,20 @@ class MainMessage(val chatId: Long) {
         )
     }
 
+    fun createNotRegistered() {
+        fun create() {
+            TelegramChat.VERIFICATION.BOT.execute(
+                SendMessage(
+                    chatId,
+                    """
+                    Ой! Похоже, вы не зарегистрированы на нашей платформе :(
+                    Вы можете создать аккаунт здесь - https://web.ethereally.space
+                    """.trimIndent(),
+                ).replyMarkup(MainKeyboard.generate()),
+            )
+        }
+    }
+
     fun replace(messageId: Int) {
         TelegramChat.VERIFICATION.BOT.execute(
             EditMessageText(

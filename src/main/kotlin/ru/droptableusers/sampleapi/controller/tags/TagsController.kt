@@ -6,6 +6,8 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import kotlinx.coroutines.runBlocking
 import ru.droptableusers.sampleapi.data.models.inout.input.tags.AddUserTagsInputModel
+import ru.droptableusers.sampleapi.data.models.inout.input.tags.CreateTagsInputModel
+import ru.droptableusers.sampleapi.data.models.inout.input.tags.DeleteTagsInputModel
 import ru.droptableusers.sampleapi.data.models.inout.input.tags.RemoveUserInputModel
 import ru.droptableusers.sampleapi.data.models.inout.output.ErrorResponse
 import ru.droptableusers.sampleapi.data.models.inout.output.tags.TagObjectOutput
@@ -63,6 +65,43 @@ class TagsController(val call: ApplicationCall) {
                 return@runBlocking
             }
             call.respond(HttpStatusCode.BadRequest, ErrorResponse("Не вписал userId"))
+        }
+    }
+
+    suspend fun getAllTags() {
+        runBlocking {
+            call.respond(
+                HttpStatusCode.OK,
+                TagsOutput(
+                    TagsPersistence().getAllTags().map {
+                        TagObjectOutput(it.id, it.tagString)
+                    },
+                ),
+            )
+        }
+    }
+
+    suspend fun createTags() {
+        runBlocking {
+            val createInput = call.receive<CreateTagsInputModel>()
+
+            createInput.tagList.forEach {
+                TagsPersistence().insert(it)
+            }
+
+            call.respond(HttpStatusCode.Created)
+        }
+    }
+
+    suspend fun deleteTags() {
+        runBlocking {
+            val createInput = call.receive<DeleteTagsInputModel>()
+
+            createInput.tagIdList.forEach {
+                TagsPersistence().delete(it)
+            }
+
+            call.respond(HttpStatusCode.OK)
         }
     }
 }
