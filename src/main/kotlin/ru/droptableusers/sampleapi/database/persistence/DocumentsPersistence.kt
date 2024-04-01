@@ -7,8 +7,10 @@ import ru.droptableusers.sampleapi.data.models.base.DocumentConditionModel
 import ru.droptableusers.sampleapi.data.models.base.DocumentModel
 import ru.droptableusers.sampleapi.database.schema.DocumentConditionsTable
 import ru.droptableusers.sampleapi.database.schema.DocumentsTable
+import java.lang.Exception
 
 class DocumentsPersistence {
+
     private fun resultRowToDocumentModel(row: ResultRow): DocumentModel =
         DocumentModel(
             id = row[DocumentsTable.id].value,
@@ -16,7 +18,7 @@ class DocumentsPersistence {
             description = row[DocumentsTable.description],
             required = row[DocumentsTable.required],
             template = row[DocumentsTable.template],
-            extensions = row[DocumentsTable.extensions],
+            extensions = row[DocumentsTable.extensions]
         )
 
     private fun resultRowToDocumentConditionModel(row: ResultRow): DocumentConditionModel =
@@ -25,7 +27,7 @@ class DocumentsPersistence {
             condition = row[DocumentConditionsTable.condition],
             fieldName = row[DocumentConditionsTable.fieldName],
             value = row[DocumentConditionsTable.value],
-            documentId = row[DocumentConditionsTable.documentId].value,
+            documentId = row[DocumentConditionsTable.documentId].value
         )
 
     fun insertDocument(documentModel: DocumentModel): DocumentModel? {
@@ -136,4 +138,16 @@ class DocumentsPersistence {
             listOf()
         }
     }
+
+    fun listDocumentConditions(): List<DocumentConditionModel> {
+        return try {
+            transaction {
+                DocumentConditionsTable.selectAll()
+                    .map(::resultRowToDocumentConditionModel)
+            }
+        } catch (exception: Exception) {
+            listOf()
+        }
+    }
+
 }

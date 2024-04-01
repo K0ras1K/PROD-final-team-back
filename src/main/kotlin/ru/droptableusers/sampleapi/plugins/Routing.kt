@@ -7,6 +7,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import ru.droptableusers.sampleapi.controller.analytics.TourAnalyticController
 import ru.droptableusers.sampleapi.controller.analytics.UserAnalyticController
+import ru.droptableusers.sampleapi.controller.documents.AdminDocumentsController
 import ru.droptableusers.sampleapi.controller.files.AuthUploadController
 import ru.droptableusers.sampleapi.controller.files.PublicDownloadController
 import ru.droptableusers.sampleapi.controller.groups.AuthGroupController
@@ -28,7 +29,7 @@ fun Application.configureRouting() {
         openAPI(path = "openapi", swaggerFile = "openapi/documentation.yaml")
 
         get("/") {
-            call.respondText("DropTableUsers API 1.0.")
+            call.respondText("DropTableUsers API 1.0")
         }
 
         route("/1.0") {
@@ -151,6 +152,11 @@ fun Application.configureRouting() {
                     route("/groups") {
                         post("/set") {
                             AuthGroupController(call).setGroup()
+                        }
+                    }
+                    route("/documents") {
+                        get("/list") {
+                            AdminDocumentsController(call).listDocuments()
                         }
                     }
                     route("/analytics") {

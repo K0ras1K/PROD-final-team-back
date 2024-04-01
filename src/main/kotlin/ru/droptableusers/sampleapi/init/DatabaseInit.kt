@@ -25,6 +25,9 @@ class DatabaseInit {
             ToursResultTable,
             ValidateDataTable,
             SearchingForTagsTable,
+            DocumentsTable,
+            DocumentConditionsTable,
+            FilledDocumentsTable
         )
 
     /**
