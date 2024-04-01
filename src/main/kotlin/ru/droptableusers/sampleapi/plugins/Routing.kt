@@ -165,6 +165,9 @@ fun Application.configureRouting() {
                         patch("/update") {
                             AdminDocumentsController(call).editDocument()
                         }
+                        delete("/{documentId}/delete") {
+                            AdminDocumentsController(call).deleteDocument()
+                        }
                     }
                     route("/analytics") {
                         get("/tour/{tourId}") {
