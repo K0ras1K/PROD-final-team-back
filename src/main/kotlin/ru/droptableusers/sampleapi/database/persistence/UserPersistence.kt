@@ -89,6 +89,19 @@ class UserPersistence {
         }
     }
 
+    fun selectByTelegramId(id: String): UserModel? {
+        return try {
+            transaction {
+                UserTable.selectAll()
+                    .where { UserTable.tgLogin.eq(id) }
+                    .single()
+                    .let(::resultRowToUserModel)
+            }
+        } catch (exception: Exception) {
+            null
+        }
+    }
+
     fun update(userModel: UserModel): Boolean {
         return try {
             transaction {

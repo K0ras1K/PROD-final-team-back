@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.UpdatesListener
 import com.pengrad.telegrambot.model.CallbackQuery
 import com.pengrad.telegrambot.model.ChosenInlineResult
 import com.pengrad.telegrambot.model.InlineQuery
+import com.pengrad.telegrambot.model.Message
 import com.pengrad.telegrambot.model.Update
 import com.pengrad.telegrambot.request.GetUpdates
 import com.pengrad.telegrambot.request.SendMessage
@@ -25,10 +26,9 @@ object TelegramUpdateHandler {
         println("Started handling updates")
         for (update in updates) {
             try {
-                val message = update.message()
                 val inlineQuery: InlineQuery? = update.inlineQuery()
                 val chosenInlineResult: ChosenInlineResult? = update.chosenInlineResult()
-                val callbackQuery: CallbackQuery? = update.callbackQuery() ?: return
+                val callbackQuery: CallbackQuery? = update.callbackQuery() ?: continue
                 if (callbackQuery!!.data().startsWith("verif-")) {
                     val userId: Int = callbackQuery.data().split("-")[1].toInt()
                     println("Кнопка бана сработала!")
@@ -49,8 +49,16 @@ object TelegramUpdateHandler {
                         )
                     }
                 }
+                if (callbackQuery.data().startsWith("show-teams")) {
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
+            }
+            try {
+                val message: Message = update.message() ?: continue
+                println(message.text())
+            } catch (exception: Exception) {
+                exception.printStackTrace()
             }
         }
     }
