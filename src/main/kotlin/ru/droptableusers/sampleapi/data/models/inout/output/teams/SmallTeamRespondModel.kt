@@ -9,5 +9,5 @@ class SmallTeamRespondModel(
     val description: String,
     val iconUrl: String,
     val bannerUrl: String,
-    val membersCount: Int
+    val membersCount: Int,
 )

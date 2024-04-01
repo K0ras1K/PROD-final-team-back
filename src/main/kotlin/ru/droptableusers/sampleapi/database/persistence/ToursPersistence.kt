@@ -10,19 +10,18 @@ import ru.droptableusers.sampleapi.database.schema.ToursTable
 import ru.droptableusers.sampleapi.database.schema.UserTable
 
 class ToursPersistence {
-
     private fun resultRowToTour(row: ResultRow): TourModel =
         TourModel(
             name = row[ToursTable.name],
             year = row[ToursTable.year],
-            maxScore = row[ToursTable.maxScore]
+            maxScore = row[ToursTable.maxScore],
         )
 
     private fun tourResultRowToTourResult(row: ResultRow): TourResultModel =
         TourResultModel(
             tourId = row[ToursResultTable.tourId].value,
             result = row[ToursResultTable.result],
-            userId = row[ToursResultTable.userId].value
+            userId = row[ToursResultTable.userId].value,
         )
 
     fun insertTour(tourModel: TourModel) {
@@ -101,7 +100,10 @@ class ToursPersistence {
         }
     }
 
-    fun deleteTourResult(userId: Int, tourId: Int): Boolean {
+    fun deleteTourResult(
+        userId: Int,
+        tourId: Int,
+    ): Boolean {
         return try {
             transaction {
                 ToursResultTable.deleteWhere { ToursResultTable.userId.eq(userId) and ToursResultTable.tourId.eq(tourId) } > 0
@@ -110,5 +112,4 @@ class ToursPersistence {
             false
         }
     }
-
 }

@@ -139,4 +139,15 @@ class DocumentsPersistence {
         }
     }
 
+    fun listDocumentConditions(): List<DocumentConditionModel> {
+        return try {
+            transaction {
+                DocumentConditionsTable.selectAll()
+                    .map(::resultRowToDocumentConditionModel)
+            }
+        } catch (exception: Exception) {
+            listOf()
+        }
+    }
+
 }

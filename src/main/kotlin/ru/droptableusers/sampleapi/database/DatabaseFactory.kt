@@ -10,7 +10,6 @@ import com.zaxxer.hikari.HikariDataSource
  */
 
 object DatabaseFactory {
-
     /**
      * Initialize hikari data pool
      *
@@ -23,7 +22,7 @@ object DatabaseFactory {
         url: String,
         driver: String,
         login: String,
-        pw: String
+        pw: String,
     ) = HikariDataSource(
         HikariConfig().apply {
             driverClassName = driver

@@ -6,13 +6,12 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import ru.droptableusers.sampleapi.data.models.base.SearchingForModel
 import ru.droptableusers.sampleapi.database.schema.SearchingForTable
 import ru.droptableusers.sampleapi.database.schema.SearchingForTagsTable
-import ru.droptableusers.sampleapi.database.schema.TagsUsersTable
 
 class SearchingForPersistence {
     private fun resultRowToSearchingFor(resultRow: ResultRow) =
         SearchingForModel(
             id = resultRow[SearchingForTable.id].value,
-            teamId = resultRow[SearchingForTable.teamId].value
+            teamId = resultRow[SearchingForTable.teamId].value,
         )
 
     fun selectByTeamId(teamId: Int): SearchingForModel? {
@@ -73,7 +72,10 @@ class SearchingForPersistence {
         }
     }
 
-    fun addTagSearchingFor(tagId: Int, searchingForId: Int) {
+    fun addTagSearchingFor(
+        tagId: Int,
+        searchingForId: Int,
+    ) {
         try {
             transaction {
                 SearchingForTagsTable.insert {
@@ -98,7 +100,10 @@ class SearchingForPersistence {
         }
     }
 
-    fun addTag(searchingForId: Int, tagId: Int){
+    fun addTag(
+        searchingForId: Int,
+        tagId: Int,
+    ) {
         try {
             transaction {
                 SearchingForTagsTable.insert {
@@ -106,20 +111,23 @@ class SearchingForPersistence {
                     it[SearchingForTagsTable.searchingForId] = searchingForId
                 }
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    fun removeTag(searchingForId: Int, tagId: Int): Boolean{
+    fun removeTag(
+        searchingForId: Int,
+        tagId: Int,
+    ): Boolean {
         return try {
             transaction {
                 SearchingForTagsTable.deleteWhere {
                     SearchingForTagsTable.searchingForId.eq(searchingForId) and
-                            SearchingForTagsTable.tagId.eq(tagId)
+                        SearchingForTagsTable.tagId.eq(tagId)
                 } > 0
             }
-        }  catch (e: Exception){
+        } catch (e: Exception) {
             false
         }
     }

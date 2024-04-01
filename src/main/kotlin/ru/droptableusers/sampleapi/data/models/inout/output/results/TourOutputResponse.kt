@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class TourOutputResponse(
     val name: String,
     val year: Short,
-    val maxScore: Short
+    val maxScore: Short,
 )

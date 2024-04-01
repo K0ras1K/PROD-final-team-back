@@ -5,5 +5,5 @@ data class TeamModel(
     val name: String,
     val description: String,
     val iconUrl: String,
-    val bannerUrl: String
+    val bannerUrl: String,
 )

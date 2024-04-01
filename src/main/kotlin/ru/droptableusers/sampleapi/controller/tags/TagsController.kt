@@ -13,21 +13,19 @@ import ru.droptableusers.sampleapi.data.models.inout.output.tags.TagsOutput
 import ru.droptableusers.sampleapi.database.persistence.TagsPersistence
 import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
-import ru.droptableusers.sampleapi.database.schema.UserTable
 
 class TagsController(val call: ApplicationCall) {
-
-    private fun tagListByUserId(userId: Int): List<TagObjectOutput>{
+    private fun tagListByUserId(userId: Int): List<TagObjectOutput> {
         val tags = TagsPersistence().getTagsByIdList(UserPersistence().selectTagIds(userId))
-        return tags.map{
+        return tags.map {
             TagObjectOutput(it.id, it.tagString)
         }
     }
 
-    suspend fun getUserTags(){
+    suspend fun getUserTags() {
         runBlocking {
             val userId = call.parameters["userId"]?.toInt()
-            if(userId != null){
+            if (userId != null) {
                 call.respond(HttpStatusCode.OK, TagsOutput(tagListByUserId(userId)))
                 return@runBlocking
             }
@@ -35,7 +33,7 @@ class TagsController(val call: ApplicationCall) {
         }
     }
 
-    suspend fun addUserTags(){
+    suspend fun addUserTags() {
         runBlocking {
             val tagsInput = call.receive<AddUserTagsInputModel>()
             tagsInput.tagIdList.forEach {
@@ -45,7 +43,7 @@ class TagsController(val call: ApplicationCall) {
         }
     }
 
-    suspend fun removeUserTag(){
+    suspend fun removeUserTag() {
         runBlocking {
             val removeInput = call.receive<RemoveUserInputModel>()
             UserPersistence().removeTag(removeInput.userId, removeInput.tagId)
@@ -53,13 +51,12 @@ class TagsController(val call: ApplicationCall) {
         }
     }
 
-
-    suspend fun getTeamsTags(){
+    suspend fun getTeamsTags() {
         runBlocking {
             val teamId = call.parameters["teamId"]?.toInt()
-            if(teamId != null){
+            if (teamId != null) {
                 val tags = mutableSetOf<TagObjectOutput>()
-                TeamsPersistence().selectTeammates(teamId).forEach{
+                TeamsPersistence().selectTeammates(teamId).forEach {
                     tags.addAll(tagListByUserId(it))
                 }
                 call.respond(HttpStatusCode.OK, TagsOutput(tags.toList()))
@@ -68,6 +65,4 @@ class TagsController(val call: ApplicationCall) {
             call.respond(HttpStatusCode.BadRequest, ErrorResponse("Не вписал userId"))
         }
     }
-
-
 }

@@ -13,7 +13,6 @@ import ru.droptableusers.sampleapi.database.persistence.UserPersistence
 
 // TODO add to Route (& check class)
 class UserAnalyticController(call: ApplicationCall) : AbstractController(call) {
-
     suspend fun getUserAnalytic() {
         runBlocking {
             val userId = call.parameters["id"]?.toInt()
@@ -27,24 +26,25 @@ class UserAnalyticController(call: ApplicationCall) : AbstractController(call) {
     }
 
     private fun getUserAnalyticById(userId: Int): UserAnalyticResponse {
-        val averageAlgebraic = UserAnalytics.handleAverageAlgebraic(userId);
-        val averageMedian = UserAnalytics.handleAverageMedian(userId);
+        val averageAlgebraic = UserAnalytics.handleAverageAlgebraic(userId)
+        val averageMedian = UserAnalytics.handleAverageMedian(userId)
 
-        val tours = mutableListOf<UserTourAnalyticResponse>();
+        val tours = mutableListOf<UserTourAnalyticResponse>()
         for (tourResult in ToursPersistence().selectResultsByTourId(userId)) {
             val tourModel = ToursPersistence().selectTourById(tourResult.tourId)!!
-            tours.add(UserTourAnalyticResponse(
-                name = tourModel.name,
-                maxScore = tourModel.maxScore,
-                score = tourResult.result
-            ))
+            tours.add(
+                UserTourAnalyticResponse(
+                    name = tourModel.name,
+                    maxScore = tourModel.maxScore,
+                    score = tourResult.result,
+                ),
+            )
         }
 
         return UserAnalyticResponse(
             tours = tours,
             averageAlgebraic = averageAlgebraic,
-            averageMedian = averageMedian
+            averageMedian = averageMedian,
         )
     }
-
 }

@@ -16,9 +16,9 @@ import ru.droptableusers.sampleapi.data.models.base.InviteModel
 import ru.droptableusers.sampleapi.data.models.inout.input.users.EditUserModel
 import ru.droptableusers.sampleapi.data.models.inout.input.users.EditUserPassword
 import ru.droptableusers.sampleapi.data.models.inout.output.ErrorResponse
-import ru.droptableusers.sampleapi.data.models.inout.output.ProfileOutputResponse
 import ru.droptableusers.sampleapi.data.models.inout.output.TokenRespondOutput
 import ru.droptableusers.sampleapi.data.models.inout.output.teams.SmallTeamRespondModel
+import ru.droptableusers.sampleapi.data.models.inout.output.users.ProfileOutputResponse
 import ru.droptableusers.sampleapi.data.models.inout.output.users.UserInvitesRespondModel
 import ru.droptableusers.sampleapi.database.persistence.GroupPersistence
 import ru.droptableusers.sampleapi.database.persistence.InvitePersistence
@@ -42,6 +42,7 @@ class AuthUsersController(call: ApplicationCall) : AbstractController(call) {
                 id = userData.id,
                 description = userData.description,
                 team = TeamsPersistence().selectByUserId(userData.id) ?: -1,
+                major = userData.major,
             )
         call.respond(HttpStatusCode.OK, respondModel)
     }

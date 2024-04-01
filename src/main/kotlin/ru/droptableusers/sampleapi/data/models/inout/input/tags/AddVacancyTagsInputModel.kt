@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AddVacancyTagsInputModel(
     val vacancyId: Int,
-    val tagIdList: List<Int>
+    val tagIdList: List<Int>,
 )

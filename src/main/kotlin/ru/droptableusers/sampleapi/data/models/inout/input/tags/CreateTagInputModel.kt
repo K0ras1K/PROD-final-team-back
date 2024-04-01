@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CreateTagInputModel(
-    val tagText: String
+    val tagText: String,
 )

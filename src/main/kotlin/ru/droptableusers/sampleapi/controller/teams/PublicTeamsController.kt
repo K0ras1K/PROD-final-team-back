@@ -12,16 +12,17 @@ class PublicTeamsController(val call: ApplicationCall) {
         runBlocking {
             val limit = call.request.queryParameters["limit"]!!.toInt()
             val offset = call.request.queryParameters["offset"]!!.toLong()
-            val allTeams = TeamsPersistence().selectAll(limit, offset).map {
-                SmallTeamRespondModel(
-                    id = it.id,
-                    name = it.name,
-                    description = it.description,
-                    iconUrl = it.iconUrl,
-                    bannerUrl = it.bannerUrl,
-                    membersCount = TeamsPersistence().selectTeammates(it.id).size
-                )
-            }
+            val allTeams =
+                TeamsPersistence().selectAll(limit, offset).map {
+                    SmallTeamRespondModel(
+                        id = it.id,
+                        name = it.name,
+                        description = it.description,
+                        iconUrl = it.iconUrl,
+                        bannerUrl = it.bannerUrl,
+                        membersCount = TeamsPersistence().selectTeammates(it.id).size,
+                    )
+                }
             call.respond(HttpStatusCode.OK, allTeams)
         }
     }

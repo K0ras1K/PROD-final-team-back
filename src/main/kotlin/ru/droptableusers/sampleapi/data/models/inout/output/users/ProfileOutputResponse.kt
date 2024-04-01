@@ -1,7 +1,8 @@
-package ru.droptableusers.sampleapi.data.models.inout.output
+package ru.droptableusers.sampleapi.data.models.inout.output.users
 
 import kotlinx.serialization.Serializable
 import ru.droptableusers.sampleapi.data.enums.Group
+import ru.droptableusers.sampleapi.data.enums.Major
 
 @Serializable
 data class ProfileOutputResponse(
@@ -13,5 +14,6 @@ data class ProfileOutputResponse(
     val tgId: String,
     val registerAt: Long,
     val description: String,
-    val team: Int
+    val major: Major,
+    val team: Int,
 )
