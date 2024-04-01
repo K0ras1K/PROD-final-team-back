@@ -57,6 +57,33 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/UserAnalyticResponse"
+  /1.0/admin/documents/create:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/DocumentCreateInput"
+        required: true
+      responses:
+        "403":
+          description: "Forbidden"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    status: "Forbidden"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
   /1.0/admin/documents/list:
     get:
       description: ""
@@ -739,6 +766,44 @@ components:
           type: "string"
       required:
         - "status"
+    DocumentConditionCreateInput:
+      type: "object"
+      properties:
+        fieldName:
+          type: "string"
+        condition:
+          type: "string"
+        value:
+          type: "string"
+      required:
+        - "fieldName"
+        - "condition"
+        - "value"
+    DocumentCreateInput:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        description:
+          type: "string"
+        required:
+          type: "boolean"
+        template:
+          type: "string"
+        extensions:
+          type: "array"
+          items:
+            type: "string"
+        conditions:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/DocumentConditionCreateInput"
+      required:
+        - "name"
+        - "description"
+        - "template"
+        - "extensions"
+        - "conditions"
     DocumentConditionOutputResponse:
       type: "object"
       properties:
