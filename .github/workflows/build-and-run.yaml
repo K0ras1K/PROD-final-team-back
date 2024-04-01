@@ -4,15 +4,16 @@ on: [push]
 jobs:
   test-run:
     runs-on: ubuntu-latest
+    needs: test-deploy
     timeout-minutes: ${{ fromJSON(vars.DEFAULT_JOB_TIMEOUT) }}
     steps:
       - uses: actions/checkout@v4
       - name: Build docker images
-        run: docker compose build
+        run: docker compose -f docker-compose.ci.yml build
         shell: bash
       - name: Run application via docker compose
         run: |
-          docker compose up &
+          docker compose -f docker-compose.ci.yml up &
           COMPOSE_PID=$!
           sleep 20
           if kill -0 $COMPOSE_PID 2>/dev/null; then
