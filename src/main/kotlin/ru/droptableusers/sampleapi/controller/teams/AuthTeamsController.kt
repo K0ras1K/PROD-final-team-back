@@ -13,6 +13,7 @@ import ru.droptableusers.sampleapi.data.models.base.InviteModel
 import ru.droptableusers.sampleapi.data.models.base.TeamModel
 import ru.droptableusers.sampleapi.data.models.inout.input.teams.CreateTeamRequest
 import ru.droptableusers.sampleapi.data.models.inout.output.ErrorResponse
+import ru.droptableusers.sampleapi.data.models.inout.output.teams.CreateTeamRespond
 import ru.droptableusers.sampleapi.data.models.inout.output.teams.InvitesRespondModel
 import ru.droptableusers.sampleapi.data.models.inout.output.teams.SmallTeamRespondModel
 import ru.droptableusers.sampleapi.data.models.inout.output.teams.TeamRespondModel
@@ -85,7 +86,7 @@ class AuthTeamsController(call: ApplicationCall) : GroupAbstractController(call)
 
             val teamId = TeamsPersistence().insert(targetTeamData)
             TeamsPersistence().addMember(UserPersistence().selectByUsername(login)!!.id, teamId!!)
-            call.respond(HttpStatusCode.OK, teamId)
+            call.respond(HttpStatusCode.OK, CreateTeamRespond(teamId))
         }
     }
 
@@ -148,6 +149,28 @@ class AuthTeamsController(call: ApplicationCall) : GroupAbstractController(call)
                     )
                 }
             call.respond(HttpStatusCode.OK, respondModel)
+        }
+    }
+
+    suspend fun loadMy() {
+        runBlocking {
+            val teamId =
+                TeamsPersistence().selectByUserId(
+                    UserPersistence().selectByUsername(login)!!.id,
+                )!!
+            val team =
+                TeamsPersistence().selectById(teamId)
+                    .let {
+                        SmallTeamRespondModel(
+                            id = it!!.id,
+                            name = it.name,
+                            description = it.description,
+                            iconUrl = it.iconUrl,
+                            bannerUrl = it.bannerUrl,
+                            membersCount = TeamsPersistence().selectTeammates(it.id).size,
+                        )
+                    }
+            call.respond(HttpStatusCode.OK, team)
         }
     }
 }

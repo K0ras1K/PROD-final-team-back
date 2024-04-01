@@ -112,6 +112,7 @@ fun Application.configureRouting() {
                         AuthTeamsController(call).loadRequests()
                     }
                     get("/loadmy") {
+                        AuthTeamsController(call).loadMy()
                     }
                 }
             }
