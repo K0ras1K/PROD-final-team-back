@@ -176,7 +176,7 @@ class UserPersistence {
         return try {
             transaction {
                 UserTable.selectAll()
-                    .where { TagsUsersTable.userId.notInList(TeamsPersistence().selectAllMembers()) }
+                    .where { UserTable.id.notInList(TeamsPersistence().selectAllMembers()) }
                     .map(::resultRowToUserModel)
             }
         } catch (e: Exception) {
