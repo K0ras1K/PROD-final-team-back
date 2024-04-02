@@ -14,6 +14,7 @@ import ru.droptableusers.sampleapi.database.persistence.DocumentsPersistence
 import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
 import java.time.Duration
+import java.time.Year
 import java.time.temporal.ChronoUnit
 import java.util.*
 import kotlin.collections.HashMap
@@ -69,7 +70,7 @@ class AdminUsersController(call: ApplicationCall) : AbstractController(call) {
                             var isRequired = false
                             when (condition.fieldName) {
                                 "age" -> {
-                                    val age = ChronoUnit.YEARS.between(Date(System.currentTimeMillis()).toInstant(), Date(it.birthdayDate).toInstant())
+                                    val age = Duration.between(Date(System.currentTimeMillis()).toInstant(), Date(it.birthdayDate).toInstant()).get(ChronoUnit.YEARS)
                                     when (condition.condition) {
                                         "less" -> {
                                             if (age < condition.value.toInt()) {
