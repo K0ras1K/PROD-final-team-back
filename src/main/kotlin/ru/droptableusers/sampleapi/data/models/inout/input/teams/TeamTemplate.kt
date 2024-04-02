@@ -9,5 +9,5 @@ data class TeamTemplate(val slots: List<Slot>)
 @Serializable
 data class Slot(
     val possibleItems: Set<Major>,
-    val required: Boolean
+    val required: Boolean,
 )

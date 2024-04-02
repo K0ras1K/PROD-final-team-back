@@ -36,7 +36,7 @@ class DocumentsPersistence {
             userId = row[FilledDocumentsTable.userId].value,
             documentId = row[FilledDocumentsTable.documentId].value,
             fileName = row[FilledDocumentsTable.fileName],
-            lastUpdate = row[FilledDocumentsTable.lastUpdate]
+            lastUpdate = row[FilledDocumentsTable.lastUpdate],
         )
 
     fun insertDocument(documentModel: DocumentModel): DocumentModel? {

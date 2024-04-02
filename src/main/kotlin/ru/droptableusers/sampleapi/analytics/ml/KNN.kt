@@ -11,8 +11,9 @@ object KNN {
     ): Set<TeamModel> {
         val result = mutableMapOf<TeamModel, Double>()
         teams.forEach { (k, v) ->
-            if (v.isNotEmpty())
+            if (v.isNotEmpty()) {
                 result[k] = sort(v, tags)
+            }
         }
 
         result.forEach {
@@ -84,5 +85,4 @@ object KNN {
             else -> null
         }
     }
-
 }

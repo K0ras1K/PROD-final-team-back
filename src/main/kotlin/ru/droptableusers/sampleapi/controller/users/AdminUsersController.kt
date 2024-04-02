@@ -14,7 +14,6 @@ import ru.droptableusers.sampleapi.database.persistence.DocumentsPersistence
 import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
 import java.util.*
-import kotlin.collections.HashMap
 
 class AdminUsersController(call: ApplicationCall) : AbstractController(call) {
     private fun compareDocumentAndConditions(conditions: List<DocumentConditionModel>): Map<Int, List<DocumentConditionModel>> {
@@ -58,60 +57,64 @@ class AdminUsersController(call: ApplicationCall) : AbstractController(call) {
             val teamsUsers = mapTeamToUser(TeamsPersistence().listAllTeamsMembersRelationships())
             val teamsDb = TeamsPersistence().selectAll()
             val teams = teamsDb.associate { it.id to it }
-            val result = users.map {
-                var success = true
-                documents.forEach {doc ->
-                    if (doc.required) {
-                        val documentConditions = conditions[doc.id].orEmpty()
-                        documentConditions.forEach { condition ->
-                            var isRequired = false
-                            when (condition.fieldName) {
-                                "age" -> {
-                                    val age = (Date(System.currentTimeMillis() - it.birthdayDate)).year
-                                    when (condition.condition) {
-                                        "less" -> {
-                                            if (age < condition.value.toInt()) {
-                                                isRequired = true
+            val result =
+                users.map {
+                    var success = true
+                    documents.forEach { doc ->
+                        if (doc.required) {
+                            val documentConditions = conditions[doc.id].orEmpty()
+                            documentConditions.forEach { condition ->
+                                var isRequired = false
+                                when (condition.fieldName) {
+                                    "age" -> {
+                                        val age = (Date(System.currentTimeMillis() - it.birthdayDate)).year
+                                        when (condition.condition) {
+                                            "less" -> {
+                                                if (age < condition.value.toInt()) {
+                                                    isRequired = true
+                                                }
                                             }
-                                        }
-                                        "equals" -> {
-                                            if (age == condition.value.toInt()) {
-                                                isRequired = true
+
+                                            "equals" -> {
+                                                if (age == condition.value.toInt()) {
+                                                    isRequired = true
+                                                }
                                             }
-                                        }
-                                        "more" -> {
-                                            if (age > condition.value.toInt()) {
-                                                isRequired = true
+
+                                            "more" -> {
+                                                if (age > condition.value.toInt()) {
+                                                    isRequired = true
+                                                }
                                             }
                                         }
                                     }
-                                }
-                                "sex" -> {
-                                    val sex = "male"; // TODO Fetch from DB
-                                    if (sex == condition.value) {
-                                        isRequired = true
+
+                                    "sex" -> {
+                                        val sex = "male"; // TODO Fetch from DB
+                                        if (sex == condition.value) {
+                                            isRequired = true
+                                        }
                                     }
                                 }
-                            }
-                            if (isRequired) {
-                                if (!(filledDocuments.containsKey(it.id) && filledDocuments[it.id]!!.containsKey(doc.id))) {
-                                    success = false
+                                if (isRequired) {
+                                    if (!(filledDocuments.containsKey(it.id) && filledDocuments[it.id]!!.containsKey(doc.id))) {
+                                        success = false
+                                    }
                                 }
                             }
                         }
                     }
+                    AdminUserOutputResponse(
+                        id = it.id,
+                        firstName = it.firstName,
+                        lastName = it.lastName,
+                        sex = "male", // TODO Fetch from db
+                        email = it.username,
+                        birthdayDate = it.birthdayDate,
+                        commandName = if (teamsUsers.containsKey(it.id)) teams[teamsUsers[it.id]!!]!!.name else "",
+                        docsReady = success,
+                    )
                 }
-                AdminUserOutputResponse(
-                    id = it.id,
-                    firstName = it.firstName,
-                    lastName = it.lastName,
-                    sex = "male", // TODO Fetch from db
-                    email = it.username,
-                    birthdayDate = it.birthdayDate,
-                    commandName = if(teamsUsers.containsKey(it.id)) teams[teamsUsers[it.id]!!]!!.name else "",
-                    docsReady = success
-                )
-            }
             call.respond(HttpStatusCode.OK, result)
         }
     }
