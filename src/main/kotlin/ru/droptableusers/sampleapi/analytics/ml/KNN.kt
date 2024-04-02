@@ -54,10 +54,32 @@ object KNN {
 
     // TODO dataset
     private fun getVector(tag: String): Vector? {
-        return when (tag) {
-            "python" -> Vector(tag, 1.0, 0.0, 0.0)
-            "docker" -> Vector(tag, 0.5, 0.0, 0.0)
+        val t = tag.lowercase()
+        return when (t.lowercase()) {
+            "mobile" -> Vector(t, 0.8, 0.2, 0.9)
+            "android" -> Vector(t, 0.7, 0.3, 0.8)
+            "ios" -> Vector(t, 0.7, 0.2, 0.85)
+            "swift" -> Vector(t, 0.6, 0.25, 0.82)
+            "flutter" -> Vector(t, 0.6, 0.35, 0.77)
+            "java" -> Vector(t, 0.5, 0.3, 0.9)
+            "kotlin" -> Vector(t, 0.5, 0.25, 0.88)
+            "frontend" -> Vector(t, 0.8, 0.2, 0.7)
+            "javascript" -> Vector(t, 0.7, 0.3, 0.65)
+            "react" -> Vector(t, 0.6, 0.35, 0.63)
+            "angular" -> Vector(t, 0.5, 0.3, 0.7)
+            "vue" -> Vector(t, 0.5, 0.25, 0.72)
+            "backend" -> Vector(t, 0.8, 0.2, 0.5)
+            "python" -> Vector(t, 0.7, 0.25, 0.48)
+            "nodejs" -> Vector(t, 0.6, 0.3, 0.4)
+            "php" -> Vector(t, 0.5, 0.25, 0.5)
+            "c#" -> Vector(t, 0.5, 0.35, 0.45)
+            "docker" -> Vector(t, 0.6, 0.8, 0.2)
+            "github ci" -> Vector(t, 0.6, 0.82, 0.2)
+            "heroku" -> Vector(t, 0.5, 0.88, 0.3)
+            "cloud" -> Vector(t, 0.5, 0.9, 0.28)
+            "kubernetes" -> Vector(t, 0.4, 0.85, 0.28)
             else -> null
         }
     }
+
 }
