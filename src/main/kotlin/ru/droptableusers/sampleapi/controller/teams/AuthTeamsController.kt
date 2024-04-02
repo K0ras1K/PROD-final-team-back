@@ -18,10 +18,7 @@ import ru.droptableusers.sampleapi.data.models.inout.output.teams.InvitesRespond
 import ru.droptableusers.sampleapi.data.models.inout.output.teams.SmallTeamRespondModel
 import ru.droptableusers.sampleapi.data.models.inout.output.teams.TeamRespondModel
 import ru.droptableusers.sampleapi.data.models.inout.output.users.ProfileOutputResponse
-import ru.droptableusers.sampleapi.database.persistence.GroupPersistence
-import ru.droptableusers.sampleapi.database.persistence.InvitePersistence
-import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
-import ru.droptableusers.sampleapi.database.persistence.UserPersistence
+import ru.droptableusers.sampleapi.database.persistence.*
 
 /**
  * Auth teams controller
@@ -101,6 +98,7 @@ class AuthTeamsController(call: ApplicationCall) : GroupAbstractController(call)
 
             val teamId = TeamsPersistence().insert(targetTeamData)
             TeamsPersistence().addMember(UserPersistence().selectByUsername(login)!!.id, teamId!!)
+
             call.respond(HttpStatusCode.OK, CreateTeamRespond(teamId))
         }
     }
@@ -140,6 +138,12 @@ class AuthTeamsController(call: ApplicationCall) : GroupAbstractController(call)
 
             TeamsPersistence().addMember(userId, teamId)
             InvitePersistence().delete(inviteId)
+
+            val user = UserPersistence().selectById(userId)
+            if (user?.major != null){
+                val sfm = SearchingForPersistence().selectFirstByMajor(user.major)
+                if (sfm != null) SearchingForPersistence().deleteBySlotIndex(inviteData.teamId, sfm.slotIndex)
+            }
 
             call.respond(HttpStatusCode.OK)
         }

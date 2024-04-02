@@ -1,8 +1,10 @@
 package ru.droptableusers.sampleapi.database.persistence
 
+import io.ktor.server.engine.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
+import ru.droptableusers.sampleapi.data.enums.Major
 import ru.droptableusers.sampleapi.data.models.base.SearchingForModel
 import ru.droptableusers.sampleapi.database.schema.SearchingForTable
 import ru.droptableusers.sampleapi.database.schema.SearchingForTagsTable
@@ -12,6 +14,8 @@ class SearchingForPersistence {
         SearchingForModel(
             id = resultRow[SearchingForTable.id].value,
             teamId = resultRow[SearchingForTable.teamId].value,
+            slotIndex = resultRow[SearchingForTable.slotIndex],
+            major = resultRow[SearchingForTable.major]
         )
 
     fun selectByTeamId(teamId: Int): List<SearchingForModel> {
@@ -39,15 +43,16 @@ class SearchingForPersistence {
         }
     }
 
-    fun insert(teamId: Int) {
-        try {
+    fun insert(teamId: Int, slotIndex: Int): Int {
+        return try {
             transaction {
                 SearchingForTable.insert {
                     it[SearchingForTable.teamId] = teamId
-                }
+                    it[SearchingForTable.slotIndex] = slotIndex
+                }.resultedValues!!.first()[SearchingForTable.id].value
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            -1
         }
     }
 
@@ -61,13 +66,37 @@ class SearchingForPersistence {
         }
     }
 
-    fun deleteByTeamId(teamId: Int): Boolean {
+    fun deleteBySlotIndex(teamId: Int, slotIndex: Int): Boolean {
         return try {
             transaction {
-                SearchingForTable.deleteWhere { SearchingForTable.teamId.eq(id) } > 0
+                SearchingForTable.deleteWhere { SearchingForTable.teamId.eq(teamId) and
+                        SearchingForTable.slotIndex.eq(slotIndex)} > 0
             }
         } catch (e: Exception) {
             false
+        }
+    }
+
+    fun deleteByTeamId(teamId: Int): Boolean {
+        return try {
+            transaction {
+                SearchingForTable.deleteWhere { SearchingForTable.teamId.eq(teamId) } > 0
+            }
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    fun selectFirstByMajor(major: Major): SearchingForModel? {
+        return try {
+            transaction {
+                SearchingForTable.selectAll()
+                    .where { SearchingForTable.major.eq(major) }
+                    .single()
+                    .let(::resultRowToSearchingFor)
+            }
+        } catch (e: Exception){
+            null
         }
     }
 

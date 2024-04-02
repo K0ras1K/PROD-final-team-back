@@ -12,12 +12,14 @@ import ru.droptableusers.sampleapi.controller.files.AuthUploadController
 import ru.droptableusers.sampleapi.controller.files.PublicDownloadController
 import ru.droptableusers.sampleapi.controller.groups.AuthGroupController
 import ru.droptableusers.sampleapi.controller.tags.TagsController
+import ru.droptableusers.sampleapi.controller.teams.AdminTeamsController
 import ru.droptableusers.sampleapi.controller.teams.AuthTeamsController
 import ru.droptableusers.sampleapi.controller.teams.PublicTeamsController
 import ru.droptableusers.sampleapi.controller.tours.AuthTourResultsController
 import ru.droptableusers.sampleapi.controller.users.AdminUsersController
 import ru.droptableusers.sampleapi.controller.users.AuthUsersController
 import ru.droptableusers.sampleapi.controller.users.UsersController
+import ru.droptableusers.sampleapi.controller.vacancies.AuthVacancyController
 import ru.droptableusers.sampleapi.controller.vacancies.VacancyController
 
 /**
@@ -82,7 +84,6 @@ fun Application.configureRouting() {
                             AuthUsersController(call).apply()
                         }
                         post("/accept/{inviteId}") {
-                            println("хуй")
                             AuthUsersController(call).accept()
                         }
                         get("/load") {
@@ -101,6 +102,10 @@ fun Application.configureRouting() {
 
                 get("/tags/{teamId}") {
                     TagsController(call).getTeamsTags()
+                }
+
+                get("/template"){
+                    PublicTeamsController(call).getTeamTemplate()
                 }
 
                 authenticate("auth-jwt") {
@@ -122,17 +127,30 @@ fun Application.configureRouting() {
                     get("/loadmy") {
                         AuthTeamsController(call).loadMy()
                     }
+                    route("/vacancy"){
+                        post("/generate"){
+                            AuthVacancyController(call).generateVacancies()
+                        }
+
+                        get("/{teamId}"){
+                            AuthVacancyController(call).get()
+                        }
+                    }
                 }
+
+
             }
             route("/vacancy") {
                 get("/{id}") {
                     VacancyController(call).get()
                 }
-                post {
-                    VacancyController(call).add()
-                }
-                delete("/{id}") {
-                    VacancyController(call).delete()
+                authenticate("auth-jwt") {
+//                    post {
+//                        VacancyController(call).add()
+//                    }
+                    delete("/{id}") {
+                        VacancyController(call).delete()
+                    }
                 }
             }
             route("/tours") {
@@ -153,9 +171,6 @@ fun Application.configureRouting() {
                     authenticate("auth-jwt") {
                         post("/pdf") {
                             AuthUploadController(call).uploadPdfFile()
-                        }
-                        post("/documentTemplate") {
-                            AuthUploadController(call).uploadDocumentTemplateFile()
                         }
                     }
                 }
@@ -187,6 +202,17 @@ fun Application.configureRouting() {
                         }
                         get("/user/{id}") {
                             UserAnalyticController(call).getUserAnalytic()
+                        }
+                    }
+
+                    route("/teams"){
+                        route("/template"){
+                            get{
+                                PublicTeamsController(call).getTeamTemplate()
+                            }
+                            post {
+                                AdminTeamsController(call).editTeamTemplate()
+                            }
                         }
                     }
 
