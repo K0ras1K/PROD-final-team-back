@@ -4,9 +4,14 @@ import com.pengrad.telegrambot.model.CallbackQuery
 import com.pengrad.telegrambot.request.EditMessageText
 import ru.droptableusers.sampleapi.data.enums.TelegramChat
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
+import ru.droptableusers.sampleapi.telegram.keyboard.utils.KeyboardUtils
 import ru.droptableusers.sampleapi.utils.DateUtils
 
 class ProfileHandler(val callbackQuery: CallbackQuery) {
+    companion object {
+        const val CALLBACK_QUERY = "show-profile"
+    }
+
     fun handle() {
         val userData = UserPersistence().selectByTelegramId("@${callbackQuery.message().chat().username()}")!!
 
@@ -21,7 +26,7 @@ class ProfileHandler(val callbackQuery: CallbackQuery) {
                 Дата рождения: ${DateUtils.getCurrentDateAsString(userData.birthdayDate)}
                 Почта: ${userData.username}
                 """.trimIndent(),
-            ),
+            ).replyMarkup(KeyboardUtils.buildBackButton("main")),
         )
     }
 }
