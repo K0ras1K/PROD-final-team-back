@@ -27,9 +27,9 @@ class TextHandler(val message: Message) {
                         ),
                     )
                 }
-                MainMessage(message.chat().id()).create()
+                MainMessage(message.chat().id(), message.chat().username()).create()
             } catch (exception: Exception) {
-                MainMessage(message.chat().id()).createNotRegistered()
+                MainMessage(message.chat().id(), message.chat().username()).createNotRegistered()
             }
         }
     }
