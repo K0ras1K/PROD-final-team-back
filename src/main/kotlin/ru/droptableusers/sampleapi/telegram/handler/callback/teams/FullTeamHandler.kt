@@ -17,7 +17,7 @@ class FullTeamHandler(val callbackQuery: CallbackQuery) {
 
         val teamMembers =
             UserPersistence().selectByIdList(
-                TeamsPersistence().selectAllMembers(),
+                TeamsPersistence().selectTeammates(teamId),
             ).map {
                 ProfileOutputResponse(
                     username = it.username,
