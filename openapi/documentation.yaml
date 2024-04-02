@@ -18,7 +18,7 @@ paths:
                 type: "string"
               examples:
                 Example#1:
-                  value: "DropTableUsers API 1.0."
+                  value: "DropTableUsers API 1.0"
   /1.0/admin/analytics/tour/{tourId}:
     get:
       description: ""
@@ -231,7 +231,7 @@ paths:
             '*/*':
               schema:
                 type: "object"
-  /1.0/admin/users:
+  /1.0/admin/teams/template:
     get:
       description: ""
       responses:
@@ -240,9 +240,75 @@ paths:
           content:
             '*/*':
               schema:
+                $ref: "#/components/schemas/TeamTemplate"
+        "204":
+          description: "No Content"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    status: "Темплейт отсутствует"
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/TeamTemplate"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /1.0/admin/users:
+    get:
+      description: ""
+      responses:
+        "403":
+          description: "Forbidden"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    status: "Forbidden"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/AdminUserOutputResponse"
+  /1.0/admin/users/notify:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/NotifyListModel"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "{\"status\": \"OK\"|"
   /1.0/files/upload/pdf:
     post:
       description: ""
@@ -395,6 +461,17 @@ paths:
   /1.0/teams/loadml:
     get:
       description: ""
+      parameters:
+        - name: "limit"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "offset"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
       requestBody:
         content:
           '*/*':
@@ -447,6 +524,72 @@ paths:
                   description: ""
                   value:
                     status: "Не вписал userId"
+  /1.0/teams/template:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TeamTemplate"
+        "204":
+          description: "No Content"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    status: "Темплейт отсутствует"
+  /1.0/teams/vacancy/{teamId}:
+    get:
+      description: ""
+      parameters:
+        - name: "teamId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/VacancyRespond"
+  /1.0/teams/vacancy/generate:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/VacancyGenerateInputModel"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    status: "Тэмплейт команды еще не создан"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
   /1.0/tours/list:
     get:
       description: ""
@@ -774,25 +917,9 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/ProfileOutputResponse"
-  /1.0/vacancy:
-    post:
-      description: ""
-      requestBody:
-        content:
-          '*/*':
-            schema:
-              $ref: "#/components/schemas/VacancyInputModel"
-        required: true
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "object"
   /1.0/vacancy/{id}:
     delete:
-      description: ""
+      description: "post { <br> VacancyController(call).add() <br> }"
       parameters:
         - name: "id"
           in: "path"
@@ -1107,6 +1234,30 @@ components:
             type: "string"
       required:
         - "tagList"
+    Slot:
+      type: "object"
+      properties:
+        possibleItems:
+          type: "array"
+          items:
+            type: "string"
+            enum:
+              - "BACKEND"
+              - "FRONTEND"
+              - "MOBILE"
+        required:
+          type: "boolean"
+      required:
+        - "possibleItems"
+    TeamTemplate:
+      type: "object"
+      properties:
+        slots:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Slot"
+      required:
+        - "slots"
     AdminUserOutputResponse:
       type: "object"
       properties:
@@ -1134,6 +1285,19 @@ components:
         - "sex"
         - "email"
         - "commandName"
+    NotifyListModel:
+      type: "object"
+      properties:
+        userIds:
+          type: "array"
+          items:
+            type: "integer"
+            format: "int32"
+        message:
+          type: "string"
+      required:
+        - "userIds"
+        - "message"
     CreateTeamRequest:
       type: "object"
       properties:
@@ -1246,9 +1410,48 @@ components:
         tags:
           type: "array"
           items:
+            type: "integer"
+            format: "int32"
+      required:
+        - "tags"
+    VacancyRespond:
+      type: "object"
+      properties:
+        teamId:
+          type: "integer"
+          format: "int32"
+        tags:
+          type: "array"
+          items:
             type: "string"
       required:
         - "tags"
+    VacancyTagsByMajor:
+      type: "object"
+      properties:
+        major:
+          type: "string"
+          enum:
+            - "BACKEND"
+            - "FRONTEND"
+            - "MOBILE"
+        tagIds:
+          type: "array"
+          items:
+            type: "integer"
+            format: "int32"
+      required:
+        - "major"
+        - "tagIds"
+    VacancyGenerateInputModel:
+      type: "object"
+      properties:
+        vacancyTemplates:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/VacancyTagsByMajor"
+      required:
+        - "vacancyTemplates"
     TourOutputResponse:
       type: "object"
       properties:
@@ -1373,28 +1576,3 @@ components:
             format: "int32"
       required:
         - "tagIdList"
-    VacancyInputModel:
-      type: "object"
-      properties:
-        teamId:
-          type: "integer"
-          format: "int32"
-        tagList:
-          type: "array"
-          items:
-            type: "integer"
-            format: "int32"
-      required:
-        - "tagList"
-    VacancyRespond:
-      type: "object"
-      properties:
-        teamId:
-          type: "integer"
-          format: "int32"
-        tags:
-          type: "array"
-          items:
-            type: "string"
-      required:
-        - "tags"
