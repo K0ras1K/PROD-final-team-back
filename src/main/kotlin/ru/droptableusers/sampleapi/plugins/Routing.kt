@@ -42,6 +42,13 @@ fun Application.configureRouting() {
                     PublicDownloadController(call).download()
                 }
             }
+
+            route("/tags") {
+                get {
+                    TagsController(call).getAllTags()
+                }
+            }
+
             authenticate("auth-jwt") {
                 route("/private") {
                     get("/{file_name}") {
@@ -152,6 +159,9 @@ fun Application.configureRouting() {
 
 
             }
+
+
+
             route("/vacancy") {
                 get("/{id}") {
                     VacancyController(call).get()
