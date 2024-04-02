@@ -61,6 +61,7 @@ class ShowDocumentsHandler(val callbackQuery: CallbackQuery) : AbstractCallbackQ
                                     }
                                 }
                                 "more" -> {
+                                    println("$age ${condition.value}")
                                     if (age > condition.value.toInt()) {
                                         isRequired = true
                                     }
@@ -77,6 +78,7 @@ class ShowDocumentsHandler(val callbackQuery: CallbackQuery) : AbstractCallbackQ
                 }
 
                 if (isRequired) {
+                    println(filledDocuments)
                     if (filledDocuments.containsKey(userId) && filledDocuments[userId]!!.containsKey(doc.id)) {
                         isFilled = true
                     }
