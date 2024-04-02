@@ -40,6 +40,7 @@ class AuthUsersController(call: ApplicationCall) : AbstractController(call) {
                 description = userData.description,
                 team = TeamsPersistence().selectByUserId(userData.id) ?: -1,
                 major = userData.major,
+                tags = TagsPersistence().getTagsByIdList(UserPersistence().selectTagIds(userData.id))
             )
         call.respond(HttpStatusCode.OK, respondModel)
     }

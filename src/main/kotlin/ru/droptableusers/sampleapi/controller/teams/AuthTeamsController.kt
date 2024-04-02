@@ -63,6 +63,7 @@ class AuthTeamsController(call: ApplicationCall) : GroupAbstractController(call)
                         description = it.description,
                         team = TeamsPersistence().selectByUserId(it.id) ?: -1,
                         major = it.major,
+                        tags = TagsPersistence().getTagsByIdList(UserPersistence().selectTagIds(it.id))
                     )
                 }
             val teamOutput =
@@ -174,6 +175,8 @@ class AuthTeamsController(call: ApplicationCall) : GroupAbstractController(call)
                                         description = user.description,
                                         team = TeamsPersistence().selectByUserId(user.id) ?: -1,
                                         major = user.major,
+                                        tags = TagsPersistence().getTagsByIdList(UserPersistence().selectTagIds(it.id))
+
                                     )
                                 },
                         id = it.id,

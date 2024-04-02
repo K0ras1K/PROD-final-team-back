@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.request.EditMessageText
 import ru.droptableusers.sampleapi.data.enums.TelegramChat
 import ru.droptableusers.sampleapi.data.models.inout.output.users.ProfileOutputResponse
 import ru.droptableusers.sampleapi.database.persistence.GroupPersistence
+import ru.droptableusers.sampleapi.database.persistence.TagsPersistence
 import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
 import ru.droptableusers.sampleapi.telegram.keyboard.FullTeamKeyboard
@@ -31,6 +32,7 @@ class FullTeamHandler(val callbackQuery: CallbackQuery) {
                     description = it.description,
                     team = teamId,
                     major = it.major,
+                    tags = TagsPersistence().getTagsByIdList(UserPersistence().selectTagIds(it.id))
                 )
             }
 
