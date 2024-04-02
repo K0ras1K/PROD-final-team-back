@@ -32,18 +32,18 @@ class VacancyController(val call: ApplicationCall) {
         }
     }
 
-    suspend fun add() {
-        runBlocking {
-            val vacancyInput = call.receive<VacancyInputModel>()
-
-            SearchingForPersistence().insert(vacancyInput.teamId)
-            vacancyInput.tagList.forEach {
-                SearchingForPersistence().addTagSearchingFor(it, vacancyInput.teamId)
-            }
-
-            call.respond(HttpStatusCode.OK)
-        }
-    }
+//    suspend fun add() {
+//        runBlocking {
+//            val vacancyInput = call.receive<VacancyInputModel>()
+//
+//            SearchingForPersistence().insert(vacancyInput.teamId)
+//            vacancyInput.tagList.forEach {
+//                SearchingForPersistence().addTagSearchingFor(it, vacancyInput.teamId)
+//            }
+//
+//            call.respond(HttpStatusCode.OK)
+//        }
+//    }
 
     suspend fun delete() {
         runBlocking {

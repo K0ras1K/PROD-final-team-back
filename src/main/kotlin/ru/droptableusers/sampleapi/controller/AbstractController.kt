@@ -9,4 +9,5 @@ abstract class AbstractController(val call: ApplicationCall) {
     val principal = call.principal<JWTPrincipal>()
     val login = principal!!.payload.getClaim("username").asString()
     val userGroup = GroupPersistence().select(principal!!.payload.getClaim("id").asInt())!!
+    val id = principal!!.payload.getClaim("id").asInt()
 }

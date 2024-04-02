@@ -8,6 +8,7 @@ import kotlinx.coroutines.runBlocking
 import ru.droptableusers.sampleapi.analytics.ml.KNN
 import ru.droptableusers.sampleapi.data.models.base.TeamModel
 import ru.droptableusers.sampleapi.data.models.inout.input.teams.TagsTeamRequest
+import ru.droptableusers.sampleapi.data.models.inout.output.ErrorResponse
 import ru.droptableusers.sampleapi.data.models.inout.output.teams.SmallTeamRespondModel
 import ru.droptableusers.sampleapi.database.persistence.SearchingForPersistence
 import ru.droptableusers.sampleapi.database.persistence.TagsPersistence
@@ -78,6 +79,16 @@ class PublicTeamsController(val call: ApplicationCall) {
                         )
                     }.safeSubList(offset, offset + limit)
             call.respond(HttpStatusCode.OK, allTeams)
+        }
+    }
+
+    suspend fun getTeamTemplate(){
+        runBlocking {
+            val template = TeamsPersistence().selectTeamTemplate()
+            if (template != null)
+                call.respond(HttpStatusCode.OK, template)
+            else
+                call.respond(HttpStatusCode.NoContent, ErrorResponse("Темплейт отсутствует"))
         }
     }
 }

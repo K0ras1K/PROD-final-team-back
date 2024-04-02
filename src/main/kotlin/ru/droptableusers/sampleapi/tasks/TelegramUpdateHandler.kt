@@ -20,6 +20,7 @@ import ru.droptableusers.sampleapi.telegram.handler.FilesHandler
 import ru.droptableusers.sampleapi.telegram.handler.TextHandler
 import ru.droptableusers.sampleapi.telegram.handler.callback.MainHandler
 import ru.droptableusers.sampleapi.telegram.handler.callback.ProfileHandler
+import ru.droptableusers.sampleapi.telegram.handler.callback.documents.ShowDocumentsHandler
 import ru.droptableusers.sampleapi.telegram.handler.callback.teams.ApplyTeamHandler
 import ru.droptableusers.sampleapi.telegram.handler.callback.teams.FullTeamHandler
 import ru.droptableusers.sampleapi.telegram.handler.callback.teams.TeamsHandler
@@ -78,6 +79,9 @@ object TelegramUpdateHandler {
                     }
                     if (callbackQuery.data().startsWith("apply-team-")) {
                         ApplyTeamHandler(callbackQuery).handle()
+                    }
+                    if (callbackQuery.data().startsWith("show-documents")) {
+                        ShowDocumentsHandler(callbackQuery).handle()
                     }
                 }
             } catch (e: Exception) {
