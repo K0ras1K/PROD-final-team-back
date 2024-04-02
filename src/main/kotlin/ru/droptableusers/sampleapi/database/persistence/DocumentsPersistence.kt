@@ -5,8 +5,10 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.droptableusers.sampleapi.data.models.base.DocumentConditionModel
 import ru.droptableusers.sampleapi.data.models.base.DocumentModel
+import ru.droptableusers.sampleapi.data.models.base.FilledDocumentModel
 import ru.droptableusers.sampleapi.database.schema.DocumentConditionsTable
 import ru.droptableusers.sampleapi.database.schema.DocumentsTable
+import ru.droptableusers.sampleapi.database.schema.FilledDocumentsTable
 
 class DocumentsPersistence {
     private fun resultRowToDocumentModel(row: ResultRow): DocumentModel =
@@ -26,6 +28,15 @@ class DocumentsPersistence {
             fieldName = row[DocumentConditionsTable.fieldName],
             value = row[DocumentConditionsTable.value],
             documentId = row[DocumentConditionsTable.documentId].value,
+        )
+
+    private fun resultRowToFilledDocumentModel(row: ResultRow): FilledDocumentModel =
+        FilledDocumentModel(
+            id = row[FilledDocumentsTable.id].value,
+            userId = row[FilledDocumentsTable.userId].value,
+            documentId = row[FilledDocumentsTable.documentId].value,
+            fileName = row[FilledDocumentsTable.fileName],
+            lastUpdate = row[FilledDocumentsTable.lastUpdate]
         )
 
     fun insertDocument(documentModel: DocumentModel): DocumentModel? {
@@ -142,6 +153,57 @@ class DocumentsPersistence {
             transaction {
                 DocumentConditionsTable.selectAll()
                     .map(::resultRowToDocumentConditionModel)
+            }
+        } catch (exception: Exception) {
+            listOf()
+        }
+    }
+
+    fun insertFilledDocument(filledDocumentModel: FilledDocumentModel): FilledDocumentModel? {
+        return try {
+            transaction {
+                FilledDocumentsTable.insert {
+                    it[FilledDocumentsTable.userId] = filledDocumentModel.userId
+                    it[FilledDocumentsTable.documentId] = filledDocumentModel.documentId
+                    it[FilledDocumentsTable.fileName] = filledDocumentModel.fileName
+                    it[FilledDocumentsTable.lastUpdate] = filledDocumentModel.lastUpdate
+                }.resultedValues!!.single().let(::resultRowToFilledDocumentModel)
+            }
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+            null
+        }
+    }
+
+    fun listFilledDocuments(): List<FilledDocumentModel> {
+        return try {
+            transaction {
+                FilledDocumentsTable.selectAll()
+                    .map(::resultRowToFilledDocumentModel)
+            }
+        } catch (exception: Exception) {
+            listOf()
+        }
+    }
+
+    fun listFilledDocumentsByUserId(userId: Int): List<FilledDocumentModel> {
+        return try {
+            transaction {
+                FilledDocumentsTable.selectAll()
+                    .where { FilledDocumentsTable.userId eq userId }
+                    .map(::resultRowToFilledDocumentModel)
+            }
+        } catch (exception: Exception) {
+            listOf()
+        }
+    }
+
+    fun listFilledDocumentsByDocumentId(documentId: Int): List<FilledDocumentModel> {
+        return try {
+            transaction {
+                FilledDocumentsTable.selectAll()
+                    .where { FilledDocumentsTable.documentId eq documentId }
+                    .map(::resultRowToFilledDocumentModel)
             }
         } catch (exception: Exception) {
             listOf()

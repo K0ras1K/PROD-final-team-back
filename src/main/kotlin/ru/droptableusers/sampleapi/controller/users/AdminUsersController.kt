@@ -6,11 +6,15 @@ import io.ktor.server.response.*
 import kotlinx.coroutines.runBlocking
 import ru.droptableusers.sampleapi.controller.AbstractController
 import ru.droptableusers.sampleapi.data.models.base.DocumentConditionModel
+import ru.droptableusers.sampleapi.data.models.base.FilledDocumentModel
 import ru.droptableusers.sampleapi.data.models.base.TeamsUsersModel
+import ru.droptableusers.sampleapi.data.models.inout.output.ErrorResponse
 import ru.droptableusers.sampleapi.data.models.inout.output.users.AdminUserOutputResponse
 import ru.droptableusers.sampleapi.database.persistence.DocumentsPersistence
 import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
+import java.util.*
+import kotlin.collections.HashMap
 
 class AdminUsersController(call: ApplicationCall) : AbstractController(call) {
     private fun compareDocumentAndConditions(conditions: List<DocumentConditionModel>): Map<Int, List<DocumentConditionModel>> {
@@ -22,7 +26,19 @@ class AdminUsersController(call: ApplicationCall) : AbstractController(call) {
                 result[it.documentId] = mutableListOf(it)
             }
         }
-        return mapOf()
+        return result
+    }
+
+    private fun compareUserAndFilledDocuments(filledDocuments: List<FilledDocumentModel>): Map<Int, Map<Int, FilledDocumentModel>> {
+        val result = HashMap<Int, MutableMap<Int, FilledDocumentModel>>()
+        filledDocuments.forEach {
+            if (result.containsKey(it.userId) && result[it.userId] != null) {
+                result[it.userId]!![it.documentId] = it
+            } else {
+                result[it.userId] = mutableMapOf(Pair(it.documentId, it))
+            }
+        }
+        return result
     }
 
     private fun mapTeamToUser(teamsUsers: List<TeamsUsersModel>): Map<Int, Int> {
@@ -31,13 +47,60 @@ class AdminUsersController(call: ApplicationCall) : AbstractController(call) {
 
     suspend fun listUsers() {
         runBlocking {
+            if (userGroup.group.ordinal > 4) {
+                call.respond(HttpStatusCode.Forbidden, ErrorResponse("Forbidden"))
+                return@runBlocking
+            }
             val users = UserPersistence().listUsers()
             val documents = DocumentsPersistence().listDocuments()
             val conditions = compareDocumentAndConditions(DocumentsPersistence().listDocumentConditions())
+            val filledDocuments = compareUserAndFilledDocuments(DocumentsPersistence().listFilledDocuments())
             val teamsUsers = mapTeamToUser(TeamsPersistence().listAllTeamsMembersRelationships())
             val teamsDb = TeamsPersistence().selectAll()
             val teams = teamsDb.associate { it.id to it }
             val result = users.map {
+                var success = true
+                documents.forEach {doc ->
+                    if (doc.required) {
+                        val documentConditions = conditions[doc.id].orEmpty()
+                        documentConditions.forEach { condition ->
+                            var isRequired = false
+                            when (condition.fieldName) {
+                                "age" -> {
+                                    val age = (Date(System.currentTimeMillis() - it.birthdayDate)).year
+                                    when (condition.condition) {
+                                        "less" -> {
+                                            if (age < condition.value.toInt()) {
+                                                isRequired = true
+                                            }
+                                        }
+                                        "equals" -> {
+                                            if (age == condition.value.toInt()) {
+                                                isRequired = true
+                                            }
+                                        }
+                                        "more" -> {
+                                            if (age > condition.value.toInt()) {
+                                                isRequired = true
+                                            }
+                                        }
+                                    }
+                                }
+                                "sex" -> {
+                                    val sex = "male"; // TODO Fetch from DB
+                                    if (sex == condition.value) {
+                                        isRequired = true
+                                    }
+                                }
+                            }
+                            if (isRequired) {
+                                if (!(filledDocuments.containsKey(it.id) && filledDocuments[it.id]!!.containsKey(doc.id))) {
+                                    success = false
+                                }
+                            }
+                        }
+                    }
+                }
                 AdminUserOutputResponse(
                     id = it.id,
                     firstName = it.firstName,
@@ -46,7 +109,7 @@ class AdminUsersController(call: ApplicationCall) : AbstractController(call) {
                     email = it.username,
                     birthdayDate = it.birthdayDate,
                     commandName = if(teamsUsers.containsKey(it.id)) teams[teamsUsers[it.id]!!]!!.name else "",
-                    docsReady = true // TODO Add checks
+                    docsReady = success
                 )
             }
             call.respond(HttpStatusCode.OK, result)

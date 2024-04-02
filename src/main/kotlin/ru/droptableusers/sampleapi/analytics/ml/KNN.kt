@@ -58,8 +58,7 @@ object KNN {
 
     // TODO dataset
     private fun getVector(tag: String): Vector? {
-        val t = tag.lowercase()
-        return when (t.lowercase()) {
+        return when (val t = tag.lowercase().replace(" ", "")) {
             "mobile" -> Vector(t, 0.8, 0.2, 0.9)
             "android" -> Vector(t, 0.7, 0.3, 0.8)
             "ios" -> Vector(t, 0.7, 0.2, 0.85)
@@ -78,7 +77,7 @@ object KNN {
             "php" -> Vector(t, 0.5, 0.25, 0.5)
             "c#" -> Vector(t, 0.5, 0.35, 0.45)
             "docker" -> Vector(t, 0.6, 0.8, 0.2)
-            "github ci" -> Vector(t, 0.6, 0.82, 0.2)
+            "githubci" -> Vector(t, 0.6, 0.82, 0.2)
             "heroku" -> Vector(t, 0.5, 0.88, 0.3)
             "cloud" -> Vector(t, 0.5, 0.9, 0.28)
             "kubernetes" -> Vector(t, 0.4, 0.85, 0.28)
