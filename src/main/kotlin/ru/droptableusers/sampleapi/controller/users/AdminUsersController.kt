@@ -47,10 +47,10 @@ class AdminUsersController(call: ApplicationCall) : AbstractController(call) {
         return teamsUsers.associate { it.userId to it.teamId }
     }
 
-    private fun unixToLocalDateTime(time: Long): LocalDateTime {
-        Instant.ofEpochMilli(time)
+    private fun unixToLocalDateTime(time: Long): LocalDate {
+        return Instant.ofEpochMilli(time)
             .atZone(ZoneId.systemDefault())
-            .toLocalDate();
+            .toLocalDate()
     }
 
     suspend fun listUsers() {
@@ -75,7 +75,7 @@ class AdminUsersController(call: ApplicationCall) : AbstractController(call) {
                             var isRequired = false
                             when (condition.fieldName) {
                                 "age" -> {
-                                    val age = unixToLocalDateTime(it.birthdayDate).until(unixToLocalDateTime(System.currentTimeMillis()), ChronoUnit.YEARS);
+                                    val age = unixToLocalDateTime(it.birthdayDate).until(unixToLocalDateTime(System.currentTimeMillis()), ChronoUnit.YEARS)
                                     when (condition.condition) {
                                         "less" -> {
                                             if (age < condition.value.toInt()) {
