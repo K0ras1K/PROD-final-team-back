@@ -183,6 +183,9 @@ fun Application.configureRouting() {
                         post("/documentTemplate") {
                             AuthUploadController(call).uploadDocumentTemplateFile()
                         }
+                        post("/filledDocument") {
+                            AuthUploadController(call).uploadFilledDocumentFile()
+                        }
                     }
                 }
             }
