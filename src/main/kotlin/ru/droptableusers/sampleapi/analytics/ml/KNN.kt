@@ -14,8 +14,12 @@ object KNN {
             result[k] = sort(v, tags)
         }
 
-        result.toList().sortedBy { (_, value) -> value }
-        return result.keys
+        result.forEach {
+            println(it.value)
+        }
+
+
+        return result.toList().sortedBy { (_, value) -> value }.toMap().keys
     }
 
     /**
@@ -39,17 +43,17 @@ object KNN {
             return Double.MAX_VALUE
         }
 
-        neighbors.toList().sortedBy { (_, value) -> value }.toMap()
+        val sorted = neighbors.toList().sortedBy { (_, value) -> value }.toMap()
 
         var sum = 0.0
         var n = 0
-        neighbors.forEach {
+        sorted.forEach {
             sum += it.value
             if (++n == 3) {
                 return sum / 3.0
             }
         }
-        return sum / neighbors.size
+        return sum / sorted.size
     }
 
     // TODO dataset
