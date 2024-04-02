@@ -232,6 +232,24 @@ fun Application.configureRouting() {
                                 AdminTeamsController(call).editTeamTemplate()
                             }
                         }
+
+                        post{
+                            AdminTeamsController(call).createTeam()
+                        }
+
+                        delete("/{teamId}") {
+                            AdminTeamsController(call).deleteTeam()
+                        }
+
+                        route("/members"){
+                            post {
+                                AdminTeamsController(call).addMember()
+                            }
+
+                            delete {
+                                AdminTeamsController(call).removeMember()
+                            }
+                        }
                     }
 
                     route("/tags") {
