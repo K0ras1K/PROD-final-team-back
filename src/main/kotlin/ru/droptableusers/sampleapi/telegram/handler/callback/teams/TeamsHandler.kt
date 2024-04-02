@@ -9,7 +9,7 @@ import ru.droptableusers.sampleapi.telegram.models.base.TeamBotModel
 
 class TeamsHandler(val callbackQuery: CallbackQuery) {
     companion object {
-        const val CALLBACK_QUERY = "show-team"
+        const val CALLBACK_QUERY = "show-teams"
     }
 
     fun handle() {
