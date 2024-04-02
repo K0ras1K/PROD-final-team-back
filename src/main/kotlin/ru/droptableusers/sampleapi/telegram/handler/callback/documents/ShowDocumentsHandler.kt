@@ -9,6 +9,7 @@ import ru.droptableusers.sampleapi.data.models.base.FilledDocumentModel
 import ru.droptableusers.sampleapi.database.persistence.DocumentsPersistence
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
 import ru.droptableusers.sampleapi.telegram.handler.AbstractCallbackQueryHandler
+import ru.droptableusers.sampleapi.telegram.keyboard.DocumentsKeyboard
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -16,14 +17,14 @@ import java.time.temporal.ChronoUnit
 
 class ShowDocumentsHandler(val callbackQuery: CallbackQuery) : AbstractCallbackQueryHandler(callbackQuery) {
     fun handle() {
+        val documents = getFilledAndUnfilledDocumentsForUser(userData.id)
         TelegramChat.VERIFICATION.BOT.execute(
             EditMessageText(
                 callbackQuery.message().chat().id(),
                 callbackQuery.message().messageId(),
                 "Менеджер документов",
-            ),
+            ).replyMarkup(DocumentsKeyboard.generateDocumentsKeyboard(documents)),
         )
-        println(getFilledAndUnfilledDocumentsForUser(userData.id))
     }
 
     private fun getFilledAndUnfilledDocumentsForUser(userId: Int): Pair<List<DocumentModel>, List<DocumentModel>> {
