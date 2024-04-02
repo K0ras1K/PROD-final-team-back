@@ -34,7 +34,7 @@ object DocumentsKeyboard {
             tempRows +=
                 InlineKeyboardButton(
                     "❌ ${doc.name}",
-                ).callbackData("add-doc-${doc.id}")
+                ).callbackData("show-doc-${doc.id}")
             if (tempRows.size == onLineCount) {
                 buttons += tempRows
                 tempRows = mutableListOf()

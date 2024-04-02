@@ -73,6 +73,20 @@ class DocumentsPersistence {
         }
     }
 
+    fun selectDocumentById(id: Int): DocumentModel? {
+        return try {
+            transaction {
+                DocumentsTable.selectAll()
+                    .where { DocumentsTable.id.eq(id) }
+                    .single()
+                    .let(::resultRowToDocumentModel)
+            }
+        }
+        catch (exception: Exception) {
+            null
+        }
+    }
+
     fun deleteDocumentById(id: Int): Boolean {
         return try {
             transaction {
