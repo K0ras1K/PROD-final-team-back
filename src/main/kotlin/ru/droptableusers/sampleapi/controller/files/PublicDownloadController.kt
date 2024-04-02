@@ -6,7 +6,7 @@ import io.ktor.server.response.*
 import java.io.File
 
 class PublicDownloadController(val call: ApplicationCall) {
-    suspend fun donwload() {
+    suspend fun download() {
         // get filename from request url
         val fileName = call.parameters["file_name"]!!
         val folderName = call.parameters["folder_name"]!!

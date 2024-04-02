@@ -12,7 +12,6 @@ import ru.droptableusers.sampleapi.controller.files.AuthUploadController
 import ru.droptableusers.sampleapi.controller.files.PublicDownloadController
 import ru.droptableusers.sampleapi.controller.groups.AuthGroupController
 import ru.droptableusers.sampleapi.controller.tags.TagsController
-import ru.droptableusers.sampleapi.controller.teams.AdminTeamsController
 import ru.droptableusers.sampleapi.controller.teams.AuthTeamsController
 import ru.droptableusers.sampleapi.controller.teams.PublicTeamsController
 import ru.droptableusers.sampleapi.controller.tours.AuthTourResultsController
@@ -37,7 +36,7 @@ fun Application.configureRouting() {
         route("/1.0") {
             route("/public") {
                 get("/{folder_name}/{file_name}") {
-                    PublicDownloadController(call).donwload()
+                    PublicDownloadController(call).download()
                 }
             }
             route("/users") {
@@ -155,6 +154,9 @@ fun Application.configureRouting() {
                         post("/pdf") {
                             AuthUploadController(call).uploadPdfFile()
                         }
+                        post("/documentTemplate") {
+                            AuthUploadController(call).uploadDocumentTemplateFile()
+                        }
                     }
                 }
             }
@@ -185,17 +187,6 @@ fun Application.configureRouting() {
                         }
                         get("/user/{id}") {
                             UserAnalyticController(call).getUserAnalytic()
-                        }
-                    }
-
-                    route("/teams"){
-                        route("/template"){
-                            get{
-                                AdminTeamsController(call).getTeamTemplate()
-                            }
-                            post {
-                                AdminTeamsController(call).editTemplate()
-                            }
                         }
                     }
 
