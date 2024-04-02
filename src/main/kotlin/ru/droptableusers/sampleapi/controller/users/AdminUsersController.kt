@@ -13,8 +13,7 @@ import ru.droptableusers.sampleapi.data.models.inout.output.users.AdminUserOutpu
 import ru.droptableusers.sampleapi.database.persistence.DocumentsPersistence
 import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
-import java.time.Duration
-import java.time.Year
+import java.time.*
 import java.time.temporal.ChronoUnit
 import java.util.*
 import kotlin.collections.HashMap
@@ -48,6 +47,12 @@ class AdminUsersController(call: ApplicationCall) : AbstractController(call) {
         return teamsUsers.associate { it.userId to it.teamId }
     }
 
+    private fun unixToLocalDateTime(time: Long): LocalDateTime {
+        Instant.ofEpochMilli(time)
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate();
+    }
+
     suspend fun listUsers() {
         runBlocking {
             if (userGroup.group.ordinal > 4) {
@@ -70,7 +75,7 @@ class AdminUsersController(call: ApplicationCall) : AbstractController(call) {
                             var isRequired = false
                             when (condition.fieldName) {
                                 "age" -> {
-                                    val age = Duration.between(Date(System.currentTimeMillis()).toInstant(), Date(it.birthdayDate).toInstant()).get(ChronoUnit.YEARS)
+                                    val age = unixToLocalDateTime(it.birthdayDate).until(unixToLocalDateTime(System.currentTimeMillis()), ChronoUnit.YEARS);
                                     when (condition.condition) {
                                         "less" -> {
                                             if (age < condition.value.toInt()) {
