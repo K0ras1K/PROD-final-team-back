@@ -8,6 +8,10 @@ import ru.droptableusers.sampleapi.telegram.keyboard.TeamsKeyboard
 import ru.droptableusers.sampleapi.telegram.models.base.TeamBotModel
 
 class TeamsHandler(val callbackQuery: CallbackQuery) {
+    companion object {
+        const val CALLBACK_QUERY = "show-team"
+    }
+
     fun handle() {
         val allTeams =
             TeamsPersistence().selectAll(30, 0).map {
