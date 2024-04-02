@@ -21,6 +21,8 @@ services:
       - "8080:8080"
     networks:
       - global
+    volumes:
+      - ./public:/public
 
 networks:
   global:
