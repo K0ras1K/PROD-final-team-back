@@ -19,7 +19,6 @@ object KNN {
             println(it.value)
         }
 
-
         return result.toList().sortedBy { (_, value) -> value }.toMap().keys
     }
 
