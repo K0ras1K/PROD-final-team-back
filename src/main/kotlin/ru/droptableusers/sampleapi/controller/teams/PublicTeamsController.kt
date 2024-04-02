@@ -85,10 +85,14 @@ class PublicTeamsController(val call: ApplicationCall) {
     suspend fun getTeamTemplate(){
         runBlocking {
             val template = TeamsPersistence().selectTeamTemplate()
-            if (template != null)
+            if (template != null) {
                 call.respond(HttpStatusCode.OK, template)
-            else
+                return@runBlocking
+            }else{
                 call.respond(HttpStatusCode.NoContent, ErrorResponse("Темплейт отсутствует"))
+                return@runBlocking
+            }
+
         }
     }
 }
