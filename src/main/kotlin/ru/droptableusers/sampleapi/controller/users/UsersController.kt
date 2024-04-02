@@ -126,7 +126,7 @@ class UsersController(val call: ApplicationCall) {
         val limit = call.request.queryParameters["limit"]!!.toInt()
         val offset = call.request.queryParameters["offset"]!!.toLong()
         val outputList =
-            UserPersistence().allUsersWithoutTeam().map {
+            UserPersistence().allUsersWithoutTeam(limit, offset).map {
                 ProfileOutputResponse(
                     username = it.username,
                     firstName = it.firstName,

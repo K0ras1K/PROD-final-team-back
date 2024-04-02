@@ -1,5 +1,8 @@
 package ru.droptableusers.sampleapi.data.models.inout.output.users
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class AdminUserOutputResponse(
     val id: Int,
     val firstName: String,
@@ -8,5 +11,5 @@ data class AdminUserOutputResponse(
     val email: String,
     val birthdayDate: Long,
     val commandName: String,
-    val docsReady: Boolean
+    val docsReady: Boolean,
 )
