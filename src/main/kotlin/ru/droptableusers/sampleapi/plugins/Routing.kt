@@ -15,6 +15,7 @@ import ru.droptableusers.sampleapi.controller.tags.TagsController
 import ru.droptableusers.sampleapi.controller.teams.AuthTeamsController
 import ru.droptableusers.sampleapi.controller.teams.PublicTeamsController
 import ru.droptableusers.sampleapi.controller.tours.AuthTourResultsController
+import ru.droptableusers.sampleapi.controller.users.AdminUsersController
 import ru.droptableusers.sampleapi.controller.users.AuthUsersController
 import ru.droptableusers.sampleapi.controller.users.UsersController
 import ru.droptableusers.sampleapi.controller.vacancies.VacancyController
@@ -197,6 +198,12 @@ fun Application.configureRouting() {
 
                         delete {
                             TagsController(call).deleteTags()
+                        }
+                    }
+
+                    route("/users") {
+                        get {
+                            AdminUsersController(call).listUsers()
                         }
                     }
                 }
