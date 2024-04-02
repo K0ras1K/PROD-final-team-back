@@ -50,15 +50,15 @@ class AuthUploadController(call: ApplicationCall) : AbstractController(call) {
     suspend fun uploadDocumentTemplateFile() {
         try {
             val multipartData = call.receiveMultipart()
-            var fileName = ""
+            var fileExt = ""
             val fileUUID = UUID.randomUUID()
 
             multipartData.forEachPart { part ->
 
                 when (part) {
                     is PartData.FileItem -> {
-                        fileName = part.originalFileName as String
-                        val fileExt = fileName.split(".").last()
+                        val fileName = part.originalFileName as String
+                        fileExt = fileName.split(".").last()
                         val fileBytes = part.streamProvider().readBytes()
                         val filePath = "$filePath/$fileUUID.$fileExt"
                         File(filePath).createNewFile()
@@ -70,7 +70,38 @@ class AuthUploadController(call: ApplicationCall) : AbstractController(call) {
                 }
                 part.dispose()
             }
-            call.respond(HttpStatusCode.OK, fileUUID.toString())
+            call.respond(HttpStatusCode.OK, "$fileUUID.$fileExt")
+        } catch (exception: Exception) {
+            exception.printStackTrace()
+            call.respond(HttpStatusCode.BadRequest, ErrorResponse("File not uploaded"))
+        }
+    }
+
+    suspend fun uploadFilledDocumentFile() {
+        try {
+            val multipartData = call.receiveMultipart()
+            var fileExt = ""
+            val fileUUID = UUID.randomUUID()
+            val userId = id!!
+
+            multipartData.forEachPart { part ->
+
+                when (part) {
+                    is PartData.FileItem -> {
+                        val fileName = part.originalFileName as String
+                        fileExt = fileName.split(".").last()
+                        val fileBytes = part.streamProvider().readBytes()
+                        val filePath = "private/$userId,$fileUUID.$fileExt"
+                        File(filePath).createNewFile()
+                        val file = File(filePath)
+                        file.writeBytes(fileBytes)
+                    }
+
+                    else -> {}
+                }
+                part.dispose()
+            }
+            call.respond(HttpStatusCode.OK, "$userId,$fileUUID.$fileExt")
         } catch (exception: Exception) {
             exception.printStackTrace()
             call.respond(HttpStatusCode.BadRequest, ErrorResponse("File not uploaded"))
