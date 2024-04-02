@@ -79,6 +79,9 @@ object TelegramUpdateHandler {
                     if (callbackQuery.data().startsWith("apply-team-")) {
                         ApplyTeamHandler(callbackQuery).handle()
                     }
+                    if (callbackQuery.data().startsWith("show-documents")) {
+                        ApplyTeamHandler(callbackQuery).handle()
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
