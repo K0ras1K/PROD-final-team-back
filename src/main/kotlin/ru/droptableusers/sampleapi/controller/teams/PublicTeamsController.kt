@@ -21,7 +21,7 @@ import ru.droptableusers.sampleapi.database.persistence.*
  * @property call
  * @constructor Create empty Public teams controller
  */
-class PublicTeamsController(call: ApplicationCall) : AbstractController(call) {
+class PublicTeamsController(val call: ApplicationCall) {
 
     /**
      * Load all

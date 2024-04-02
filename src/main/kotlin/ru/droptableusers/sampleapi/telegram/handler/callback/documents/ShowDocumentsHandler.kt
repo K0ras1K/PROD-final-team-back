@@ -78,7 +78,6 @@ class ShowDocumentsHandler(val callbackQuery: CallbackQuery) : AbstractCallbackQ
                     }
                 }
 
-                println(filledDocuments)
                 if (isRequired) {
                     if (filledDocuments.containsKey(userId) && filledDocuments[userId]!!.containsKey(doc.id)) {
                         isFilled = true
