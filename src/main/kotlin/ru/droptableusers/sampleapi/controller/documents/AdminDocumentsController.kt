@@ -25,7 +25,7 @@ class AdminDocumentsController(call: ApplicationCall) : AbstractController(call)
                 result[it.documentId] = mutableListOf(it)
             }
         }
-        return mapOf()
+        return result
     }
 
     suspend fun listDocuments() {
