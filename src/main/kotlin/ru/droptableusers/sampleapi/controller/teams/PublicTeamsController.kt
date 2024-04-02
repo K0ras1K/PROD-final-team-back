@@ -89,7 +89,7 @@ class PublicTeamsController(val call: ApplicationCall) {
                 call.respond(HttpStatusCode.OK, template)
                 return@runBlocking
             }else{
-                call.respond(HttpStatusCode.NoContent, ErrorResponse("Темплейт отсутствует"))
+                call.respond(HttpStatusCode.NotFound, ErrorResponse("Темплейт отсутствует"))
                 return@runBlocking
             }
 
