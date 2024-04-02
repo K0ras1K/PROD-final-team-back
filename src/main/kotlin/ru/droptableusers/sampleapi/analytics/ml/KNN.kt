@@ -2,22 +2,17 @@
 
 package ru.droptableusers.sampleapi.analytics.ml
 
-import ru.droptableusers.sampleapi.data.models.base.TeamModel
-
 object KNN {
-    fun sort(
-        teams: Map<TeamModel, Set<String>>,
+
+    fun <T>sort(
+        teams: Map<T, Set<String>>,
         tags: Set<String>,
-    ): Set<TeamModel> {
-        val result = mutableMapOf<TeamModel, Double>()
+    ): Set<T> {
+        val result = mutableMapOf<T, Double>()
         teams.forEach { (k, v) ->
             if (v.isNotEmpty()) {
                 result[k] = sort(v, tags)
             }
-        }
-
-        result.forEach {
-            println(it.value)
         }
 
         return result.toList().sortedBy { (_, value) -> value }.toMap().keys
@@ -27,14 +22,14 @@ object KNN {
      * @return average distance
      */
     private fun sort(
-        teamTags: Set<String>,
-        tags: Set<String>,
+        tags1: Set<String>,
+        tags2: Set<String>,
     ): Double {
         val neighbors = mutableMapOf<String, Double>()
-        tags.forEach { tag ->
+        tags2.forEach { tag ->
             val vector = getVector(tag) ?: return@forEach
 
-            teamTags.forEach { teamTag ->
+            tags1.forEach { teamTag ->
                 val teamTagVector = getVector(teamTag) ?: return@forEach
                 neighbors[teamTag] = vector.distQ(teamTagVector)
             }
