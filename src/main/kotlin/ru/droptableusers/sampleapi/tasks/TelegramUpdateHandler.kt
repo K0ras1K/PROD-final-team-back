@@ -19,6 +19,7 @@ import ru.droptableusers.sampleapi.database.persistence.UserPersistence
 import ru.droptableusers.sampleapi.telegram.handler.TextHandler
 import ru.droptableusers.sampleapi.telegram.handler.callback.MainHandler
 import ru.droptableusers.sampleapi.telegram.handler.callback.ProfileHandler
+import ru.droptableusers.sampleapi.telegram.handler.callback.teams.TeamsHandler
 
 object TelegramUpdateHandler {
     var updateId: Int = 0
@@ -58,6 +59,7 @@ object TelegramUpdateHandler {
                         MainHandler(callbackQuery).handle()
                     }
                     if (callbackQuery.data().startsWith("show-teams")) {
+                        TeamsHandler(callbackQuery).handle()
                     }
                     if (callbackQuery.data() == "show-profile") {
                         ProfileHandler(callbackQuery).handle()
