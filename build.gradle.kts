@@ -51,7 +51,7 @@ dependencies {
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
 
     // TELEGRAM
-    implementation("com.github.pengrad:java-telegram-bot-api:7.1.1")
+    implementation("com.github.pengrad:java-telegram-bot-api:6.0.1")
     implementation("org.telegram:telegrambots:5.3.0")
 
     // LOGGING
