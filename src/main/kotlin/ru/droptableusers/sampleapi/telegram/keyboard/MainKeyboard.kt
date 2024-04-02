@@ -15,6 +15,9 @@ object MainKeyboard {
             arrayOf(
                 InlineKeyboardButton("Пользователи").callbackData("show-users"),
             ),
+            arrayOf(
+                InlineKeyboardButton("Документы").callbackData("show-documents"),
+            ),
             if (team) {
                 arrayOf(
                     InlineKeyboardButton("Моя команда").callbackData("show-my-team"),

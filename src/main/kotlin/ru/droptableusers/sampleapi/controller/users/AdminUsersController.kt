@@ -70,7 +70,8 @@ class AdminUsersController(call: ApplicationCall) : AbstractController(call) {
             val teamsDb = TeamsPersistence().selectAll()
             val teams = teamsDb.associate { it.id to it }
             val result = users.map {
-                var success = true
+                var filledDocsCount = 0
+                var requiredDocsCount = 0
                 documents.forEach {doc ->
                     if (doc.required) {
                         val documentConditions = conditions[doc.id].orEmpty()
@@ -105,8 +106,9 @@ class AdminUsersController(call: ApplicationCall) : AbstractController(call) {
                                 }
                             }
                             if (isRequired) {
-                                if (!(filledDocuments.containsKey(it.id) && filledDocuments[it.id]!!.containsKey(doc.id))) {
-                                    success = false
+                                requiredDocsCount += 1
+                                if (filledDocuments.containsKey(it.id) && filledDocuments[it.id]!!.containsKey(doc.id)) {
+                                    filledDocsCount += 1
                                 }
                             }
                         }
@@ -120,7 +122,8 @@ class AdminUsersController(call: ApplicationCall) : AbstractController(call) {
                     email = it.username,
                     birthdayDate = it.birthdayDate,
                     commandName = if(teamsUsers.containsKey(it.id)) teams[teamsUsers[it.id]!!]!!.name else "",
-                    docsReady = success
+                    filledDocs = filledDocsCount,
+                    requiredDocs = requiredDocsCount
                 )
             }
             call.respond(HttpStatusCode.OK, result)
@@ -131,7 +134,7 @@ class AdminUsersController(call: ApplicationCall) : AbstractController(call) {
         runBlocking {
             val notifyList = call.receive<NotifyListModel>()
             NotifyUtils.notifyByIds(notifyList.userIds, notifyList.message)
-            call.respond(HttpStatusCode.OK, "{\"status\": \"OK\"|")
+            call.respond(HttpStatusCode.OK, "{\"status\": \"OK\"}")
         }
     }
 }

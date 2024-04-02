@@ -11,5 +11,6 @@ data class AdminUserOutputResponse(
     val email: String,
     val birthdayDate: Long,
     val commandName: String,
-    val docsReady: Boolean,
+    val filledDocs: Int,
+    val requiredDocs: Int
 )
