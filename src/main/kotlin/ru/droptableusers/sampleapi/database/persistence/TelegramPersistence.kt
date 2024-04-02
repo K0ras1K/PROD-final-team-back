@@ -37,4 +37,20 @@ class TelegramPersistence {
             null
         }
     }
+
+    fun selectAll(): List<TelegramModel> {
+        return try {
+            transaction {
+                TelegramsTable.selectAll()
+                    .map {
+                        TelegramModel(
+                            userId = it[TelegramsTable.userId].value,
+                            telegramId = it[TelegramsTable.telegramId],
+                        )
+                    }
+            }
+        } catch (exception: Exception) {
+            listOf()
+        }
+    }
 }
