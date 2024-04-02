@@ -27,7 +27,6 @@ class ShowDocumentsHandler(val callbackQuery: CallbackQuery) : AbstractCallbackQ
     }
 
     private fun getFilledAndUnfilledDocumentsForUser(userId: Int): Pair<List<DocumentModel>, List<DocumentModel>> {
-        val users = UserPersistence().listUsers()
         val documents = DocumentsPersistence().listDocuments()
         val conditions = compareDocumentAndConditions(DocumentsPersistence().listDocumentConditions())
         val filledDocuments = compareUserAndFilledDocuments(DocumentsPersistence().listFilledDocuments())
@@ -35,16 +34,20 @@ class ShowDocumentsHandler(val callbackQuery: CallbackQuery) : AbstractCallbackQ
         val filledDocs = mutableListOf<DocumentModel>()
         val unfilledDocs = mutableListOf<DocumentModel>()
 
+        val user = UserPersistence().selectById(userData.id)
+
         documents.forEach { doc ->
+            println(doc)
             if (doc.required) {
+                println("doc req")
                 val documentConditions = conditions[doc.id].orEmpty()
                 var isRequired = false
                 var isFilled = false
 
                 documentConditions.forEach { condition ->
+                    println(condition)
                     when (condition.fieldName) {
                         "age" -> {
-                            val user = users.find { it.id == userId }
                             val age = unixToLocalDateTime(user?.birthdayDate!!).until(unixToLocalDateTime(System.currentTimeMillis()), ChronoUnit.YEARS)
                             when (condition.condition) {
                                 "less" -> {
