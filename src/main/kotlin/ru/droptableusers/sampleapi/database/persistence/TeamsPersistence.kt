@@ -156,7 +156,7 @@ class TeamsPersistence() {
     private fun resultRowToTeamsUsersModel(row: ResultRow): TeamsUsersModel =
         TeamsUsersModel(
             teamId = row[TeamsUsersTable.teamId].value,
-            userId = row[TeamsUsersTable.userId].value
+            userId = row[TeamsUsersTable.userId].value,
         )
 
     fun listAllTeamsMembersRelationships(): List<TeamsUsersModel> {
@@ -191,28 +191,28 @@ class TeamsPersistence() {
                         Json.decodeFromString<TeamTemplate>(it[TeamTemplateTable.jsonTemplate])
                     }
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             null
         }
     }
 
-    private fun templateExists(): Boolean{
+    private fun templateExists(): Boolean {
         return try {
             transaction {
                 TeamTemplateTable.selectAll()
                     .where { TeamTemplateTable.id.eq(1) }
                     .map { it }.isNotEmpty()
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             false
         }
     }
 
-    fun addTeamTemplate(template: TeamTemplate){
+    fun addTeamTemplate(template: TeamTemplate) {
         try {
             transaction {
-                if (templateExists()){
-                    TeamTemplateTable.update({TeamTemplateTable.id.eq(1)}) {
+                if (templateExists()) {
+                    TeamTemplateTable.update({ TeamTemplateTable.id.eq(1) }) {
                         it[TeamTemplateTable.jsonTemplate] = Json.encodeToString(template)
                     }
                 } else {
@@ -221,12 +221,8 @@ class TeamsPersistence() {
                     }
                 }
             }
-
-        } catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
-
-
 }

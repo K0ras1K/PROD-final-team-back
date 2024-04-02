@@ -91,6 +91,7 @@ class AdminDocumentsController(call: ApplicationCall) : AbstractController(call)
                     )
                 conditions.add(DocumentsPersistence().insertDocumentCondition(conditionModel)!!)
             }
+            // TODO add Telegram notification
             val response =
                 DocumentOutputResponse(
                     id = document.id,

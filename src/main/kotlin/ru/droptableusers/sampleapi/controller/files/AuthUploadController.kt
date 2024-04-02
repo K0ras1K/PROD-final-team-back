@@ -9,7 +9,6 @@ import ru.droptableusers.sampleapi.controller.AbstractController
 import ru.droptableusers.sampleapi.data.models.inout.output.ErrorResponse
 import ru.droptableusers.sampleapi.database.schema.UserTable.username
 import java.io.File
-import java.lang.Exception
 import java.util.*
 
 class AuthUploadController(call: ApplicationCall) : AbstractController(call) {

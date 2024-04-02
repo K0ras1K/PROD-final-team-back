@@ -9,16 +9,17 @@ import ru.droptableusers.sampleapi.data.models.inout.input.teams.TeamTemplate
 import ru.droptableusers.sampleapi.data.models.inout.output.ErrorResponse
 import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
 
-class AdminTeamsController(call: ApplicationCall): AbstractController(call) {
-    suspend fun getTeamTemplate(){
+class AdminTeamsController(call: ApplicationCall) : AbstractController(call) {
+    suspend fun getTeamTemplate() {
         val template = TeamsPersistence().selectTeamTemplate()
-        if (template != null)
+        if (template != null) {
             call.respond(HttpStatusCode.OK, template)
-        else
+        } else {
             call.respond(HttpStatusCode.NoContent, ErrorResponse("Темплейт отсутствует"))
+        }
     }
 
-    suspend fun editTemplate(){
+    suspend fun editTemplate() {
         TeamsPersistence().addTeamTemplate(call.receive<TeamTemplate>())
         call.respond(HttpStatusCode.OK)
     }

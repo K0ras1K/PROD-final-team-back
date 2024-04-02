@@ -16,6 +16,7 @@ import ru.droptableusers.sampleapi.data.enums.TelegramChat
 import ru.droptableusers.sampleapi.data.models.base.GroupModel
 import ru.droptableusers.sampleapi.database.persistence.GroupPersistence
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
+import ru.droptableusers.sampleapi.telegram.handler.FilesHandler
 import ru.droptableusers.sampleapi.telegram.handler.TextHandler
 import ru.droptableusers.sampleapi.telegram.handler.callback.MainHandler
 import ru.droptableusers.sampleapi.telegram.handler.callback.ProfileHandler
@@ -33,9 +34,15 @@ object TelegramUpdateHandler {
                 val callbackQuery: CallbackQuery? = update.callbackQuery()
                 val message: Message? = update.message()
                 if (message != null) {
-                    println(message.text())
-                    TextHandler(message).handle()
+                    if (message.text() != null) {
+                        println(message.text())
+                        TextHandler(message).handle()
+                    }
+                    if (message.document() != null) {
+                        FilesHandler(message).handle()
+                    }
                 }
+
                 if (callbackQuery != null) {
                     if (callbackQuery!!.data().startsWith("verif-")) {
                         val userId: Int = callbackQuery.data().split("-")[1].toInt()

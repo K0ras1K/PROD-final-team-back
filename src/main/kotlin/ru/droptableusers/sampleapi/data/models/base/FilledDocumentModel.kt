@@ -5,5 +5,5 @@ data class FilledDocumentModel(
     val userId: Int,
     val documentId: Int,
     val fileName: String,
-    val lastUpdate: Long
+    val lastUpdate: Long,
 )

@@ -77,7 +77,7 @@ class AdminUsersController(call: ApplicationCall) : AbstractController(call) {
                                             }
                                         }
                                         "equals" -> {
-                                            if (age == condition.value.toInt()) {
+                                            if (age == condition.value.toLong()) {
                                                 isRequired = true
                                             }
                                         }
@@ -115,12 +115,6 @@ class AdminUsersController(call: ApplicationCall) : AbstractController(call) {
                 )
             }
             call.respond(HttpStatusCode.OK, result)
-        }
-    }
-
-    suspend fun notifyAboutDocuments() {
-        runBlocking {
-
         }
     }
 }

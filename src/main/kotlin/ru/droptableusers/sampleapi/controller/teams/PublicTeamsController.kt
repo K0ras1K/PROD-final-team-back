@@ -47,7 +47,6 @@ class PublicTeamsController(val call: ApplicationCall) {
      * Load all by m l
      *
      */
-    // TODO add to Route
     suspend fun loadAllByML() {
         runBlocking {
             val receive = call.receive<TagsTeamRequest>()
@@ -83,8 +82,12 @@ class PublicTeamsController(val call: ApplicationCall) {
     }
 }
 
-fun <T> List<T>.safeSubList(fromIndex: Int, toIndex: Int): List<T> {
-    if (fromIndex >= this.size)
+fun <T> List<T>.safeSubList(
+    fromIndex: Int,
+    toIndex: Int,
+): List<T> {
+    if (fromIndex >= this.size) {
         return listOf<T>()
+    }
     return this.subList(fromIndex, toIndex.coerceAtMost(this.size))
 }
