@@ -20,10 +20,7 @@ import ru.droptableusers.sampleapi.data.models.inout.input.users.RegisterInputMo
 import ru.droptableusers.sampleapi.data.models.inout.output.ErrorResponse
 import ru.droptableusers.sampleapi.data.models.inout.output.TokenRespondOutput
 import ru.droptableusers.sampleapi.data.models.inout.output.users.ProfileOutputResponse
-import ru.droptableusers.sampleapi.database.persistence.GroupPersistence
-import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
-import ru.droptableusers.sampleapi.database.persistence.UserPersistence
-import ru.droptableusers.sampleapi.database.persistence.ValidateDataPersistence
+import ru.droptableusers.sampleapi.database.persistence.*
 import ru.droptableusers.sampleapi.tasks.Keyboard
 import ru.droptableusers.sampleapi.utils.DateUtils
 import ru.droptableusers.sampleapi.utils.Validation

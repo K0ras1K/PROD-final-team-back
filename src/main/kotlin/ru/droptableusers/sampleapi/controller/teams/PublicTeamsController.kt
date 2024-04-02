@@ -6,13 +6,14 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import kotlinx.coroutines.runBlocking
 import ru.droptableusers.sampleapi.analytics.ml.KNN
+import ru.droptableusers.sampleapi.controller.AbstractController
 import ru.droptableusers.sampleapi.data.models.base.TeamModel
+import ru.droptableusers.sampleapi.data.models.base.UserModel
 import ru.droptableusers.sampleapi.data.models.inout.input.teams.TagsTeamRequest
 import ru.droptableusers.sampleapi.data.models.inout.output.ErrorResponse
 import ru.droptableusers.sampleapi.data.models.inout.output.teams.SmallTeamRespondModel
-import ru.droptableusers.sampleapi.database.persistence.SearchingForPersistence
-import ru.droptableusers.sampleapi.database.persistence.TagsPersistence
-import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
+import ru.droptableusers.sampleapi.data.models.inout.output.users.ProfileOutputResponse
+import ru.droptableusers.sampleapi.database.persistence.*
 
 /**
  * Public teams controller
@@ -20,10 +21,10 @@ import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
  * @property call
  * @constructor Create empty Public teams controller
  */
-class PublicTeamsController(val call: ApplicationCall) {
+class PublicTeamsController(call: ApplicationCall) : AbstractController(call) {
+
     /**
      * Load all
-     *
      */
     suspend fun loadAll() {
         runBlocking {
@@ -94,6 +95,35 @@ class PublicTeamsController(val call: ApplicationCall) {
             }
 
         }
+    }
+
+    // TODO add to route
+    suspend fun selectUsersWithoutTeamML() {
+        val limit = call.request.queryParameters["limit"]!!.toInt()
+        val offset = call.request.queryParameters["offset"]!!.toInt()
+        val users = UserPersistence().allUsersWithoutTeam(Int.MAX_VALUE, 0)
+        val usersTags = mutableSetOf<String>()
+        users.forEach {
+            usersTags.addAll(TagsPersistence().getTagsByIdList(UserPersistence().selectTagIds(it.id)).map { tag -> tag.tagString })
+        }
+        val tags = TagsPersistence().getTagsByIdList(UserPersistence().selectTagIds(id)).map { tag -> tag.tagString }
+        val users1 = mutableMapOf<UserModel, Set<String>>()
+        val outputList =
+            KNN.sort(users1, tags.toSet()).map {
+                ProfileOutputResponse(
+                    username = it.username,
+                    firstName = it.firstName,
+                    lastName = it.lastName,
+                    tgLogin = it.tgLogin,
+                    registerAt = it.regTime,
+                    group = GroupPersistence().select(it.id)!!.group,
+                    id = it.id,
+                    description = it.description,
+                    team = TeamsPersistence().selectByUserId(it.id) ?: -1,
+                    major = it.major,
+                )
+            }.safeSubList(offset, offset + limit)
+        call.respond(HttpStatusCode.OK, outputList)
     }
 }
 
