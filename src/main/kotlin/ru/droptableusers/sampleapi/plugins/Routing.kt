@@ -8,6 +8,7 @@ import io.ktor.server.routing.*
 import ru.droptableusers.sampleapi.controller.analytics.TourAnalyticController
 import ru.droptableusers.sampleapi.controller.analytics.UserAnalyticController
 import ru.droptableusers.sampleapi.controller.documents.AdminDocumentsController
+import ru.droptableusers.sampleapi.controller.files.AuthDownloadController
 import ru.droptableusers.sampleapi.controller.files.AuthUploadController
 import ru.droptableusers.sampleapi.controller.files.PublicDownloadController
 import ru.droptableusers.sampleapi.controller.groups.AuthGroupController
@@ -39,6 +40,13 @@ fun Application.configureRouting() {
             route("/public") {
                 get("/{folder_name}/{file_name}") {
                     PublicDownloadController(call).download()
+                }
+            }
+            authenticate("auth-jwt") {
+                route("/private") {
+                    get("/{folder_name}/{file_name}") {
+                        AuthDownloadController(call).download()
+                    }
                 }
             }
             route("/users") {
