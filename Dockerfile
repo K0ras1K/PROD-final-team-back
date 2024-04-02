@@ -13,7 +13,7 @@ COPY openapi openapi
 
 RUN gradle copyDependencies -x test --no-daemon
 
-RUN gradle build -x test --no-daemon
+RUN gradle build -x test --no-daemon --stacktrace
 
 FROM openjdk:17-oracle
 
