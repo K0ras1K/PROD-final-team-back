@@ -17,6 +17,7 @@ import ru.droptableusers.sampleapi.data.models.base.GroupModel
 import ru.droptableusers.sampleapi.database.persistence.GroupPersistence
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
 import ru.droptableusers.sampleapi.telegram.handler.TextHandler
+import ru.droptableusers.sampleapi.telegram.handler.callback.MainHandler
 import ru.droptableusers.sampleapi.telegram.handler.callback.ProfileHandler
 
 object TelegramUpdateHandler {
@@ -52,6 +53,9 @@ object TelegramUpdateHandler {
                                 ),
                             )
                         }
+                    }
+                    if (callbackQuery.data() == "main") {
+                        MainHandler(callbackQuery).handle()
                     }
                     if (callbackQuery.data().startsWith("show-teams")) {
                     }
