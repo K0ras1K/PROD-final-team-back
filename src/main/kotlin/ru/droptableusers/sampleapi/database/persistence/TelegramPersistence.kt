@@ -53,4 +53,18 @@ class TelegramPersistence {
             listOf()
         }
     }
+
+    fun selectByIds(ids: List<Int>): List<Long> {
+        return try {
+            transaction {
+                TelegramsTable.selectAll()
+                    .where { TelegramsTable.userId.inList(ids) }
+                    .map {
+                        it[TelegramsTable.telegramId]
+                    }
+            }
+        } catch (exception: Exception) {
+            listOf()
+        }
+    }
 }
