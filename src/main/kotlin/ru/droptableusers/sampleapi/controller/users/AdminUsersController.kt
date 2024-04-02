@@ -35,7 +35,8 @@ class AdminUsersController(call: ApplicationCall) : AbstractController(call) {
             val documents = DocumentsPersistence().listDocuments()
             val conditions = compareDocumentAndConditions(DocumentsPersistence().listDocumentConditions())
             val teamsUsers = mapTeamToUser(TeamsPersistence().listAllTeamsMembersRelationships())
-            val teams = TeamsPersistence().selectAll()
+            val teamsDb = TeamsPersistence().selectAll()
+            val teams = teamsDb.associate { it.id to it }
             val result = users.map {
                 AdminUserOutputResponse(
                     id = it.id,
@@ -44,7 +45,7 @@ class AdminUsersController(call: ApplicationCall) : AbstractController(call) {
                     sex = "male", // TODO Fetch from db
                     email = it.username,
                     birthdayDate = it.birthdayDate,
-                    commandName = if(teamsUsers.containsKey(it.id)) teams[teamsUsers[it.id]!!].name else "",
+                    commandName = if(teamsUsers.containsKey(it.id)) teams[teamsUsers[it.id]!!]!!.name else "",
                     docsReady = true // TODO Add checks
                 )
             }
