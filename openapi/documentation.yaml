@@ -231,6 +231,18 @@ paths:
             '*/*':
               schema:
                 type: "object"
+  /1.0/admin/users:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/AdminUserOutputResponse"
   /1.0/files/upload/pdf:
     post:
       description: ""
@@ -380,6 +392,24 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/TeamRespondModel"
+  /1.0/teams/loadml:
+    get:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/TagsTeamRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/SmallTeamRespondModel"
   /1.0/teams/loadmy:
     get:
       description: ""
@@ -721,6 +751,29 @@ paths:
                   description: ""
                   value:
                     status: "Не вписал userId"
+  /1.0/users/withoutTeam:
+    get:
+      description: ""
+      parameters:
+        - name: "limit"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "offset"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ProfileOutputResponse"
   /1.0/vacancy:
     post:
       description: ""
@@ -1054,6 +1107,33 @@ components:
             type: "string"
       required:
         - "tagList"
+    AdminUserOutputResponse:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int32"
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        sex:
+          type: "string"
+        email:
+          type: "string"
+        birthdayDate:
+          type: "integer"
+          format: "int64"
+        commandName:
+          type: "string"
+        docsReady:
+          type: "boolean"
+      required:
+        - "firstName"
+        - "lastName"
+        - "sex"
+        - "email"
+        - "commandName"
     CreateTeamRequest:
       type: "object"
       properties:
@@ -1160,6 +1240,15 @@ components:
       required:
         - "team"
         - "users"
+    TagsTeamRequest:
+      type: "object"
+      properties:
+        tags:
+          type: "array"
+          items:
+            type: "string"
+      required:
+        - "tags"
     TourOutputResponse:
       type: "object"
       properties:

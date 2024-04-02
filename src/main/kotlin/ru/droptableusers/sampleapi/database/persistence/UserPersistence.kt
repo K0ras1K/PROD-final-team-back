@@ -172,11 +172,15 @@ class UserPersistence {
         }
     }
 
-    fun allUsersWithoutTeam(): List<UserModel> {
+    fun allUsersWithoutTeam(
+        limit: Int,
+        offset: Long,
+    ): List<UserModel> {
         return try {
             transaction {
                 UserTable.selectAll()
                     .where { UserTable.id.notInList(TeamsPersistence().selectAllMembers()) }
+                    .limit(limit, offset = offset)
                     .map(::resultRowToUserModel)
             }
         } catch (e: Exception) {

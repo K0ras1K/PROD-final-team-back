@@ -123,6 +123,8 @@ class UsersController(val call: ApplicationCall) {
     }
 
     suspend fun selectWithoutTeam() {
+        val limit = call.request.queryParameters["limit"]!!.toInt()
+        val offset = call.request.queryParameters["offset"]!!.toLong()
         val outputList =
             UserPersistence().allUsersWithoutTeam().map {
                 ProfileOutputResponse(
