@@ -2,17 +2,20 @@ package ru.droptableusers.sampleapi.controller.users
 
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import kotlinx.coroutines.runBlocking
 import ru.droptableusers.sampleapi.controller.AbstractController
 import ru.droptableusers.sampleapi.data.models.base.DocumentConditionModel
 import ru.droptableusers.sampleapi.data.models.base.FilledDocumentModel
 import ru.droptableusers.sampleapi.data.models.base.TeamsUsersModel
+import ru.droptableusers.sampleapi.data.models.inout.input.users.NotifyListModel
 import ru.droptableusers.sampleapi.data.models.inout.output.ErrorResponse
 import ru.droptableusers.sampleapi.data.models.inout.output.users.AdminUserOutputResponse
 import ru.droptableusers.sampleapi.database.persistence.DocumentsPersistence
 import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
+import ru.droptableusers.sampleapi.telegram.utils.NotifyUtils
 import java.time.*
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -121,6 +124,14 @@ class AdminUsersController(call: ApplicationCall) : AbstractController(call) {
                 )
             }
             call.respond(HttpStatusCode.OK, result)
+        }
+    }
+
+    suspend fun telegramNotify() {
+        runBlocking {
+            val notifyList = call.receive<NotifyListModel>()
+            NotifyUtils.notifyByIds(notifyList.userIds, notifyList.message)
+            call.respond(HttpStatusCode.OK, "{\"status\": \"OK\"|")
         }
     }
 }

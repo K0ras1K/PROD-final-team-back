@@ -208,6 +208,9 @@ fun Application.configureRouting() {
                         get {
                             AdminUsersController(call).listUsers()
                         }
+                        post("/notify") {
+                            AdminUsersController(call).telegramNotify()
+                        }
                     }
                 }
             }
