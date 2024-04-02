@@ -54,8 +54,6 @@ class PublicTeamsController(call: ApplicationCall) : AbstractController(call) {
             val receive = call.receive<TagsTeamRequest>()
             val teams = TeamsPersistence().selectAll()
             val teamsAndTags = mutableMapOf<TeamModel, Set<String>>()
-            val limit = call.request.queryParameters["limit"]!!.toInt()
-            val offset = call.request.queryParameters["offset"]!!.toInt()
             teams.forEach {
                 val tags = mutableSetOf<String>()
                 val searchingForModels = SearchingForPersistence().selectByTeamId(it.id)
@@ -78,7 +76,7 @@ class PublicTeamsController(call: ApplicationCall) : AbstractController(call) {
                             bannerUrl = it.bannerUrl,
                             membersCount = TeamsPersistence().selectTeammates(it.id).size,
                         )
-                    }.safeSubList(offset, offset + limit)
+                    }
             call.respond(HttpStatusCode.OK, allTeams)
         }
     }
@@ -99,14 +97,13 @@ class PublicTeamsController(call: ApplicationCall) : AbstractController(call) {
 
     // TODO add to route
     suspend fun selectUsersWithoutTeamML() {
-        val limit = call.request.queryParameters["limit"]!!.toInt()
-        val offset = call.request.queryParameters["offset"]!!.toInt()
+        val receive = call.receive<TagsTeamRequest>()
         val users = UserPersistence().allUsersWithoutTeam(Int.MAX_VALUE, 0)
         val usersTags = mutableSetOf<String>()
         users.forEach {
             usersTags.addAll(TagsPersistence().getTagsByIdList(UserPersistence().selectTagIds(it.id)).map { tag -> tag.tagString })
         }
-        val tags = TagsPersistence().getTagsByIdList(UserPersistence().selectTagIds(id)).map { tag -> tag.tagString }
+        val tags = TagsPersistence().getTagsByIdList(receive.tags).map { it.tagString }
         val users1 = mutableMapOf<UserModel, Set<String>>()
         val outputList =
             KNN.sort(users1, tags.toSet()).map {
@@ -122,7 +119,7 @@ class PublicTeamsController(call: ApplicationCall) : AbstractController(call) {
                     team = TeamsPersistence().selectByUserId(it.id) ?: -1,
                     major = it.major,
                 )
-            }.safeSubList(offset, offset + limit)
+            }
         call.respond(HttpStatusCode.OK, outputList)
     }
 }
