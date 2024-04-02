@@ -9,11 +9,10 @@ import java.io.File
 
 class AuthDownloadController(call: ApplicationCall) : AbstractController(call) {
     suspend fun download() {
-        val folderName = call.parameters["folder_name"]!!
         val fileName = call.parameters["file_name"]!!
         val requiredUserId = fileName.split(",")[0].toInt()
         if (requiredUserId == id!! || userGroup.group.ordinal < 2) {
-            val file = File("public/$folderName/$fileName")
+            val file = File("public/$fileName")
             if (file.exists()) {
                 call.respondFile(file)
             } else {

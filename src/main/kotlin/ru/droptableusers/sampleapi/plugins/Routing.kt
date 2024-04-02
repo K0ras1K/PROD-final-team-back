@@ -44,7 +44,7 @@ fun Application.configureRouting() {
             }
             authenticate("auth-jwt") {
                 route("/private") {
-                    get("/{folder_name}/{file_name}") {
+                    get("/{file_name}") {
                         AuthDownloadController(call).download()
                     }
                 }
