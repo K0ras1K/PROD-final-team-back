@@ -10,11 +10,13 @@ import io.ktor.server.response.*
 import kotlinx.coroutines.runBlocking
 import org.mindrot.jbcrypt.BCrypt
 import ru.droptableusers.sampleapi.ApplicationConstants
+import ru.droptableusers.sampleapi.analytics.ml.KNN
 import ru.droptableusers.sampleapi.data.enums.Group
 import ru.droptableusers.sampleapi.data.enums.TelegramChat
 import ru.droptableusers.sampleapi.data.enums.ValidationStatus
 import ru.droptableusers.sampleapi.data.models.base.GroupModel
 import ru.droptableusers.sampleapi.data.models.base.UserModel
+import ru.droptableusers.sampleapi.data.models.inout.input.teams.TagsTeamRequest
 import ru.droptableusers.sampleapi.data.models.inout.input.users.LoginInputModel
 import ru.droptableusers.sampleapi.data.models.inout.input.users.RegisterInputModel
 import ru.droptableusers.sampleapi.data.models.inout.output.ErrorResponse
@@ -135,6 +137,36 @@ class UsersController(val call: ApplicationCall) {
                     description = it.description,
                     team = TeamsPersistence().selectByUserId(it.id) ?: -1,
                     major = it.major,
+                    tags = TagsPersistence().getTagsByIdList(UserPersistence().selectTagIds(it.id))
+                )
+            }
+        call.respond(HttpStatusCode.OK, outputList)
+    }
+
+
+    suspend fun selectWithoutTeamML() {
+        val receive = call.receive<TagsTeamRequest>()
+        val users = UserPersistence().allUsersWithoutTeam(Int.MAX_VALUE, 0)
+        val usersTags = mutableSetOf<String>()
+        users.forEach {
+            usersTags.addAll(TagsPersistence().getTagsByIdList(UserPersistence().selectTagIds(it.id)).map { tag -> tag.tagString })
+        }
+        val tags = TagsPersistence().getTagsByIdList(receive.tags).map { it.tagString }
+        val users1 = mutableMapOf<UserModel, Set<String>>()
+        val outputList =
+            KNN.sort(users1, tags.toSet()).map {
+                ProfileOutputResponse(
+                    username = it.username,
+                    firstName = it.firstName,
+                    lastName = it.lastName,
+                    tgLogin = it.tgLogin,
+                    registerAt = it.regTime,
+                    group = GroupPersistence().select(it.id)!!.group,
+                    id = it.id,
+                    description = it.description,
+                    team = TeamsPersistence().selectByUserId(it.id) ?: -1,
+                    major = it.major,
+                    tags = TagsPersistence().getTagsByIdList(UserPersistence().selectTagIds(it.id))
                 )
             }
         call.respond(HttpStatusCode.OK, outputList)

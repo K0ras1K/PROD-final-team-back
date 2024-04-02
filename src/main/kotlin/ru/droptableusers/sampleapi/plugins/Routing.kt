@@ -61,6 +61,10 @@ fun Application.configureRouting() {
                     UsersController(call).selectWithoutTeam()
                 }
 
+                get("/withoutTeamml"){
+
+                }
+
                 get("/tags/{userId}") {
                     TagsController(call).getUserTags()
                 }
