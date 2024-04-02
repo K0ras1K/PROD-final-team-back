@@ -53,6 +53,8 @@ class PublicTeamsController(val call: ApplicationCall) {
             val receive = call.receive<TagsTeamRequest>()
             val teams = TeamsPersistence().selectAll()
             val teamsAndTags = mutableMapOf<TeamModel, Set<String>>()
+            val limit = call.request.queryParameters["limit"]!!.toInt()
+            val offset = call.request.queryParameters["offset"]!!.toInt()
             teams.forEach {
                 val tags = mutableSetOf<String>()
                 val searchingForModels = SearchingForPersistence().selectByTeamId(it.id)
@@ -63,9 +65,9 @@ class PublicTeamsController(val call: ApplicationCall) {
                 }
                 teamsAndTags[it] = tags
             }
-
+            val tags = TagsPersistence().getTagsByIdList(receive.tags).map { it.tagString }
             val allTeams =
-                KNN.sort(teamsAndTags, receive.tags.toSet())
+                KNN.sort(teamsAndTags, tags.toSet())
                     .map {
                         SmallTeamRespondModel(
                             id = it.id,
@@ -75,8 +77,14 @@ class PublicTeamsController(val call: ApplicationCall) {
                             bannerUrl = it.bannerUrl,
                             membersCount = TeamsPersistence().selectTeammates(it.id).size,
                         )
-                    }
+                    }.safeSubList(offset, offset + limit)
             call.respond(HttpStatusCode.OK, allTeams)
         }
     }
+}
+
+fun <T> List<T>.safeSubList(fromIndex: Int, toIndex: Int): List<T> {
+    if (fromIndex >= this.size)
+        return listOf<T>()
+    return this.subList(fromIndex, toIndex.coerceAtMost(this.size))
 }

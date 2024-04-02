@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TagsTeamRequest(
-    val tags: List<String>,
+    val tags: List<Int>,
 )
