@@ -5,6 +5,9 @@ import ru.droptableusers.sampleapi.telegram.templates.MainMessage
 
 class MainHandler(val callbackQuery: CallbackQuery) {
     fun handle() {
-        MainMessage(callbackQuery.message().chat().id()).replace(callbackQuery.message().messageId())
+        MainMessage(
+            callbackQuery.message().chat().id(),
+            callbackQuery.message().chat().username(),
+        ).replace(callbackQuery.message().messageId())
     }
 }
