@@ -3,9 +3,11 @@ package ru.droptableusers.sampleapi.telegram.templates
 import com.pengrad.telegrambot.request.EditMessageText
 import com.pengrad.telegrambot.request.SendMessage
 import ru.droptableusers.sampleapi.data.enums.TelegramChat
+import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
+import ru.droptableusers.sampleapi.database.persistence.UserPersistence
 import ru.droptableusers.sampleapi.telegram.keyboard.MainKeyboard
 
-class MainMessage(val chatId: Long) {
+class MainMessage(val chatId: Long, val userLogin: String) {
     fun create() {
         TelegramChat.VERIFICATION.BOT.execute(
             SendMessage(
@@ -14,7 +16,13 @@ class MainMessage(val chatId: Long) {
                 Привет! Это бот проекта DropTableUsers
                 Готов начинать?
                 """.trimIndent(),
-            ).replyMarkup(MainKeyboard.generate()),
+            ).replyMarkup(
+                MainKeyboard.generate(
+                    TeamsPersistence().selectByUserId(
+                        UserPersistence().selectByTelegramId("@$userLogin")!!.id,
+                    ) != null,
+                ),
+            ),
         )
     }
 
@@ -39,7 +47,13 @@ class MainMessage(val chatId: Long) {
                 Привет! Это бот проекта DropTableUsers
                 Готов начинать?
                 """.trimIndent(),
-            ).replyMarkup(MainKeyboard.generate()),
+            ).replyMarkup(
+                MainKeyboard.generate(
+                    TeamsPersistence().selectByUserId(
+                        UserPersistence().selectByTelegramId("@$userLogin")!!.id,
+                    ) != null,
+                ),
+            ),
         )
     }
 }

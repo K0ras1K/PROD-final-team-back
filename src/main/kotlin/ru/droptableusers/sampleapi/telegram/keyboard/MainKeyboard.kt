@@ -4,7 +4,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardButton
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup
 
 object MainKeyboard {
-    fun generate(): InlineKeyboardMarkup {
+    fun generate(team: Boolean): InlineKeyboardMarkup {
         return InlineKeyboardMarkup(
             arrayOf(
                 InlineKeyboardButton("\uD83E\uDDD1\u200D\uD83D\uDCBC Мой профиль").callbackData("show-profile"),
@@ -15,6 +15,13 @@ object MainKeyboard {
             arrayOf(
                 InlineKeyboardButton("Пользователи").callbackData("show-users"),
             ),
+            if (team) {
+                arrayOf(
+                    InlineKeyboardButton("Моя команда").callbackData("show-my-team"),
+                )
+            } else {
+                arrayOf()
+            },
         )
     }
 }
