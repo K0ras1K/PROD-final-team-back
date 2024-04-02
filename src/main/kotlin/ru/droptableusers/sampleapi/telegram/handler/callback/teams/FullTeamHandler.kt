@@ -1,6 +1,7 @@
 package ru.droptableusers.sampleapi.telegram.handler.callback.teams
 
 import com.pengrad.telegrambot.model.CallbackQuery
+import com.pengrad.telegrambot.model.request.ParseMode
 import com.pengrad.telegrambot.request.EditMessageText
 import ru.droptableusers.sampleapi.data.enums.TelegramChat
 import ru.droptableusers.sampleapi.data.models.inout.output.users.ProfileOutputResponse
@@ -47,7 +48,7 @@ class FullTeamHandler(val callbackQuery: CallbackQuery) {
                 Команда ${teamData.name}
                 Описание: ${teamData.description}
                 """.trimIndent(),
-            ).replyMarkup(FullTeamKeyboard.generateFullTeamKeyboard(model)),
+            ).replyMarkup(FullTeamKeyboard.generateFullTeamKeyboard(model)).parseMode(ParseMode.MarkdownV2),
         )
     }
 }
