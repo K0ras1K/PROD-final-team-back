@@ -12,6 +12,7 @@ import ru.droptableusers.sampleapi.controller.files.AuthUploadController
 import ru.droptableusers.sampleapi.controller.files.PublicDownloadController
 import ru.droptableusers.sampleapi.controller.groups.AuthGroupController
 import ru.droptableusers.sampleapi.controller.tags.TagsController
+import ru.droptableusers.sampleapi.controller.teams.AdminTeamsController
 import ru.droptableusers.sampleapi.controller.teams.AuthTeamsController
 import ru.droptableusers.sampleapi.controller.teams.PublicTeamsController
 import ru.droptableusers.sampleapi.controller.tours.AuthTourResultsController
@@ -184,6 +185,17 @@ fun Application.configureRouting() {
                         }
                         get("/user/{id}") {
                             UserAnalyticController(call).getUserAnalytic()
+                        }
+                    }
+
+                    route("/teams"){
+                        route("/template"){
+                            get{
+                                AdminTeamsController(call).getTeamTemplate()
+                            }
+                            post {
+                                AdminTeamsController(call).editTemplate()
+                            }
                         }
                     }
 

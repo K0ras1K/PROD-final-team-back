@@ -1,11 +1,15 @@
 package ru.droptableusers.sampleapi.database.persistence
 
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.droptableusers.sampleapi.data.models.base.TeamModel
 import ru.droptableusers.sampleapi.data.models.base.TeamsUsersModel
+import ru.droptableusers.sampleapi.data.models.inout.input.teams.TeamTemplate
 import ru.droptableusers.sampleapi.database.schema.TeamTable
+import ru.droptableusers.sampleapi.database.schema.TeamTemplateTable
 import ru.droptableusers.sampleapi.database.schema.TeamsUsersTable
 
 class TeamsPersistence() {
@@ -176,4 +180,53 @@ class TeamsPersistence() {
             listOf()
         }
     }
+
+    fun selectTeamTemplate(): TeamTemplate? {
+        return try {
+            transaction {
+                TeamTemplateTable.selectAll()
+                    .where { TeamTemplateTable.id.eq(1) }
+                    .single()
+                    .let {
+                        Json.decodeFromString<TeamTemplate>(it[TeamTemplateTable.jsonTemplate])
+                    }
+            }
+        } catch (e: Exception){
+            null
+        }
+    }
+
+    private fun templateExists(): Boolean{
+        return try {
+            transaction {
+                TeamTemplateTable.selectAll()
+                    .where { TeamTemplateTable.id.eq(1) }
+                    .map { it }.isNotEmpty()
+            }
+        } catch (e: Exception){
+            false
+        }
+    }
+
+    fun addTeamTemplate(template: TeamTemplate){
+        try {
+            transaction {
+                if (templateExists()){
+                    TeamTemplateTable.update({TeamTemplateTable.id.eq(1)}) {
+                        it[TeamTemplateTable.jsonTemplate] = Json.encodeToString(template)
+                    }
+                } else {
+                    TeamTemplateTable.insert {
+                        it[TeamTemplateTable.jsonTemplate] = Json.encodeToString(template)
+                    }
+                }
+            }
+
+        } catch (e: Exception){
+            e.printStackTrace()
+        }
+
+    }
+
+
 }
