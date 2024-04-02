@@ -64,6 +64,7 @@ class TelegramPersistence {
                     }
             }
         } catch (exception: Exception) {
+            exception.printStackTrace()
             listOf()
         }
     }
