@@ -17,12 +17,12 @@ import ru.droptableusers.sampleapi.database.persistence.DocumentsPersistence
 
 class AdminDocumentsController(call: ApplicationCall) : AbstractController(call) {
     private fun compareDocumentAndConditions(conditions: List<DocumentConditionModel>): Map<Int, List<DocumentConditionModel>> {
-        val result = HashMap<Int, ArrayList<DocumentConditionModel>>()
+        val result = HashMap<Int, MutableList<DocumentConditionModel>>()
         conditions.forEach {
             if (result.containsKey(it.documentId) && result[it.documentId] != null) {
                 result[it.documentId]!!.add(it)
             } else {
-                result[it.documentId] = arrayListOf(it)
+                result[it.documentId] = mutableListOf(it)
             }
         }
         return mapOf()
