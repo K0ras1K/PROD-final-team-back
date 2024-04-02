@@ -29,6 +29,7 @@ class DatabaseInit {
             DocumentsTable,
             DocumentConditionsTable,
             FilledDocumentsTable,
+            TeamTemplateTable
         )
 
     /**
