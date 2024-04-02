@@ -97,7 +97,7 @@ class TeamsPersistence() {
     fun removeMember(userId: Int): Boolean {
         return try {
             transaction {
-                TeamsUsersTable.deleteWhere { TeamsUsersTable.userId.eq(id) } > 0
+                TeamsUsersTable.deleteWhere { TeamsUsersTable.userId.eq(userId) } > 0
             }
         } catch (e: Exception) {
             false
