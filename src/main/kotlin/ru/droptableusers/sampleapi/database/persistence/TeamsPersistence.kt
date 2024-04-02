@@ -4,6 +4,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.droptableusers.sampleapi.data.models.base.TeamModel
+import ru.droptableusers.sampleapi.data.models.base.TeamsUsersModel
 import ru.droptableusers.sampleapi.database.schema.TeamTable
 import ru.droptableusers.sampleapi.database.schema.TeamsUsersTable
 
@@ -145,6 +146,23 @@ class TeamsPersistence() {
             }
         } catch (exception: Exception) {
             null
+        }
+    }
+
+    private fun resultRowToTeamsUsersModel(row: ResultRow): TeamsUsersModel =
+        TeamsUsersModel(
+            teamId = row[TeamsUsersTable.teamId].value,
+            userId = row[TeamsUsersTable.userId].value
+        )
+
+    fun listAllTeamsMembersRelationships(): List<TeamsUsersModel> {
+        return try {
+            transaction {
+                TeamsUsersTable.selectAll()
+                    .map(::resultRowToTeamsUsersModel)
+            }
+        } catch (exception: Exception) {
+            listOf()
         }
     }
 

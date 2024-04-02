@@ -184,6 +184,17 @@ class UserPersistence {
         }
     }
 
+    fun listUsers(): List<UserModel> {
+        return try {
+            transaction {
+                UserTable.selectAll()
+                    .map(::resultRowToUserModel)
+            }
+        } catch (exception: Exception) {
+            listOf()
+        }
+    }
+
     fun addTag(
         userId: Int,
         tagId: Int,
