@@ -42,9 +42,16 @@ fun Application.configureRouting() {
                     PublicDownloadController(call).download()
                 }
             }
+
+            route("/tags") {
+                get {
+                    TagsController(call).getAllTags()
+                }
+            }
+
             authenticate("auth-jwt") {
                 route("/private") {
-                    get("/{folder_name}/{file_name}") {
+                    get("/{file_name}") {
                         AuthDownloadController(call).download()
                     }
                 }
@@ -152,6 +159,9 @@ fun Application.configureRouting() {
 
 
             }
+
+
+
             route("/vacancy") {
                 get("/{id}") {
                     VacancyController(call).get()
@@ -230,6 +240,24 @@ fun Application.configureRouting() {
                             }
                             post {
                                 AdminTeamsController(call).editTeamTemplate()
+                            }
+                        }
+
+                        post{
+                            AdminTeamsController(call).createTeam()
+                        }
+
+                        delete("/{teamId}") {
+                            AdminTeamsController(call).deleteTeam()
+                        }
+
+                        route("/members"){
+                            post {
+                                AdminTeamsController(call).addMember()
+                            }
+
+                            delete {
+                                AdminTeamsController(call).removeMember()
                             }
                         }
                     }
