@@ -25,6 +25,7 @@ import ru.droptableusers.sampleapi.telegram.handler.callback.documents.ShowFullD
 import ru.droptableusers.sampleapi.telegram.handler.callback.teams.ApplyTeamHandler
 import ru.droptableusers.sampleapi.telegram.handler.callback.teams.FullTeamHandler
 import ru.droptableusers.sampleapi.telegram.handler.callback.teams.TeamsHandler
+import ru.droptableusers.sampleapi.telegram.handler.callback.users.FullUserHandler
 import ru.droptableusers.sampleapi.telegram.handler.callback.users.UsersWithoutTeamHandler
 
 object TelegramUpdateHandler {
@@ -77,7 +78,7 @@ object TelegramUpdateHandler {
                         UsersWithoutTeamHandler(callbackQuery).handle()
                     }
                     if (callbackQuery.data().startsWith("show-user-")){
-
+                        FullUserHandler(callbackQuery).handle()
                     }
                     if (callbackQuery.data() == "show-profile") {
                         ProfileHandler(callbackQuery).handle()
