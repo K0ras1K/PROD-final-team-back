@@ -9,6 +9,7 @@ import ru.droptableusers.sampleapi.controller.AbstractController
 import ru.droptableusers.sampleapi.data.models.base.DocumentConditionModel
 import ru.droptableusers.sampleapi.data.models.base.FilledDocumentModel
 import ru.droptableusers.sampleapi.data.models.base.TeamsUsersModel
+import ru.droptableusers.sampleapi.data.models.base.UserModel
 import ru.droptableusers.sampleapi.data.models.inout.input.users.NotifyListModel
 import ru.droptableusers.sampleapi.data.models.inout.output.ErrorResponse
 import ru.droptableusers.sampleapi.data.models.inout.output.users.AdminUserOutputResponse
@@ -82,7 +83,7 @@ class AdminUsersController(call: ApplicationCall) : AbstractController(call) {
                                     val age = unixToLocalDateTime(it.birthdayDate).until(unixToLocalDateTime(System.currentTimeMillis()), ChronoUnit.YEARS)
                                     when (condition.condition) {
                                         "less" -> {
-                                            if (age < condition.value.toInt()) {
+                                            if (age <= condition.value.toInt()) {
                                                 isRequired = true
                                             }
                                         }
@@ -92,7 +93,7 @@ class AdminUsersController(call: ApplicationCall) : AbstractController(call) {
                                             }
                                         }
                                         "more" -> {
-                                            if (age > condition.value.toInt()) {
+                                            if (age >= condition.value.toInt()) {
                                                 isRequired = true
                                             }
                                         }
@@ -125,6 +126,58 @@ class AdminUsersController(call: ApplicationCall) : AbstractController(call) {
                     filledDocs = filledDocsCount,
                     requiredDocs = requiredDocsCount
                 )
+            }
+            call.respond(HttpStatusCode.OK, result)
+        }
+    }
+
+    suspend fun listNotFilledUsers() {
+        runBlocking {
+            val documentId = call.request.queryParameters["documentId"]!!.toInt()
+            val document = DocumentsPersistence().selectDocumentById(documentId)!!
+            val documentConditions = DocumentsPersistence().listDocumentConditionsByDocumentId(documentId)
+            val filledDocuments = (DocumentsPersistence().listFilledDocumentsByDocumentId(documentId)).associate { it.userId to it }
+            val users = UserPersistence().listUsers()
+            val result = mutableListOf<UserModel>()
+            users.forEach {
+                if (document.required) {
+                    documentConditions.forEach { condition ->
+                        var isRequired = false
+                        when (condition.fieldName) {
+                            "age" -> {
+                                val age = unixToLocalDateTime(it.birthdayDate).until(unixToLocalDateTime(System.currentTimeMillis()), ChronoUnit.YEARS)
+                                when (condition.condition) {
+                                    "less" -> {
+                                        if (age <= condition.value.toInt()) {
+                                            isRequired = true
+                                        }
+                                    }
+                                    "equals" -> {
+                                        if (age == condition.value.toLong()) {
+                                            isRequired = true
+                                        }
+                                    }
+                                    "more" -> {
+                                        if (age >= condition.value.toInt()) {
+                                            isRequired = true
+                                        }
+                                    }
+                                }
+                            }
+                            "sex" -> {
+                                val sex = "male"; // TODO Fetch from DB
+                                if (sex == condition.value) {
+                                    isRequired = true
+                                }
+                            }
+                        }
+                        if (isRequired) {
+                            if (!filledDocuments.containsKey(it.id)) {
+                                result.add(it)
+                            }
+                        }
+                    }
+                }
             }
             call.respond(HttpStatusCode.OK, result)
         }
