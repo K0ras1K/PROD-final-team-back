@@ -25,6 +25,7 @@ import ru.droptableusers.sampleapi.telegram.handler.callback.documents.ShowFullD
 import ru.droptableusers.sampleapi.telegram.handler.callback.teams.ApplyTeamHandler
 import ru.droptableusers.sampleapi.telegram.handler.callback.teams.FullTeamHandler
 import ru.droptableusers.sampleapi.telegram.handler.callback.teams.TeamsHandler
+import ru.droptableusers.sampleapi.telegram.handler.callback.users.UsersWithoutTeamHandler
 
 object TelegramUpdateHandler {
     var updateId: Int = 0
@@ -71,6 +72,12 @@ object TelegramUpdateHandler {
                     }
                     if (callbackQuery.data().startsWith("show-teams")) {
                         TeamsHandler(callbackQuery).handle()
+                    }
+                    if (callbackQuery.data().startsWith("show-users")){
+                        UsersWithoutTeamHandler(callbackQuery).handle()
+                    }
+                    if (callbackQuery.data().startsWith("show-user-")){
+
                     }
                     if (callbackQuery.data() == "show-profile") {
                         ProfileHandler(callbackQuery).handle()
