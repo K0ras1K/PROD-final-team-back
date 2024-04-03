@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.model.CallbackQuery
 import com.pengrad.telegrambot.request.EditMessageText
 import ru.droptableusers.sampleapi.data.enums.TelegramChat
 import ru.droptableusers.sampleapi.database.persistence.UserPersistence
+import ru.droptableusers.sampleapi.telegram.keyboard.FullUserKeyboard
 import ru.droptableusers.sampleapi.utils.DateUtils
 
 class FullUserHandler(val callbackQuery: CallbackQuery) {
@@ -21,7 +22,7 @@ class FullUserHandler(val callbackQuery: CallbackQuery) {
                 Направление: ${userData.major?.localizedName ?: "Нет"}
                 Дата рождения: ${DateUtils.getCurrentDateAsString(userData.birthdayDate)}
                 """.trimIndent()
-            )
+            ).replyMarkup(FullUserKeyboard.generateFullUserKeyboard(userId))
         )
     }
 }

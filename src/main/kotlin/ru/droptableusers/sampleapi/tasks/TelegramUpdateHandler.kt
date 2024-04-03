@@ -89,6 +89,15 @@ object TelegramUpdateHandler {
                     if (callbackQuery.data().startsWith("apply-team-")) {
                         ApplyTeamHandler(callbackQuery).handle()
                     }
+                    if (callbackQuery.data().startsWith("apply-user-")) {
+                        //ApplyTeamHandler(callbackQuery).handle()
+                    }
+                    if (callbackQuery.data().startsWith("accept-team-")) {
+//                        ApplyTeamHandler(callbackQuery).handle()
+                    }
+                    if (callbackQuery.data().startsWith("accept-user-")) {
+//                        ApplyTeamHandler(callbackQuery).handle()
+                    }
                     if (callbackQuery.data().startsWith("show-documents")) {
                         ShowDocumentsHandler(callbackQuery).handle()
                     }
