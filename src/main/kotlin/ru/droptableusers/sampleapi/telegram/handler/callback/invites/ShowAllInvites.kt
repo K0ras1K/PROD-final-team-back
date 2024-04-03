@@ -15,12 +15,10 @@ import ru.droptableusers.sampleapi.telegram.models.base.InviteBotModel
 
 class ShowAllInvites(val callbackQuery: CallbackQuery): AbstractCallbackQueryHandler(callbackQuery) {
     fun handle(){
-        val invites = InvitePersistence().selectByUserId(userData.id).map{
-            val from = if(it.type == InviteStatus.TO_USER)
-                TeamsPersistence().selectById(it.teamId)!!.name
-            else
-                UserPersistence().selectById(it.userId)!!.let { i -> "${i.firstName} ${i.lastName}" }
-            InviteBotModel(from, it.type, it.teamId, it.id)
+
+        val from = TeamsPersistence().selectById(TeamsPersistence().selectByUserId(userData.id)!!)
+        val invites = InvitePersistence().selectByTeamId(from!!.id, InviteStatus.TO_TEAM).map{
+            InviteBotModel(from.name, it.type, it.teamId, it.id)
         }
 
         TelegramChat.VERIFICATION.BOT.execute(

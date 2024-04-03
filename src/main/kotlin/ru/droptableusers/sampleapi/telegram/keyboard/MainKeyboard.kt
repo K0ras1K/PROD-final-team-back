@@ -18,9 +18,6 @@ object MainKeyboard {
             arrayOf(
                 InlineKeyboardButton("Документы").callbackData("show-documents"),
             ),
-            arrayOf(
-                InlineKeyboardButton("Мои заявки").callbackData("show-all-invites"),
-            ),
             if (team) {
                 arrayOf(
                     InlineKeyboardButton("Моя команда").callbackData("show-my-team"),
@@ -28,6 +25,14 @@ object MainKeyboard {
             } else {
                 arrayOf()
             },
+
+            if (team){
+                arrayOf(
+                    InlineKeyboardButton("Мои заявки").callbackData("show-all-invites"),
+                )
+            } else {
+                arrayOf()
+            }
         )
     }
 }
