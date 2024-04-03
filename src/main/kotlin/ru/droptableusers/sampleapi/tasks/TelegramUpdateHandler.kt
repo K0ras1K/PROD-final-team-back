@@ -22,9 +22,13 @@ import ru.droptableusers.sampleapi.telegram.handler.callback.MainHandler
 import ru.droptableusers.sampleapi.telegram.handler.callback.ProfileHandler
 import ru.droptableusers.sampleapi.telegram.handler.callback.documents.ShowDocumentsHandler
 import ru.droptableusers.sampleapi.telegram.handler.callback.documents.ShowFullDocumentHandler
+import ru.droptableusers.sampleapi.telegram.handler.callback.invites.ShowAllInvites
+import ru.droptableusers.sampleapi.telegram.handler.callback.teams.AcceptTeamHandler
 import ru.droptableusers.sampleapi.telegram.handler.callback.teams.ApplyTeamHandler
 import ru.droptableusers.sampleapi.telegram.handler.callback.teams.FullTeamHandler
 import ru.droptableusers.sampleapi.telegram.handler.callback.teams.TeamsHandler
+import ru.droptableusers.sampleapi.telegram.handler.callback.users.AcceptUserHandler
+import ru.droptableusers.sampleapi.telegram.handler.callback.users.ApplyUserHandler
 import ru.droptableusers.sampleapi.telegram.handler.callback.users.FullUserHandler
 import ru.droptableusers.sampleapi.telegram.handler.callback.users.UsersWithoutTeamHandler
 
@@ -90,19 +94,22 @@ object TelegramUpdateHandler {
                         ApplyTeamHandler(callbackQuery).handle()
                     }
                     if (callbackQuery.data().startsWith("apply-user-")) {
-                        //ApplyTeamHandler(callbackQuery).handle()
+                        ApplyUserHandler(callbackQuery).handle()
                     }
                     if (callbackQuery.data().startsWith("accept-team-")) {
-//                        ApplyTeamHandler(callbackQuery).handle()
+                        AcceptTeamHandler(callbackQuery).handle()
                     }
                     if (callbackQuery.data().startsWith("accept-user-")) {
-//                        ApplyTeamHandler(callbackQuery).handle()
+                        AcceptUserHandler(callbackQuery).handle()
                     }
                     if (callbackQuery.data().startsWith("show-documents")) {
                         ShowDocumentsHandler(callbackQuery).handle()
                     }
                     if (callbackQuery.data().startsWith("show-doc-")) {
                         ShowFullDocumentHandler(callbackQuery).handle()
+                    }
+                    if (callbackQuery.data().startsWith("show-all-invites")) {
+                        ShowAllInvites(callbackQuery).handle()
                     }
                 }
             } catch (e: Exception) {
