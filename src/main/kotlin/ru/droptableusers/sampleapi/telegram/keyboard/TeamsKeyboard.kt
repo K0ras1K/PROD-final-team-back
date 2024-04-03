@@ -7,7 +7,7 @@ import ru.droptableusers.sampleapi.telegram.models.base.TeamBotModel
 
 object TeamsKeyboard {
     fun generateTeamKeyboard(teams: List<TeamBotModel>): InlineKeyboardMarkup {
-        val onLineCount = 3
+        val onLineCount = 2
         val buttons: MutableList<MutableList<InlineKeyboardButton>> = mutableListOf()
 
         var tempRows: MutableList<InlineKeyboardButton> = mutableListOf()
