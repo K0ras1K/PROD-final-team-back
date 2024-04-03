@@ -15,7 +15,7 @@ object InvitesKeyboard {
         var tempRows: MutableList<InlineKeyboardButton> = mutableListOf()
         var counter = 0
         for (inv in invites) {
-            val text = if (inv.type == InviteStatus.TO_USER) "Приглашение от ${inv.from}" else "Запрос к ${inv.from}"
+            val text = if (inv.type == InviteStatus.TO_USER) "Приглашение к ${inv.from}" else "Запрос от ${inv.from}"
             val data = if (inv.type == InviteStatus.TO_USER) "accept-user-${inv.id}" else "accept-team-${inv.teamId}"
             counter += 1
             tempRows +=

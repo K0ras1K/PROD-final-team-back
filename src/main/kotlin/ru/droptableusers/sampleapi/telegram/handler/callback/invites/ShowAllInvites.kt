@@ -5,12 +5,9 @@ import com.pengrad.telegrambot.request.EditMessageText
 import ru.droptableusers.sampleapi.data.enums.InviteStatus
 import ru.droptableusers.sampleapi.data.enums.TelegramChat
 import ru.droptableusers.sampleapi.database.persistence.InvitePersistence
-import ru.droptableusers.sampleapi.database.persistence.SearchingForPersistence
 import ru.droptableusers.sampleapi.database.persistence.TeamsPersistence
-import ru.droptableusers.sampleapi.database.persistence.UserPersistence
 import ru.droptableusers.sampleapi.telegram.handler.AbstractCallbackQueryHandler
 import ru.droptableusers.sampleapi.telegram.keyboard.InvitesKeyboard
-import ru.droptableusers.sampleapi.telegram.keyboard.TeamsKeyboard
 import ru.droptableusers.sampleapi.telegram.models.base.InviteBotModel
 
 class ShowAllInvites(val callbackQuery: CallbackQuery): AbstractCallbackQueryHandler(callbackQuery) {
@@ -18,7 +15,7 @@ class ShowAllInvites(val callbackQuery: CallbackQuery): AbstractCallbackQueryHan
 
         val from = TeamsPersistence().selectById(TeamsPersistence().selectByUserId(userData.id)!!)
         val invites = InvitePersistence().selectByTeamId(from!!.id, InviteStatus.TO_TEAM).map{
-            InviteBotModel(from.name, it.type, it.teamId, it.id)
+            InviteBotModel("${userData.firstName} ${userData.lastName}", it.type, it.teamId, it.id)
         }
 
         TelegramChat.VERIFICATION.BOT.execute(
