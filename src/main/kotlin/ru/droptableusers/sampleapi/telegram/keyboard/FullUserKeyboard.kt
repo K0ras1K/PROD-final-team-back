@@ -10,7 +10,7 @@ object FullUserKeyboard {
     fun generateFullUserKeyboard(userId: Int): InlineKeyboardMarkup {
         val buttons: MutableList<MutableList<InlineKeyboardButton>> = mutableListOf()
         buttons += mutableListOf(mutableListOf(InlineKeyboardButton("Подать заявку").callbackData("apply-user-$userId")))
-        buttons += mutableListOf(mutableListOf(KeyboardUtils.getBackButton(TeamsHandler.CALLBACK_QUERY)))
+        buttons += mutableListOf(mutableListOf(KeyboardUtils.getBackButton("show-users")))
 
         val buttonsArray: Array<Array<InlineKeyboardButton>> = buttons.map { it.toTypedArray() }.toTypedArray()
 
